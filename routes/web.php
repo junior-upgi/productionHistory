@@ -12,5 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('show');
 });
+
+Route::get('/order' ,'OrderController@orderSearch');

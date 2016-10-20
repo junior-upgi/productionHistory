@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'mysql'),
+    'default' => env('DB_CONNECTION', 'SQL_PH'),
 
     /*
     |--------------------------------------------------------------------------
@@ -63,6 +63,20 @@ return [
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
             'strict' => true,
+            'engine' => null,
+        ],
+
+        'SQL_PH' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_SqlServer', '192.168.168.5'),
+            'port' => '1433',
+            'database' => 'productionHistory',
+            'username' => 'sa',
+            'password' => 'attn@3100',
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
             'engine' => null,
         ],
 
