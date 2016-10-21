@@ -33,23 +33,21 @@
 </head>
 <body>
 	<nav class="navbar navbar-default">
-		<div class="container">
-			<div class="container-fluid">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="#" style="padding:5px;">
-						<img alt="UPGI" src="{{url('/')}}/img/upgi.png" style="height:40px;"/>
-					</a>
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#" style="padding:5px;">
+					<img alt="UPGI" src="{{url('/')}}/img/upgi.png" style="height:40px;"/>
+				</a>
+			</div>
+			<div class="collapse navbar-collapse navbar-left">
+				<div class="nav navbar-nav">
 				</div>
-				<div class="collapse navbar-collapse navbar-left">
-					<div class="nav navbar-nav">
-					</div>
-				</div>
-				<div class="collapse navbar-collapse navbar-right">
-				</div>
+			</div>
+			<div class="collapse navbar-collapse navbar-right">
 			</div>
 		</div>
 	</nav>
-	<div class="container">
+	<div class="container-fluid">
 		<div class="content">
 			@yield('content')
 		</div>

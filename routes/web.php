@@ -15,4 +15,4 @@ Route::get('/', function () {
     return view('show');
 });
 
-Route::get('/order' ,'OrderController@orderSearch');
+Route::any('/order' ,'OrderController@orderSearch');

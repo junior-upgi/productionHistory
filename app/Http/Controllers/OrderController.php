@@ -10,6 +10,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 
 use App\Repositories\OrderRepository;
 
@@ -34,9 +35,26 @@ class OrderController extends Controller
         $this->order = $order;
     }
 
-    public function orderSearch()
+    public function orderSearch(Request $request)
     {   
-        return view('order.orderSearch');
+        $order = null;
+        $ID = $request->input('orderNumber');
+        if (isset($ID)) {
+            $where = array();
+            $search = array(
+                'key' => 'PRD_NO',
+                'value' => $ID 
+            );
+            array_push($where, $search);
+            $order = $this->order->getOrderWhere($where)
+                ->orderBy('OS_NO')
+                ->orderBy('ITM')
+                ->get();
+        }
+        return view('order.orderSearch')
+            ->with('order', $order)
+            ->with('ID', $ID);
     }
+
 
 }

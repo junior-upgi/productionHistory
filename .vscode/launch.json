@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "Listen for XDebug",
+        "type": "php",
+        "request": "launch",
+        "port": 9000,
+        "serverSourceRoot": "/home/vagrant/Code/productionHistory",
+        "localSourceRoot": "${workspaceRoot}"
+      },
+      {
+        "name": "Remote",
+        "type": "php",
+        "request": "launch",
+        "port": 9000,
+        "serverSourceRoot": "/var/www/html/productionHistory",
+        "localSourceRoot": "${workspaceRoot}"
+      },
+      {
+        "name": "Launch",
+        "request": "launch",
+        "type": "php",
+        "program": "${file}",
+        "cwd": "${workspaceRoot}",
+        "externalConsole": false
+      }
+    ]
+}
