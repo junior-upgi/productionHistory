@@ -10,6 +10,8 @@
 namespace App\Repositories;
 
 use App\Models\OrderProduct;
+use App\Models\History;
+use App\Models\ProductHistory;
 
 /**
  * Class OrderRepository
@@ -20,17 +22,27 @@ class OrderRepository
 {
     /** @var OrderProduct 注入OrderProduct */
     private $order;
-
+    /** @var History 注入History */
+    private $history;
+    /** @var ProductHistory 注入ProductHistory */
+    private $productHistory;
 
     /**
      * 建構式
      *
      * @param OrderProduct $order
+     * @param History $history
+     * @param ProductHistory $productHistory
      * @return void
      */
-    public function __construct(OrderProduct $order)
-    {
+    public function __construct(
+        OrderProduct $order,
+        History $history,
+        ProductHistory $productHistory
+    ) {
         $this->order = $order;
+        $this->history = $history;
+        $this->productHistory = $productHistory;
     }
 
     /**
@@ -45,14 +57,41 @@ class OrderRepository
     }
 
     /**
-    * 依orderID取得資料
+    * 依where條件取得Order資料
     * 
     * @param array $where 注入查詢條件
     * @return OrderProduct 回傳Module
     */
     public function getOrderWhere($where)
     {
-        $list = $this->order
+        $table = $this->order;
+        $obj = $this->getWhere($table, $where);
+        return $obj;
+    }
+
+    /**
+    * 依where條件取得ProductHistory資料
+    * 
+    * @param array $where 注入查詢條件
+    * @return ProductHistory 回傳Module
+    */
+    public function getProductHistoryWhere($where)
+    {
+        $table = $this->productHistory;
+        $obj = $this->getWhere($table, $where);
+        return $obj;
+    }
+
+    /**
+    * 依where條件取得資料
+    * 
+    * @param Model $table 傳入Model物件
+    * @param array $where 傳入查詢條件
+    * @return Model 回傳Module
+    */
+    private function getWhere($table, $where)
+    {
+        $obj = $table
             ->where(function ($q) use ($where) {
                 foreach ($where as $w) {
                     $key = $w['key'];
@@ -66,6 +105,6 @@ class OrderRepository
                     }
                 }
             });
-        return $list;
+        return $obj;
     }
 }

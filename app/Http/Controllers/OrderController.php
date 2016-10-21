@@ -42,13 +42,21 @@ class OrderController extends Controller
         if (isset($searchContent)) {
             $where = array();
             $value = iconv("UTF-8", "BIG-5", $searchContent);
-            $search = array(
+            $osno = array(
+                'key' => 'OS_NO',
+                'op' => 'like',
+                'value' => "%$value%",
+                'or' => true,
+            );
+            $comb = array(
                 'key' => 'COMB_ITEM_NAME',
                 'op' => 'like',
-                'value' => "%$value%" 
+                'value' => "%$value%",
+                'or' => true,
             );
-            array_push($where, $search);
-            $order = $this->order->getOrderWhere($where)
+            array_push($where, $osno);
+            array_push($where, $comb);
+            $order = $this->order->getProductHistoryWhere($where)
                 ->orderBy('OS_NO')
                 ->orderBy('ITM')
                 ->get();

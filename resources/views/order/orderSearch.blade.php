@@ -1,6 +1,7 @@
 @extends('layouts.masterpage')
 @section('content')
     <script src="{{url('/')}}/js/order/orderSearch.js?x=1"></script>
+    @inject('web', 'App\Presenters\WebBasePresenter')
         <form id="orderSearchForm" class="form-horizontal col-md-12" action="{{url('/')}}/order" method="POST">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
             <div class="col-md-4">
@@ -15,17 +16,17 @@
                     <tr>
                         <td width="130">訂單編號</td>
                         <td width="40">項次</td>
-                        <td width="200">品名</td>
-                        <td>單位</td>
-                        <td>工序</td>
-                        <td>開始時間</td>
-                        <td>產線</td>
-                        <td>結束時間</td>
-                        <td width="82">設備材料</td>
-                        <td width="82">製程條件</td>
-                        <td width="82">管制要求</td>
-                        <td width="82">問題缺點</td>
-                        <td width="82">生產狀況</td>
+                        <td >品名</td>
+                        <td width="40">單位</td>
+                        <td width="80">工序</td>
+                        <td width="90">開始時間</td>
+                        <td width="100">產線</td>
+                        <td width="90">結束時間</td>
+                        <td width="82"></td>
+                        <td width="82"></td>
+                        <td width="82"></td>
+                        <td width="82"></td>
+                        <td width="82"></td>
                     </tr>
                 </thead>
                 <tbody>
@@ -33,23 +34,29 @@
                         <tr>
                             <td>{{ $o->OS_NO }}</td>
                             <td>{{ $o->ITM }}</td>
-                            @php
-                                $oid = $o->OS_NO;
-                                $itm = $o->ITM;
-                                $pn = $o->COMB_ITEM_NAME;
-                                $url = "https://docs.google.com/forms/d/e/1FAIpQLSehNS4idn8yHXa2IPNzu5kNwNGE2aJbvHoTw3mS4OcpaxB99w/viewform?entry.1932040804=$oid&entry.1999602853=$itm&entry.1518767994=$pn&entry.1336051967&entry.1089230296&entry.1706891687";
-                            @endphp
-                            <td><a href="{{ $url }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td><a href="#" class="btn btn-default btn-sm">設備材料</a></td>
-                            <td><a href="#" class="btn btn-default btn-sm">製程條件</a></td>
-                            <td><a href="#" class="btn btn-default btn-sm">管制要求</a></td>
-                            <td><a href="#" class="btn btn-default btn-sm">問題缺點</a></td>
-                            <td><a href="#" class="btn btn-default btn-sm">生產狀況</a></td>
+                            @if (isset($o->UNIT))
+                                <td>{{ $o->COMB_ITEM_NAME }}</td>
+                            @else
+                                <td><a href="{{ $web->getFormLink($o, 0) }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></td>
+                            @endif
+                            <td>{{ $o->UNIT }}</td>
+                            <td>{{ $o->PRC }}</td>
+                            <td>{{ $web->getDate($o->SDATE) }}</td>
+                            <td>{{ $o->PL }}</td>
+                            <td>{{ $web->getDate($o->EDATE) }}</td>
+                            @if (isset($o->UNIT))
+                                <td><a href="{{ $web->getFormLink($o, 1) }}" target="_blank" class="btn btn-default btn-sm">設備材料</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 2) }}" target="_blank" class="btn btn-default btn-sm">製程條件</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 3) }}" target="_blank" class="btn btn-default btn-sm">管制要求</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 4) }}" target="_blank" class="btn btn-default btn-sm">問題缺點</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 5) }}" target="_blank" class="btn btn-default btn-sm">生產狀況</a></td>
+                            @else
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            @endif
                         </tr>
                     @endforeach
                 </tbody>
