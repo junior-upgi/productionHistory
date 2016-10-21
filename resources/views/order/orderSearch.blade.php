@@ -3,8 +3,8 @@
     <script src="{{url('/')}}/js/order/orderSearch.js?x=1"></script>
         <form id="orderSearchForm" class="form-horizontal col-md-12" action="{{url('/')}}/order" method="POST">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
-            <div class="col-md-2">
-                <input type="text" class="form-control" id="orderNumber" name="orderNumber" placeholder="請輸入產品編號" value="{{ $ID }}" />
+            <div class="col-md-4">
+                <input type="text" class="form-control" id="searchContent" name="searchContent" placeholder="請輸入查詢內容" value="{{ $search }}" />
             </div>
             <button type="submit" class="btn btn-primary">查詢</button>
         </form>

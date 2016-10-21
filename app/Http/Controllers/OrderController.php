@@ -38,12 +38,14 @@ class OrderController extends Controller
     public function orderSearch(Request $request)
     {   
         $order = null;
-        $ID = $request->input('orderNumber');
-        if (isset($ID)) {
+        $searchContent = $request->input('searchContent');
+        if (isset($searchContent)) {
             $where = array();
+            $value = iconv("UTF-8", "BIG-5", $searchContent);
             $search = array(
-                'key' => 'PRD_NO',
-                'value' => $ID 
+                'key' => 'COMB_ITEM_NAME',
+                'op' => 'like',
+                'value' => "%$value%" 
             );
             array_push($where, $search);
             $order = $this->order->getOrderWhere($where)
@@ -53,7 +55,7 @@ class OrderController extends Controller
         }
         return view('order.orderSearch')
             ->with('order', $order)
-            ->with('ID', $ID);
+            ->with('search', $searchContent);
     }
 
 
