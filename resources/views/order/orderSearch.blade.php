@@ -36,7 +36,8 @@
                             @php
                                 $oid = $o->OS_NO;
                                 $itm = $o->ITM;
-                                $url = "https://docs.google.com/forms/d/e/1FAIpQLSehNS4idn8yHXa2IPNzu5kNwNGE2aJbvHoTw3mS4OcpaxB99w/viewform?entry.1932040804=$oid&entry.1999602853=$itm&entry.1336051967&entry.1089230296&entry.1706891687";
+                                $pn = $o->COMB_ITEM_NAME;
+                                $url = "https://docs.google.com/forms/d/e/1FAIpQLSehNS4idn8yHXa2IPNzu5kNwNGE2aJbvHoTw3mS4OcpaxB99w/viewform?entry.1932040804=$oid&entry.1999602853=$itm&entry.1518767994=$pn&entry.1336051967&entry.1089230296&entry.1706891687";
                             @endphp
                             <td><a href="{{ $url }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></td>
                             <td></td>
