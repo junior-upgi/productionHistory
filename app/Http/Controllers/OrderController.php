@@ -92,7 +92,7 @@ class OrderController extends Controller
             'sectCount' => $input['sectcount'],
             'gobWeight' => $input['gobweight'],
             'shearCount' => $input['shearcount'],
-            'gobsPerCut' => $input['gobsperCut'],
+            'gobsPerCut' => $input['gobspercut'],
         );
 
         $ins = $this->order->insert($params);
