@@ -58,7 +58,7 @@ class WebBasePresenter
                 
             case 2:
                 //製程條件
-                $url ="https://docs.google.com/forms/d/e/1FAIpQLScBQf7LugzQ6zabTvMrxIqIPLgprDRX7yi9DyX0PkxaeIzSpw/viewform?entry.2073060511=$OS_NO&entry.1347295307=$ITM&entry.228686488=$COMB_ITEM_NAME&entry.653745443=$UNIT&entry.1900150380&entry.302003372";
+                $url ="https://form.jotform.me/62972049818467?OS_NO=$OS_NO&ITM=$ITM&department=$UNIT";
                 break;
 
             case 3:
