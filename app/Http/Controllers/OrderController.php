@@ -71,6 +71,7 @@ class OrderController extends Controller
         
         $re = $request;
         $input = $re->input();
+        /*
         $textbox = $re->input('textbox');
         $textarea = $re->input('textarea');
         $droplist = $re->input('droplist');
@@ -78,6 +79,7 @@ class OrderController extends Controller
         $radiobox = $re->input('radiobox');
         $matrix = $re->input('matrix');
         $dytextbox = $re->input('dytextbox');
+        */
 
         $countInput = count($re->input());
         
@@ -94,7 +96,7 @@ class OrderController extends Controller
         );
 
         $ins = $this->order->insert($params);
-        
+
         
         return $re;
     }
