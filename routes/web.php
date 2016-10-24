@@ -12,7 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('show');
+    return redirect('/order');
 });
 
 Route::any('/order' ,'OrderController@orderSearch');
+
+Route::any('/insert/{cat}', 'OrderController@orderSearch');

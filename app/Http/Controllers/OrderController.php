@@ -66,5 +66,22 @@ class OrderController extends Controller
             ->with('search', $searchContent);
     }
 
+    public function insert(Request $request, $cat)
+    {
+        $re = $request;
+        $input = $re->input();
+        $textbox = $re->input('textbox');
+        $textarea = $re->input('textarea');
+        $droplist = $re->input('droplist');
+        $checkbox = $re->input('checkbox');
+        $radiobox = $re->input('radiobox');
+        $matrix = $re->input('matrix');
+        $dytextbox = $re->input('dytextbox');
+
+
+
+        
+        return $re;
+    }
 
 }
