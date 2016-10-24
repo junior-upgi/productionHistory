@@ -120,7 +120,7 @@ class OrderRepository
             $table->insert($params);
             return true;
         } catch (\Exception $e) {
-            return false;
+            return $e['errorInfo'][2];
         }
     }
 }

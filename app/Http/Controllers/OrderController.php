@@ -86,7 +86,7 @@ class OrderController extends Controller
         $params = array(
             'OS_NO' => $input['os_no'],
             'ITM' => $input['itm'],
-            'created' => $now,
+            'created' => '2016-10-10',
             'department' => $input['department'],
             'gobTemp' => $input['gobtemp'],
             'sectCount' => $input['sectcount'],
