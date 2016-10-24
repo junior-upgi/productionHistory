@@ -12,6 +12,7 @@ namespace App\Repositories;
 use App\Models\OrderProduct;
 use App\Models\History;
 use App\Models\ProductHistory;
+use App\Models\Parameter;
 
 /**
  * Class OrderRepository
@@ -27,6 +28,8 @@ class OrderRepository
     /** @var ProductHistory 注入ProductHistory */
     private $productHistory;
 
+    private $parameter;
+
     /**
      * 建構式
      *
@@ -38,11 +41,13 @@ class OrderRepository
     public function __construct(
         OrderProduct $order,
         History $history,
-        ProductHistory $productHistory
+        ProductHistory $productHistory,
+        Parameter $parameter
     ) {
         $this->order = $order;
         $this->history = $history;
         $this->productHistory = $productHistory;
+        $this->parameter = $parameter;
     }
 
     /**
@@ -106,5 +111,16 @@ class OrderRepository
                 }
             });
         return $obj;
+    }
+
+    public function insert($params)
+    {
+        try{
+            $table = $this->parameter;
+            $table->insert($params);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

@@ -68,6 +68,7 @@ class OrderController extends Controller
 
     public function insert(Request $request, $cat)
     {
+        
         $re = $request;
         $input = $re->input();
         $textbox = $re->input('textbox');
@@ -78,8 +79,22 @@ class OrderController extends Controller
         $matrix = $re->input('matrix');
         $dytextbox = $re->input('dytextbox');
 
+        $countInput = count($re->input());
+        
+        $params = array(
+            'OS_NO' => $input['OS_NO'],
+            'ITM' => $input['ITM'],
+            'created' => \Carbon\Carbon::now(),
+            'department' => $input['department'],
+            'gobTemp' => $input['gobTemp'],
+            'sectCount' => $input['sectCount'],
+            'gobWeight' => $input['gobWeight'],
+            'shearCount' => $input['shearCount'],
+            'gobsPerCut' => $input['gobsPerCut'],
+        );
 
-
+        $ins = $this->order->insert($params);
+        
         
         return $re;
     }
