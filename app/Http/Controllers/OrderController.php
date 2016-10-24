@@ -82,11 +82,11 @@ class OrderController extends Controller
         */
 
         $countInput = count($re->input());
-        
+        $now = \Carbon\Carbon::now();
         $params = array(
             'OS_NO' => $input['os_no'],
             'ITM' => $input['itm'],
-            'created' => \Carbon\Carbon::now(),
+            'created' => $now,
             'department' => $input['department'],
             'gobTemp' => $input['gobtemp'],
             'sectCount' => $input['sectcount'],
