@@ -84,15 +84,15 @@ class OrderController extends Controller
         $countInput = count($re->input());
         
         $params = array(
-            'OS_NO' => $input['OS_NO'],
-            'ITM' => $input['ITM'],
+            'OS_NO' => $input['os_no'],
+            'ITM' => $input['itm'],
             'created' => \Carbon\Carbon::now(),
             'department' => $input['department'],
-            'gobTemp' => $input['gobTemp'],
-            'sectCount' => $input['sectCount'],
-            'gobWeight' => $input['gobWeight'],
-            'shearCount' => $input['shearCount'],
-            'gobsPerCut' => $input['gobsPerCut'],
+            'gobTemp' => $input['gobtemp'],
+            'sectCount' => $input['sectcount'],
+            'gobWeight' => $input['gobweight'],
+            'shearCount' => $input['shearcount'],
+            'gobsPerCut' => $input['gobsperCut'],
         );
 
         $ins = $this->order->insert($params);
