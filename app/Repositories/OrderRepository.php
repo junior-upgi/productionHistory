@@ -229,8 +229,8 @@ class OrderRepository
         $obj = $this->getTable('formLink');
         $big5Table = iconv("UTF-8", "BIG-5", $table);
         $big5Unit = iconv("UTF-8", "BIG-5", $unit);
-        $obj = $obj->where('table', $table)
-            ->where('unit', $unit)
+        $obj = $obj->where('table', $big5Table)
+            ->where('unit', $big5Unit)
             ->first();
         if (isset($obj)) {
             return $obj->link;
