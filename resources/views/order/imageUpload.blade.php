@@ -8,6 +8,7 @@
         @endfor
         <div class="form-group">
             <input id="img" name="img" type="file" class="file-loading" data-show-upload="false" accept="image/*">
+            <button type="submit" class="btn btn-primary" data-loading-text="資料送出中..." autocomplete="off">完成</button>
             <script>
                 $("#img").fileinput({
                     language: 'zh-TW',

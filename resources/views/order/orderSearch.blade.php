@@ -36,7 +36,10 @@
                             <td>{{ $o->ITM }}</td>
                             <td>{{ $o->SNM }}</td>
                             @if (isset($o->department))
-                                <td><small>{{ $o->COMB_ITEM_NAME }}</small></td>
+                                <td>
+                                    <small>{{ $o->COMB_ITEM_NAME }}</small>
+                                    {{ $web->getPic($o->image) }}
+                                </td>
                             @else
                                 <td><small><a href="{{ $web->getFormLink($o, 'history', 'all') }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></small></td>
                             @endif
@@ -62,4 +65,5 @@
             </table>
         </div>
     @endif
+@include('order.picModal')
 @endsection

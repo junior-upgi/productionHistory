@@ -60,4 +60,13 @@ class WebBasePresenter
         }
         return $url;
     }
+
+    public function getPic($src)
+    {
+        if (isset($src)) {
+            return "<span class='glyphicon glyphicon-picture' 
+                    onclick=\"showimage('$src')\"></span>";
+        }
+        return '';
+    }
 }
