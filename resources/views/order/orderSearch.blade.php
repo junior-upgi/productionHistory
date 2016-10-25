@@ -49,7 +49,7 @@
                             @if (isset($o->UNIT))
                                 <td><a href="{{ $web->getFormLink($o, 'setup', $o->UNIT) }}" target="_blank" class="btn btn-default btn-sm">設備材料</a></td>
                                 <td><a href="{{ $web->getFormLink($o, 'parameter', $o->UNIT) }}" target="_blank" class="btn btn-default btn-sm">製程條件</a></td>
-                                <!--<td><a href="{{ $web->getFormLink($o, 3) }}" target="_blank" class="btn btn-default btn-sm">管制要求</a></td>-->
+                                <!--<td><a href="{{ $web->getFormLink($o, '', '') }}" target="_blank" class="btn btn-default btn-sm">管制要求</a></td>-->
                                 <td><a href="{{ $web->getFormLink($o, 'issue', $o->UNIT) }}" target="_blank" class="btn btn-default btn-sm">問題缺點</a></td>
                                 <td><a href="{{ $web->getFormLink($o, 'output', $o->UNIT) }}" target="_blank" class="btn btn-default btn-sm">生產狀況</a></td>
                             @else
