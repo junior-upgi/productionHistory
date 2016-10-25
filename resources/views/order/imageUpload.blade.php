@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-    <form class="form-signin" role="form" action="service/formSubmit/{{$table}}" method="POST" style="max-width:480px;padding:15px;margin:auto;">
+    <form class="form-signin" role="form" action="{{url('/')}}/service/formSubmit/{{$table}}" method="POST" style="max-width:480px;padding:15px;margin:auto;">
         <h2>上傳生產成品圖片</h2>
         <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
         @for($i=0; $i < count($key); $i++)
