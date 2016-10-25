@@ -86,7 +86,8 @@ class OrderController extends Controller
         $params = array();
         list($key, $value) = array_divide($input);      //分拆key & value
         for ($i = 0; $i < $countInput; $i++) {
-            $params[$key[$i]] = iconv("UTF-8", "BIG-5", $value[$i]);             //寫入array
+            $big5 = iconv("UTF-8", "BIG-5", $value[$i]);
+            $params[$key[$i]] = $value[$i];             //寫入array
         }
         $ins = $this->order->insertForm($table, $params);
 
