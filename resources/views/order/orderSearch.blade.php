@@ -46,10 +46,10 @@
                             <td>{{ $o->PL }}</td>
                             <td>{{ $web->getDate($o->endDate) }}</td>
                             @if (isset($o->department))
-                                <td><a href="{{ $web->getFormLink($o, 'setup', $o->department) }}" target="_blank" class="btn btn-default btn-sm">設備材料</a></td>
-                                <td><a href="{{ $web->getFormLink($o, 'parameter', $o->department) }}" target="_blank" class="btn btn-default btn-sm">製程條件</a></td>
-                                <td><a href="{{ $web->getFormLink($o, 'issue', $o->department) }}" target="_blank" class="btn btn-default btn-sm">問題缺點</a></td>
-                                <td><a href="{{ $web->getFormLink($o, 'output', $o->department) }}" target="_blank" class="btn btn-default btn-sm">生產狀況</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 'setup', $o->department) }}" target="_blank" class="btn btn-default btn-sm">裝備設定</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 'parameter', $o->department) }}" target="_blank" class="btn btn-default btn-sm">生產條件</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 'issue', $o->department) }}" target="_blank" class="btn btn-default btn-sm">狀況記錄</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 'output', $o->department) }}" target="_blank" class="btn btn-default btn-sm">產出記錄</a></td>
                             @else
                                 <td></td>
                                 <td></td>
