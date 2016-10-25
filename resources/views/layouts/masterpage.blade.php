@@ -18,6 +18,8 @@
 	<link rel="stylesheet" href="{{url('/')}}/css/bootstrap-datetimepicker.min.css">
 	<link rel="stylesheet" href="{{url('/')}}/css/jquery-ui.css">
 	<link rel="stylesheet" href="{{url('/')}}/css/sweetalert.css">
+	<link rel="stylesheet" href="{{url('/')}}/css/fileinput.min.css">
+
 	<!-- Fonts -->
 	<!--<link href='//fonts.googleapis.com/css?family=Roboto:400,300' rel='stylesheet' type='text/css'>-->
 	
@@ -29,6 +31,12 @@
 	<script src="{{url('/')}}/script/jquery.form.min.js"></script>
 	<script src="{{url('/')}}/script/bootstrap-datetimepicker.min.js"></script>
 	<script src="{{url('/')}}/script/bootstrap-datetimepicker.zh-TW.js"></script>
+	<script src="{{url('/')}}/script/fileupload/plugins/canvas-to-blob.min.js?x=1"></script>
+	<script src="{{url('/')}}/script/fileupload/plugins/sortable.min.js?x=1"></script>
+	<script src="{{url('/')}}/script/fileupload/plugins/purify.min.js?x=1"></script>
+	<script src="{{url('/')}}/script/fileinput.min.js?x=1"></script>
+	<script src="{{url('/')}}/script/fileupload/themes/fa/theme.js?x=1"></script>
+	<script src="{{url('/')}}/script/fileupload/locales/zh-TW.js?x=1"></script>
 	<script src="{{url('/')}}/script/master.js?x=1"></script>
 </head>
 <body>

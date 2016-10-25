@@ -18,3 +18,6 @@ Route::get('/', function () {
 Route::any('order' ,'OrderController@orderSearch');
 
 Route::any('service/formSubmit/{table}', 'OrderController@formSubmit');
+Route::any('service/upload/{table}', 'OrderController@imageUpload');
+
+Route::any('test' ,'OrderController@test');

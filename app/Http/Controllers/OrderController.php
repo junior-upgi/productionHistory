@@ -77,11 +77,16 @@ class OrderController extends Controller
      */
     public function formSubmit(Request $request, $table)
     {
+        $file = $request->file('img');
         $input = $request->input();
         $now = \Carbon\Carbon::now();
         $ignore = ['submission_id', 'formID', 'ip', 'comb_item_name'];    //欲忽略的key
         $input = array_except($input, $ignore);         //移除忽略的key
         $input['created'] = $now;                       //加入日期
+        if (isset($file)) {
+            $image = $this->order->fileEncode($file);
+            $input['image'] = $image;
+        }
         $countInput = count($input);
         $params = array();
         list($key, $value) = array_divide($input);      //分拆key & value
@@ -95,4 +100,20 @@ class OrderController extends Controller
         return $ins['msg'];
     }
 
+    public function productionImage(Request $request, $table)
+    {
+        $input = $request->input();
+        $ignore = ['submission_id', 'formID', 'ip', 'comb_item_name'];  //欲忽略的key
+        $input = array_except($input, $ignore);                         //移除忽略的key
+        list($key, $value) = array_divide($input);                      //分拆key & value
+        return view('order.imageUpload')
+            ->with('key', $key)
+            ->with('value', $value)
+            ->with('table', $table);
+    }
+
+    public function test()
+    {
+        return view('order.imageUpload');
+    }
 }

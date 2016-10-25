@@ -237,4 +237,19 @@ class OrderRepository
         }
         return null;
     }
+
+    /**
+     * 將檔案轉成base64編碼
+     * 
+     * @param File $file 檔案物件
+     * @return string 回傳編碼字串
+     */
+    public function fileEncode($file)
+    {
+        $MIME = $file->getMimeType();
+        $data = file_get_contents($file);
+        $code = base64_encode($data);
+        $src = "data:$MIME;base64,$code";
+        return $src;
+    }
 }
