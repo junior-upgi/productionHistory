@@ -82,7 +82,7 @@ return [
 
         'SQL_25' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_SqlServer', '192.168.168.25'),
+            'host' => '192.168.168.25',
             'port' => '1433',
             'database' => 'productionHistory',
             'username' => 'productionHistory',
