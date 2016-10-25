@@ -93,7 +93,7 @@ class OrderController extends Controller
         $ins = $this->order->insertForm($table, $params);
 
         
-        return $ins->msg;
+        return $ins['msg'];
     }
 
 }
