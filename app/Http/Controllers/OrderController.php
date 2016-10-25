@@ -114,6 +114,12 @@ class OrderController extends Controller
 
     public function test()
     {
-        return view('order.imageUpload');
+        $key = ['aa','bb'];
+        $value = ['11','22'];
+        $table = 'abc';
+        return view('order.imageUpload')
+            ->with('key', $key)
+            ->with('value', $value)
+            ->with('table', $table);
     }
 }

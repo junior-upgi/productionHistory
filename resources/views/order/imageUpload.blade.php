@@ -5,7 +5,7 @@
         <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
         @for($i=0; $i < count($key); $i++)
             <input type="hidden" name="{{$key[$i]}}" value="{{$value[$i]}}">
-        @end
+        @endfor
         <div class="form-group">
             <input id="img" name="img" type="file" class="file-loading" data-show-upload="false" accept="image/*">
             <script>
