@@ -230,7 +230,7 @@ class OrderRepository
         $big5Table = iconv("UTF-8", "BIG-5", $table);
         $big5Unit = iconv("UTF-8", "BIG-5", $unit);
         $obj = $obj->where('table', $table)
-            ->where('unit', $big5Unit)
+            ->where('unit', $unit)
             ->first();
         if (isset($obj)) {
             return $obj->link;
