@@ -79,7 +79,7 @@ class OrderController extends Controller
     {
         $input = $request->input();
         $now = \Carbon\Carbon::now();
-        $ignore = ['submission_id', 'formID', 'ip'];    //欲忽略的key
+        $ignore = ['submission_id', 'formID', 'ip', 'comb_item_name'];    //欲忽略的key
         $input = array_except($input, $ignore);         //移除忽略的key
         $input['created'] = $now;                       //加入日期
         $countInput = count($input);
