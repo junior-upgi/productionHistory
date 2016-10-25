@@ -80,7 +80,7 @@ class OrderController extends Controller
         $file = $request->file('img');
         $input = $request->input();
         $now = \Carbon\Carbon::now();
-        $ignore = ['submission_id', 'formID', 'ip', 'comb_item_name'];    //欲忽略的key
+        $ignore = ['submission_id', 'formID', 'ip', 'comb_item_name','img'];    //欲忽略的key
         $input = array_except($input, $ignore);         //移除忽略的key
         $input['created'] = $now;                       //加入日期
         if (isset($file)) {
