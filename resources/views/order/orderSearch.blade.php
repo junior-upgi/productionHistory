@@ -38,7 +38,7 @@
                             @if (isset($o->department))
                                 <td><small>{{ $o->COMB_ITEM_NAME }}</small></td>
                             @else
-                                <td><small><a href="{{ $web->getFormLink($o, 'history', '') }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></small></td>
+                                <td><small><a href="{{ $web->getFormLink($o, 'history', 'all') }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></small></td>
                             @endif
                             <td>{{ $o->department }}</td>
                             <td>{{ $o->process }}</td>
