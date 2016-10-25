@@ -69,31 +69,22 @@ class OrderController extends Controller
             ->with('search', $searchContent);
     }
 
-    public function insert(Request $request, $cat)
+    public function insert(Request $request, $table)
     {
         $input = $request->input();
-
-        $countInput = count($re->input());
         $now = \Carbon\Carbon::now();
-        
-        
-        $params = array(
-            'OS_NO' => $input['os_no'],
-            'ITM' => $input['itm'],
-            'created' => $now,
-            'department' => $input['department'],
-            'productionLine' => $input['productionline'],
-            'gobTemp' => $input['gobtemp'],
-            'sectCount' => $input['sectcount'],
-            'gobWeight' => $input['gobweight'],
-            'shearCount' => $input['shearcount'],
-            'gobsPerCut' => $input['gobspercut'],
-        );
-        
-        $ins = $this->order->insert($params);
+        $ignore = ['submission_id', 'formID', 'ip'];    //欲忽略的key
+        $input = array_except($input, $ignore);         //移除忽略的key
+        $countInput = count($request->input());
+        $params = array();
+        list($key, $value) = array_divide($input);      //分拆key & value
+        for ($i = 0; $i < $countInput; $i++) {
+            $params[$key[$i]] = iconv("UTF-8", "BIG-5", $value[$i]);             //寫入array
+        }
+        $ins = $this->order->insertForm($table, $params);
 
         
-        return $ins;
+        return $ins->msg;
     }
 
 }

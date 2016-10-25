@@ -24,7 +24,7 @@
                         <td width="90">結束時間</td>
                         <td width="82"></td>
                         <td width="82"></td>
-                        <td width="82"></td>
+                        <!--<td width="82"></td>-->
                         <td width="82"></td>
                         <td width="82"></td>
                     </tr>
@@ -47,13 +47,13 @@
                             @if (isset($o->UNIT))
                                 <td><a href="{{ $web->getFormLink($o, 1) }}" target="_blank" class="btn btn-default btn-sm">設備材料</a></td>
                                 <td><a href="{{ $web->getFormLink($o, 2) }}" target="_blank" class="btn btn-default btn-sm">製程條件</a></td>
-                                <td><a href="{{ $web->getFormLink($o, 3) }}" target="_blank" class="btn btn-default btn-sm">管制要求</a></td>
+                                <!--<td><a href="{{ $web->getFormLink($o, 3) }}" target="_blank" class="btn btn-default btn-sm">管制要求</a></td>-->
                                 <td><a href="{{ $web->getFormLink($o, 4) }}" target="_blank" class="btn btn-default btn-sm">問題缺點</a></td>
                                 <td><a href="{{ $web->getFormLink($o, 5) }}" target="_blank" class="btn btn-default btn-sm">生產狀況</a></td>
                             @else
                                 <td></td>
                                 <td></td>
-                                <td></td>
+                                <!--<td></td>-->
                                 <td></td>
                                 <td></td>
                             @endif

@@ -113,14 +113,55 @@ class OrderRepository
         return $obj;
     }
 
-    public function insert($params)
+    public function insertForm($table, $params)
+    {
+        $getTable = $this->getTable($table);
+        if (isset($getTable)) {
+            $ins = $this->insertData($getTable, $params);
+            return $ins;
+        }
+        return array(
+            'success' => false,
+            'msg' => '找不到資料表!',
+        );
+    }
+
+    private function getTable($table)
+    {
+        switch ($table) {
+            case 'parameter':
+                return $this->parameter;
+                break;
+            case 'issue':
+                return null;
+                break;
+            case 'output':
+                return null;
+                break;
+            case 'setup':
+                return null;
+                break;
+            default:
+                return null;
+        }
+    }
+
+    private function insertData($table, $params)
     {
         try{
-            $table = $this->parameter;
+            $table->getConnection()->beginTransaction();
             $table->insert($params);
-            return true;
+            $table->getConnection()->commit();
+            return array(
+                'success' => true,
+                'msg' => '新增資料成功',
+            );
         } catch (\Exception $e) {
-            return $e['errorInfo'][2];
+            $table->getConnection()->rollback();
+            return array(
+                'success' => false,
+                'msg' => $e['errorInfo'][2],
+            );
         }
     }
 }
