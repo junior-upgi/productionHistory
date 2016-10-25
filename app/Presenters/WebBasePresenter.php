@@ -50,6 +50,8 @@ class WebBasePresenter
         $ITM = $order->ITM;
         $COMB_ITEM_NAME = str_replace("#", "%23", $order->COMB_ITEM_NAME);
         $UNIT = $order->UNIT;
+        $PRC = $order->PRC;
+        $PL = $order->PL;
         $params = "?OS_NO=$OS_NO&ITM=$ITM&department=$UNIT&PRC=$PRC&productionLine=$PL&product=$COMB_ITEM_NAME";
         $formLink = $this->order->getFormLink($table, $unit);
         $url = $formLink . $params;
