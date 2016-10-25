@@ -39,6 +39,7 @@ class OrderController extends Controller
 
     public function orderSearch(Request $request)
     {   
+        $order = null;
         $searchContent = $request->input('searchContent');
         if (isset($searchContent)) {
             $where = array();
