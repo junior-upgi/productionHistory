@@ -2,11 +2,12 @@
 /**
  * order相關資料邏輯處理
  *
- * @version 1.0.1
+ * @version 1.0.2
  * @author spark it@upgi.com.tw
  * @date 16/10/20
  * @since 1.0.0 spark: 於此版本開始編寫註解
  * @since 1.0.1 spark: 初步完成表單接收資料並寫入資料庫
+ * @since 1.0.2 spark: 初步完成表單介接寫入資料庫，表單連結已完成
  */
 namespace App\Repositories;
 
@@ -14,6 +15,10 @@ use App\Models\OrderProduct;
 use App\Models\History;
 use App\Models\ProductHistory;
 use App\Models\Parameter;
+use App\Models\Issue;
+use App\Models\Output;
+use App\Models\Setup;
+use App\Models\FormLink;
 
 /**
  * Class OrderRepository
@@ -28,8 +33,16 @@ class OrderRepository
     private $history;
     /** @var ProductHistory 注入ProductHistory */
     private $productHistory;
-
+    /** @var Parameter 注入Parameter */
     private $parameter;
+    /** @var Issue 注入Issue */
+    private $issue;
+    /** @var Output 注入Output */
+    private $output;
+    /** @var Setup 注入Setup */
+    private $setup;
+    /** @var FormLink 注入FormLink */
+    private $formLink;
 
     /**
      * 建構式
@@ -37,18 +50,30 @@ class OrderRepository
      * @param OrderProduct $order
      * @param History $history
      * @param ProductHistory $productHistory
+     * @param Parameter $parameter
+     * @param Issue $issue
+     * @param Output $output
+     * @param Setup $setup
      * @return void
      */
     public function __construct(
         OrderProduct $order,
         History $history,
         ProductHistory $productHistory,
-        Parameter $parameter
+        Parameter $parameter,
+        Issue $issue,
+        Output $output,
+        Setup $setup,
+        FormLink $formLink
     ) {
         $this->order = $order;
         $this->history = $history;
         $this->productHistory = $productHistory;
         $this->parameter = $parameter;
+        $this->issue = $issue;
+        $this->output = $output;
+        $this->setup = $setup;
+        $this->formLink = $formLink;
     }
 
     /**
@@ -143,17 +168,22 @@ class OrderRepository
     private function getTable($table)
     {
         switch ($table) {
+            case 'history':
+                return $this->history;
             case 'parameter':
                 return $this->parameter;
                 break;
             case 'issue':
-                return null;
+                return $this->issue;
                 break;
             case 'output':
-                return null;
+                return $this->output;
                 break;
             case 'setup':
-                return null;
+                return $this->setup;
+                break;
+            case 'formLink':
+                return $this->formLink;
                 break;
             default:
                 return null;
@@ -185,5 +215,24 @@ class OrderRepository
                 'msg' => $e['errorInfo'][2],
             );
         }
+    }
+
+    /**
+     * 取得表單連結
+     * 
+     * @param string $table 資料表名稱
+     * @param string $unit 單位名稱
+     * @return string 回傳表單連結
+     */
+    public function getFormLink($table, $unit)
+    {
+        $obj = $this->getTable('formLink');
+        $obj->where('table', $table)
+            ->where('unit', $unit)
+            ->first();
+        if (isset($obj)) {
+            return $obj->link;
+        }
+        return null;
     }
 }

@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'SQL_PH'),
+    'default' => env('DB_CONNECTION', 'MSSQL'),
 
     /*
     |--------------------------------------------------------------------------
@@ -66,29 +66,15 @@ return [
             'engine' => null,
         ],
 
-        'SQL_PH' => [
+        'MSSQL' => [
             'driver' => 'sqlsrv',
-            'host' => env('DB_SqlServer', '192.168.168.5'),
-            'port' => '1433',
-            'database' => 'productionHistory',
-            'username' => 'sa',
-            'password' => 'attn@3100',
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
-            'prefix' => '',
-            'strict' => false,
-            'engine' => null,
-        ],
-
-        'SQL_25' => [
-            'driver' => 'sqlsrv',
-            'host' => '192.168.168.25',
-            'port' => '1433',
-            'database' => 'productionHistory',
-            'username' => 'sa',
-            'password' => 'cHApPPZV',
-            'charset' => 'utf8',
-            'collation' => 'utf8_unicode_ci',
+            'host' => env('MSSQL_HOST', '192.168.168.5'),
+            'port' => env('MSSQL_PORT', '1433'),
+            'database' => env('MSSQL_DATABASE', 'productionHistory'),
+            'username' => env('MSSQL_USERNAME', 'productionHistory'),
+            'password' => env('MSSQL_PASSWORD', 'productionHistory'),
+            'charset' => env('MSSQL_CHARSET', 'utf8'),
+            'collation' => env('MSSQL_COLLATION', 'utf8_unicode_ci'),
             'prefix' => '',
             'strict' => false,
             'engine' => null,

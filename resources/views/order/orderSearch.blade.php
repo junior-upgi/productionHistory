@@ -16,6 +16,7 @@
                     <tr>
                         <td width="130">訂單編號</td>
                         <td width="40">項次</td>
+                        <td width="130">顧客</td>
                         <td >品名</td>
                         <td width="40">單位</td>
                         <td width="80">工序</td>
@@ -34,10 +35,11 @@
                         <tr>
                             <td>{{ $o->OS_NO }}</td>
                             <td>{{ $o->ITM }}</td>
+                            <td>{{ $o->SNM }}</td>
                             @if (isset($o->UNIT))
-                                <td>{{ $o->COMB_ITEM_NAME }}</td>
+                                <td><small>{{ $o->COMB_ITEM_NAME }}</small></td>
                             @else
-                                <td><a href="{{ $web->getFormLink($o, 0) }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></td>
+                                <td><small><a href="{{ $web->getFormLink($o, 'history', '') }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></small></td>
                             @endif
                             <td>{{ $o->UNIT }}</td>
                             <td>{{ $o->PRC }}</td>
@@ -45,11 +47,11 @@
                             <td>{{ $o->PL }}</td>
                             <td>{{ $web->getDate($o->EDATE) }}</td>
                             @if (isset($o->UNIT))
-                                <td><a href="{{ $web->getFormLink($o, 1) }}" target="_blank" class="btn btn-default btn-sm">設備材料</a></td>
-                                <td><a href="{{ $web->getFormLink($o, 2) }}" target="_blank" class="btn btn-default btn-sm">製程條件</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 'setup', $o->UNIT) }}" target="_blank" class="btn btn-default btn-sm">設備材料</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 'parameter', $o->UNIT) }}" target="_blank" class="btn btn-default btn-sm">製程條件</a></td>
                                 <!--<td><a href="{{ $web->getFormLink($o, 3) }}" target="_blank" class="btn btn-default btn-sm">管制要求</a></td>-->
-                                <td><a href="{{ $web->getFormLink($o, 4) }}" target="_blank" class="btn btn-default btn-sm">問題缺點</a></td>
-                                <td><a href="{{ $web->getFormLink($o, 5) }}" target="_blank" class="btn btn-default btn-sm">生產狀況</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 'issue', $o->UNIT) }}" target="_blank" class="btn btn-default btn-sm">問題缺點</a></td>
+                                <td><a href="{{ $web->getFormLink($o, 'output', $o->UNIT) }}" target="_blank" class="btn btn-default btn-sm">生產狀況</a></td>
                             @else
                                 <td></td>
                                 <td></td>

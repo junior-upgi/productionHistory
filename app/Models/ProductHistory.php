@@ -6,6 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductHistory extends Model
 {   
-    protected $connection = 'SQL_PH';
+    protected $connection = 'MSSQL';
     protected $table = "vProductHistory";
 }

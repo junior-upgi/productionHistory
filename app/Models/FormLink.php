@@ -4,8 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Parameter extends Model
+class FormLink extends Model
 {   
     protected $connection = 'MSSQL';
-    protected $table = "parameter";
+    protected $table = "formLink";
 }
