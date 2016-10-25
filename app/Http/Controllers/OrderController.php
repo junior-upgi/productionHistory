@@ -71,46 +71,25 @@ class OrderController extends Controller
 
     public function insert(Request $request, $cat)
     {
-        $a = new Parameter();
-        //return var_dump( $a->first() );
-        $re = $request;
-        $input = $re->input();
-        /*
-        $textbox = $re->input('textbox');
-        $textarea = $re->input('textarea');
-        $droplist = $re->input('droplist');
-        $checkbox = $re->input('checkbox');
-        $radiobox = $re->input('radiobox');
-        $matrix = $re->input('matrix');
-        $dytextbox = $re->input('dytextbox');
-        */
+        $input = $request->input();
 
         $countInput = count($re->input());
         $now = \Carbon\Carbon::now();
-        /*
+        
+        
         $params = array(
             'OS_NO' => $input['os_no'],
             'ITM' => $input['itm'],
-            'created' => '2016-10-10',
+            'created' => $now,
             'department' => $input['department'],
+            'productionLine' => $input['productionline'],
             'gobTemp' => $input['gobtemp'],
             'sectCount' => $input['sectcount'],
             'gobWeight' => $input['gobweight'],
             'shearCount' => $input['shearcount'],
             'gobsPerCut' => $input['gobspercut'],
         );
-        */
-        $params = array(
-            'OS_NO' => 111,
-            'ITM' => 111,
-            'created' => '2016-10-10',
-            'department' => 111,
-            'gobTemp' => 111,
-            'sectCount' => 111,
-            'gobWeight' => 111,
-            'shearCount' => 111,
-            'gobsPerCut' => 111,
-        );
+        
         $ins = $this->order->insert($params);
 
         
