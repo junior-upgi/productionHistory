@@ -42,9 +42,9 @@
                             @endif
                             <td>{{ $o->department }}</td>
                             <td>{{ $o->process }}</td>
-                            <td>{{ $web->getDate($o->startDate) }}</td>
+                            <td>{{ $o->startDate }}</td>
                             <td>{{ $o->productionLine }}</td>
-                            <td>{{ $web->getDate($o->endDate) }}</td>
+                            <td>{{ $o->endDate }}</td>
                             @if (isset($o->department))
                                 <td><a href="{{ $web->getFormLink($o, 'setup', $o->department) }}" target="_blank" class="btn btn-default btn-sm">裝備設定</a></td>
                                 <td><a href="{{ $web->getFormLink($o, 'parameter', $o->department) }}" target="_blank" class="btn btn-default btn-sm">生產條件</a></td>
