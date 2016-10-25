@@ -17,4 +17,4 @@ Route::get('/', function () {
 
 Route::any('order' ,'OrderController@orderSearch');
 
-Route::any('service/insert/{table}', 'OrderController@insert');
+Route::any('service/formSubmit/{table}', 'OrderController@formSubmit');

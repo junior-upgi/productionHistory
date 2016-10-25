@@ -2,10 +2,11 @@
 /**
  * order相關資料邏輯處理
  *
- * @version 1.0.0
+ * @version 1.0.1
  * @author spark it@upgi.com.tw
  * @date 16/10/20
  * @since 1.0.0 spark: 於此版本開始編寫註解
+ * @since 1.0.1 spark: 初步完成表單接收資料並寫入資料庫
  */
 namespace App\Http\Controllers;
 
@@ -69,7 +70,14 @@ class OrderController extends Controller
             ->with('search', $searchContent);
     }
 
-    public function insert(Request $request, $table)
+    /**
+     * 取得表單提交資料
+     * 
+     * @param Request $request request
+     * @param string $table 資料表名稱
+     * @return string 回傳新增結果
+     */
+    public function formSubmit(Request $request, $table)
     {
         $input = $request->input();
         $now = \Carbon\Carbon::now();

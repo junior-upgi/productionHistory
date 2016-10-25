@@ -2,10 +2,11 @@
 /**
  * order相關資料邏輯處理
  *
- * @version 1.0.0
+ * @version 1.0.1
  * @author spark it@upgi.com.tw
  * @date 16/10/20
  * @since 1.0.0 spark: 於此版本開始編寫註解
+ * @since 1.0.1 spark: 初步完成表單接收資料並寫入資料庫
  */
 namespace App\Repositories;
 
@@ -51,10 +52,10 @@ class OrderRepository
     }
 
     /**
-    * 取得所有OrderProduct資料
-    * 
-    * @return OrderProduct 回傳Module
-    */
+     * 取得所有OrderProduct資料
+     * 
+     * @return OrderProduct 回傳Module
+     */
     public function getOrderList()
     {
         $list = $this->order->get();
@@ -62,11 +63,11 @@ class OrderRepository
     }
 
     /**
-    * 依where條件取得Order資料
-    * 
-    * @param array $where 注入查詢條件
-    * @return OrderProduct 回傳Module
-    */
+     * 依where條件取得Order資料
+     * 
+     * @param array $where 注入查詢條件
+     * @return OrderProduct 回傳Module
+     */
     public function getOrderWhere($where)
     {
         $table = $this->order;
@@ -75,11 +76,11 @@ class OrderRepository
     }
 
     /**
-    * 依where條件取得ProductHistory資料
-    * 
-    * @param array $where 注入查詢條件
-    * @return ProductHistory 回傳Module
-    */
+     * 依where條件取得ProductHistory資料
+     * 
+     * @param array $where 注入查詢條件
+     * @return ProductHistory 回傳Module
+     */
     public function getProductHistoryWhere($where)
     {
         $table = $this->productHistory;
@@ -88,12 +89,12 @@ class OrderRepository
     }
 
     /**
-    * 依where條件取得資料
-    * 
-    * @param Model $table 傳入Model物件
-    * @param array $where 傳入查詢條件
-    * @return Model 回傳Module
-    */
+     * 依where條件取得資料
+     * 
+     * @param Model $table 傳入Model物件
+     * @param array $where 傳入查詢條件
+     * @return Model 回傳Module
+     */
     private function getWhere($table, $where)
     {
         $obj = $table
@@ -113,6 +114,13 @@ class OrderRepository
         return $obj;
     }
 
+    /**
+     * 寫入表單資料
+     * 
+     * @param string $table 資料表名稱
+     * @param array $params 傳入寫入參數
+     * @return array 回傳新增結果
+     */
     public function insertForm($table, $params)
     {
         $getTable = $this->getTable($table);
@@ -126,6 +134,12 @@ class OrderRepository
         );
     }
 
+    /**
+     * 回傳tabel物件
+     * 
+     * @param string $table 資料表名稱
+     * @return Models 回傳table Models
+     */
     private function getTable($table)
     {
         switch ($table) {
@@ -146,6 +160,14 @@ class OrderRepository
         }
     }
 
+    /**
+     * 新增資料
+     * 
+     * @param string $table 資料表名稱
+     * @param array $params 傳入寫入參數
+     * @return array 回傳新增結果
+     * @throw Exception 回傳例外
+     */
     private function insertData($table, $params)
     {
         try{
