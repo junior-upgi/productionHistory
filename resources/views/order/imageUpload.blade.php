@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-    <form class="form-signin" role="form" action="{{url('/')}}/service/formSubmit/{{$table}}" method="POST" style="max-width:480px;padding:15px;margin:auto;">
+    <form class="form-signin" role="form" action="{{url('/')}}/service/formSubmit/{{$table}}" method="POST" style="max-width:480px;padding:15px;margin:auto;" enctype="multipart/form-data">
         <h2>上傳生產成品圖片</h2>
         @for($i=0; $i < count($key); $i++)
             <input type="hidden" name="{{$key[$i]}}" value="{{$value[$i]}}">
