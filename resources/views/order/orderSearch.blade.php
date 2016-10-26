@@ -38,7 +38,6 @@
                             @if (isset($o->department))
                                 <td>
                                     <small>{{ $o->COMB_ITEM_NAME }}</small>
-                                    {!! $web->getPic($o->image) !!}
                                     {!! $web->getPicAjax($o) !!}
                                 </td>
                             @else
