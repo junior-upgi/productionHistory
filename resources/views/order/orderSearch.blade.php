@@ -38,7 +38,7 @@
                             @if (isset($o->department))
                                 <td>
                                     <small>{{ $o->COMB_ITEM_NAME }}</small>
-                                    {{ $web->getPic($o->image) }}
+                                    {!! $web->getPic($o->image) !!}
                                 </td>
                             @else
                                 <td><small><a href="{{ $web->getFormLink($o, 'history', 'all') }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></small></td>
