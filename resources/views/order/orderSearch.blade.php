@@ -38,7 +38,12 @@
                             @if (isset($o->department))
                                 <td>
                                     <small>{{ $o->COMB_ITEM_NAME }}</small>
+<<<<<<< HEAD
                                     {!! $web->getPic($o->image) !!}
+                                    {!! $web->getPicAjax($o) !!}
+=======
+                                    {{ $web->getPic($o->image) }}
+>>>>>>> parent of 55c92f5... fix php to html
                                 </td>
                             @else
                                 <td><small><a href="{{ $web->getFormLink($o, 'history', 'all') }}" target="_blank">{{ $o->COMB_ITEM_NAME }}</a></small></td>

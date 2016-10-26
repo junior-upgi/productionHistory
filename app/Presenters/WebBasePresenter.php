@@ -65,7 +65,21 @@ class WebBasePresenter
     {
         if (isset($src)) {
             return "<span class='glyphicon glyphicon-picture' 
-                    onclick=\"showimage('$src')\"></span>";
+                onclick=\"showimage('$src')\"></span>";
+        }
+        return '';
+    }
+
+    public function getPicAjax($order)
+    {
+        $no = $order->OS_NO;
+        $item = $order->ITM;
+        $dep = $order->department;
+        $pl = $order->productionLine;
+        $src = $order->image;
+        if (isset($src)) {
+            return "<span class='glyphicon glyphicon-picture' 
+                onclick=\"showimageAjax('$no', '$item', '$dep', '$pl')\"></span>";
         }
         return '';
     }

@@ -15,7 +15,8 @@ Route::get('/', function () {
     return redirect('/order');
 });
 
-Route::any('order' ,'OrderController@orderSearch');
+Route::any('order', 'OrderController@orderSearch');
+Route::get('getPic/{no}/{item}/{dep}/{pl}', 'OrderController@getPic');
 
 Route::any('service/formSubmit/{table}', 'OrderController@formSubmit');
 Route::any('service/upload/{table}', 'OrderController@productionImage');

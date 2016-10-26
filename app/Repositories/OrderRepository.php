@@ -252,4 +252,16 @@ class OrderRepository
         $src = "data:$MIME;base64,$code";
         return $src;
     }
+
+    public function getPicSrc($params)
+    {
+        $table = $this->history;
+        $src = $table
+            ->where('OS_NO', $params['OS_NO'])
+            ->where('ITM', $params['ITM'])
+            ->where('department', $params['department'])
+            ->where('productionLine', $params['productionLine'])
+            ->first()->image;
+        return $src;
+    }
 }

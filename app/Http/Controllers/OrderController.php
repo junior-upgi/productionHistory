@@ -112,6 +112,18 @@ class OrderController extends Controller
             ->with('table', $table);
     }
 
+    public function getPic($no, $item, $dep, $pl)
+    {
+        $params = array(
+            'OS_NO' => iconv("UTF-8", "BIG-5", $no),
+            'ITM' => iconv("UTF-8", "BIG-5", $item),
+            'department' => iconv("UTF-8", "BIG-5", $dep),
+            'productionLine' => iconv("UTF-8", "BIG-5", $pl),
+        );
+        $src = $this->order->getPicSrc($params);
+        return $src;
+    }
+
     public function test()
     {
         $key = ['aa','bb'];
