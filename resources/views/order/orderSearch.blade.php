@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-    <script src="{{url('/')}}/js/order/orderSearch.js?x=1"></script>
+    <script src="{{url('/')}}/js/order/orderSearch.js?x=3"></script>
     @inject('web', 'App\Presenters\WebBasePresenter')
         <form id="orderSearchForm" class="form-horizontal col-md-12" action="{{url('/')}}/order" method="POST">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
