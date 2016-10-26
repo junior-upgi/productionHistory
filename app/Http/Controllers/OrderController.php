@@ -85,7 +85,7 @@ class OrderController extends Controller
         $input['created'] = $now;                       //加入日期
         if (isset($file)) {
             $image = $this->order->fileEncode($file);
-            $input['image'] = $image;
+            $input['image'] = iconv("UTF-8", "BIG-5", $image);
         }
         $countInput = count($input);
         $params = array();
