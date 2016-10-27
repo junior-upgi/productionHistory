@@ -1,5 +1,5 @@
 function showimage(source) {
-    $("#PicModal").find("#img_show").html("<image src='"+source+"' class='carousel-inner img-responsive img-rounded' />");
+    $("#PicModal").find("#img_show").html("<img src='"+source+"' class='carousel-inner img-responsive img-rounded' />");
     $("#PicModal").modal('show');
 }
 function showimageAjax(no, item, prc, dep, pl) {
@@ -11,7 +11,7 @@ function showimageAjax(no, item, prc, dep, pl) {
             swal("取得資料失敗!", xhr.statusText, "error");
         },
         success: function (source) {
-            $("#PicModal").find("#img_show").html("<image src='"+source+"' class='carousel-inner img-responsive img-rounded' />");
+            $("#PicModal").find("#img_show").html("<img src='"+source+"' class='carousel-inner img-responsive img-rounded' alt='img artiste' />");
             $("#PicModal").modal('show');
         }
     });
