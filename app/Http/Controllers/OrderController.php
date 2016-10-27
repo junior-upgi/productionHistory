@@ -96,8 +96,8 @@ class OrderController extends Controller
         }
         $ins = $this->order->insertForm($table, $params);
 
-        
-        return $ins['msg'];
+        return view('order.complete');
+        //return $ins['msg'];
     }
 
     public function productionImage(Request $request, $table)
