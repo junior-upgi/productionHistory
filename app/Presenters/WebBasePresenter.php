@@ -74,12 +74,13 @@ class WebBasePresenter
     {
         $no = $order->OS_NO;
         $item = $order->ITM;
+        $prc = $order->process;
         $dep = $order->department;
         $pl = $order->productionLine;
         $src = $order->image;
         if (isset($src)) {
             return "<span class='glyphicon glyphicon-picture' 
-                onclick=\"showimageAjax('$no', '$item', '$dep', '$pl')\"></span>";
+                onclick=\"showimageAjax('$no', '$item', '$prc', '$dep', '$pl')\"></span>";
         }
         return '';
     }

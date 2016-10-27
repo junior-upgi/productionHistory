@@ -112,11 +112,12 @@ class OrderController extends Controller
             ->with('table', $table);
     }
 
-    public function getPic($no, $item, $dep, $pl)
+    public function getPic($no, $item, $prc, $dep, $pl)
     {
         $params = array(
             'OS_NO' => iconv("UTF-8", "BIG-5", $no),
             'ITM' => iconv("UTF-8", "BIG-5", $item),
+            'process' => iconv("UTF-8", "BIG-5", $prc),
             'department' => iconv("UTF-8", "BIG-5", $dep),
             'productionLine' => iconv("UTF-8", "BIG-5", $pl),
         );

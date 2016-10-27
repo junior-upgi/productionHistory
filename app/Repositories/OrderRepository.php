@@ -259,6 +259,7 @@ class OrderRepository
         $src = $table
             ->where('OS_NO', $params['OS_NO'])
             ->where('ITM', $params['ITM'])
+            ->where('process', $params['process'])
             ->where('department', $params['department'])
             ->where('productionLine', $params['productionLine'])
             ->first()->image;
