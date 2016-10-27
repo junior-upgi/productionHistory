@@ -37,8 +37,9 @@ class OrderController extends Controller
         $this->order = $order;
     }
 
-    public function orderSearch(Request $request)
+    public function orderSearch()
     {   
+        $request = request();
         $order = null;
         $searchContent = $request->input('searchContent');
         if (isset($searchContent)) {
@@ -75,8 +76,9 @@ class OrderController extends Controller
      * @param string $table 資料表名稱
      * @return string 回傳新增結果
      */
-    public function formSubmit(Request $request, $table)
+    public function formSubmit($table)
     {
+        $request = request();
         $file = $request->file('img');
         $input = $request->input();
         $now = \Carbon\Carbon::now();
@@ -100,8 +102,9 @@ class OrderController extends Controller
         //return $ins['msg'];
     }
 
-    public function productionImage(Request $request, $table)
+    public function productionImage($table)
     {
+        $request = request();
         $input = $request->input();
         $ignore = ['submission_id', 'formID', 'ip', 'comb_item_name'];  //欲忽略的key
         $input = array_except($input, $ignore);                         //移除忽略的key
