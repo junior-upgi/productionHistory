@@ -124,15 +124,17 @@ class OrderRepository
     {
         $obj = $table
             ->where(function ($q) use ($where) {
-                foreach ($where as $w) {
-                    $key = $w['key'];
-                    $op = (!isset($w['op'])) ? '=' : $w['op'];
-                    $value = $w['value'];
-                    $or = (!isset($w['or'])) ? false : $w['or'];
-                    if ($or) {
-                        $q->orWhere($key, $op, $value);
-                    } else {
-                        $q->where($key, $op, $value);
+                if (isset($where)) {
+                    foreach ($where as $w) {
+                        $key = $w['key'];
+                        $op = (!isset($w['op'])) ? '=' : $w['op'];
+                        $value = $w['value'];
+                        $or = (!isset($w['or'])) ? false : $w['or'];
+                        if ($or) {
+                            $q->orWhere($key, $op, $value);
+                        } else {
+                            $q->where($key, $op, $value);
+                        }
                     }
                 }
             });
