@@ -2,7 +2,7 @@
 @section('content')
     <script src="{{url('/')}}/js/order/orderSearch.js?x=4"></script>
     @inject('web', 'App\Presenters\WebBasePresenter')
-        <form id="orderSearchForm" class="form-horizontal col-lg-12" action="{{url('/')}}/order" method="POST">
+        <form id="orderSearchForm" class="form-horizontal col-lg-12" action="{{url('/')}}/order" method="GET">
             <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                 <input type="text" class="form-control" id="searchContent" name="searchContent" placeholder="請輸入查詢內容" value="{{ $search }}" />
