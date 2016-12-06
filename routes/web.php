@@ -12,10 +12,20 @@
 */
 
 Route::get('/', function () {
-    return redirect('/order');
+    return view('welcome');
 });
-Route::get('order', 'OrderController@orderSearch');
-Route::get('getPic/{no}/{item}/{prc}/{dep}/{pl}', 'OrderController@getPic');
 
-Route::any('service/formSubmit/{table}', 'OrderController@formSubmit');
-Route::any('service/upload/{table}', 'OrderController@productionImage');
+Route::get('nav/{view}', function($view) {
+    return view($view);
+});
+
+
+
+Route::group(['prefix' => 'Duty'], function() {
+    Route::get('ScheduleList', 'ProductionController@scheduleList');
+    Route::get('DutyList', 'ProductionController@dutyList');
+    Route::post('GetSchedule', 'ProductionController@getSchedule');
+    Route::post('GetDuty', 'ProductionController@getDuty');
+    Route::get('GetStaff', 'ProductionController@getStaff');
+    Route::post('SaveDuty', 'ProductionController@saveDuty');
+});

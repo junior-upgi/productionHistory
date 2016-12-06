@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'default' => env('DB_CONNECTION', 'MSSQL'),
+    'default' => env('DB_CONNECTION'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,29 +52,57 @@ return [
             'prefix' => '',
         ],
 
-        'mysql' => [
-            'driver' => 'mysql',
+        'productionHistory' => [
+            'driver' => 'sqlsrv',
             'host' => env('DB_HOST', 'localhost'),
             'port' => env('DB_PORT', '3306'),
-            'database' => env('DB_DATABASE', 'forge'),
+            'database' => 'productionHistory',
             'username' => env('DB_USERNAME', 'forge'),
             'password' => env('DB_PASSWORD', ''),
             'charset' => 'utf8',
             'collation' => 'utf8_unicode_ci',
             'prefix' => '',
-            'strict' => true,
+            'strict' => false,
             'engine' => null,
         ],
 
-        'MSSQL' => [
+        'Z_DB_U105' => [
             'driver' => 'sqlsrv',
-            'host' => env('MSSQL_HOST', '192.168.168.5'),
-            'port' => env('MSSQL_PORT', '1433'),
-            'database' => env('MSSQL_DATABASE', 'productionHistory'),
-            'username' => env('MSSQL_USERNAME', 'productionHistory'),
-            'password' => env('MSSQL_PASSWORD', 'productionHistory'),
-            'charset' => env('MSSQL_CHARSET', 'utf8'),
-            'collation' => env('MSSQL_COLLATION', 'utf8_unicode_ci'),
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => 'Z_DB_U105',
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
+        'upgiSystem' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => 'upgiSystem',
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+            'engine' => null,
+        ],
+
+        'UPGWeb' => [
+            'driver' => 'sqlsrv',
+            'host' => env('DB_HOST', 'localhost'),
+            'port' => env('DB_PORT', '3306'),
+            'database' => 'UPGWeb',
+            'username' => env('DB_USERNAME', 'forge'),
+            'password' => env('DB_PASSWORD', ''),
+            'charset' => 'utf8',
+            'collation' => 'utf8_unicode_ci',
             'prefix' => '',
             'strict' => false,
             'engine' => null,
