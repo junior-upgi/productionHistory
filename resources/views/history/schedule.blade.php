@@ -4,11 +4,11 @@
 <div class="row">
     <div class="col-md-12">
         <h2>生產排程清單</h2>
-        <div class="pull-left">
-            <a class="btn btn-default" href="{{ url('/History/HistoryList') }}">返回履歷表清單</a>
-            <button class="btn btn-primary" onclick="testModel()">填寫試模履歷表</button>
+        <div class="pull-left col-xs-6 row">
+            <a class="btn btn-default" href="{{ url('/History/HistoryList') }}" style="margin-bottom: 10px;">返回履歷表清單</a>
+            <button class="btn btn-primary" onclick="testModel()" style="margin-bottom: 10px;">填寫試模履歷表</button>
         </div>
-        <form class="form-inline pull-right" action="{{ url('/History/ScheduleList') }}" role="form">
+        <form class="form-inline pull-right" action="{{ url('/History/ScheduleList') }}" role="form" style="margin-bottom: 10px;">
             <div class="row form-group">
                 <div class="col-md-3">
                     <input type="text" name="pname" class="form-control" placeholder="請輸入瓶號" value="{{ $pname }}">
@@ -37,7 +37,6 @@
         </form>
     </div>
 </div>
-<p></p>
 <div class="row">
     <div class="col-md-12">
         <table class="table table-bordered">

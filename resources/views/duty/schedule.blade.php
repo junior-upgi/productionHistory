@@ -4,7 +4,7 @@
 <div class="row">
     <div class="col-md-12">
         <h2>生產排程清單</h2>
-        <div class="pull-left">
+        <div class="pull-left col-md-6 row">
             <a class="btn btn-default" href="{{ url('/Duty/DutyList') }}">返回值班表清單</a>
         </div>
         <form class="form-inline pull-right" action="{{ url('/Duty/ScheduleList') }}" role="form">
