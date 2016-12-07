@@ -10,44 +10,31 @@ $(document).ready(function () {
         todayHighlight: true,
         language: 'zh-TW',
     });
-
-    $(".time").datetimepicker({
-        format: 'hh:ii',
-        //startDate: timInMs,
-        startView: 1,
-        minView: 0,
-        maxView: 1,
-        minuteStep: 5,
-        autoclose: true,
-        todayBtn: true,
-        todayHighlight: true,
-        language: 'zh-TW',
-    });
-
-    $('#searchStaff').bsSuggest('init', {
-        url: url + '/Duty/GetStaff',
-        //url: url + '/js/data.json',
-        effectiveFields: ['ID', 'nodeName', 'name'],
-        searchFields: ['ID', 'nodeName', 'name'],
-        effectiveFieldsAlias:{mobileSystemAccount: '員工編號', nodeName: '單位', name: '姓名'},
+    
+    $('#searchCustomer').bsSuggest('init', {
+        url: url + '/History/GetCustomer',
+        getDataMethod: 'firstByUrl',
+        effectiveFields: ['name'],
+        searchFields: ['name', 'sname'],
+        effectiveFieldsAlias:{name: '顧客名稱'},
         ignorecase: true,
         showHeader: true,
         showBtn: false,
-        delayUntilKeyup: true, //获取数据的方式为 firstByUrl 时，延迟到有输入/获取到焦点时才请求数据
+        delayUntilKeyup: false, //获取数据的方式为 firstByUrl 时，延迟到有输入/获取到焦点时才请求数据
         idField: 'ID',
-        keyField: 'name'
+        keyField: 'sname'
     }).on('onDataRequestSuccess', function (e, result) {
         //console.log('onDataRequestSuccess: ', result);
     }).on('onSetSelectValue', function (e, keyword, data) {
         //console.log('onSetSelectValue: ', keyword, data);
-        $('#staffID').val(keyword['id']);
+        $('#cus_no').val(keyword['id']);
     }).on('onUnsetSelectValue', function () {
         //console.log('onUnsetSelectValue');
-        $('#staffID').val('');
+        $('#cus_no').val('');
     });
-    
+
     $("#addForm").ajaxForm({
-        url: url + '/Duty/SaveDuty',
+        url: url + '/History/SaveHistory',
         type: 'POST',
         beforeSubmit: function () {
             //$('#BtnSave').attr('disabled', 'disabled');
@@ -65,7 +52,7 @@ $(document).ready(function () {
                     closeOnConfirm: false
                 },
                 function () {
-                    document.location.href = url + '/Duty/DutyList';
+                    document.location.href = url + '/History/HistoryList';
                 });
             } else {
                 swal("新增資料失敗!", obj.msg, "error");
@@ -80,10 +67,5 @@ $(document).ready(function () {
 });
 
 function save() {
-    if ($('#staffID').val() == '') {
-        $('#searchStaff').val('');
-        alert('請選擇正確的機台人員');
-    } else {
-        $("#addForm").submit();
-    }
+    $("#addForm").submit();
 }

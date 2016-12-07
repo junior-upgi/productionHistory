@@ -1,5 +1,4 @@
-@inject('form', 'App\Presenters\FormPresenter')
-<script src="{{ url('/js/duty/add.js?v=2') }}"></script>
+<script src="{{ url('/js/duty/add.js?v=3') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -44,7 +43,7 @@
                         <label for="machno" class="col-md-3 control-label">線別</label>
                         <div class="col-md-2">
                             {{ $machno = '' }}
-                            <select class="form-control" name="machno" id="machno">
+                            <select class="form-control" id="machno">
                                 <option value="1-1" {{ $machno == '1-1' ? 'selected': '' }}>1-1</option>
                                 <option value="01" {{ $machno == '01' ? 'selected': '' }}>01</option>
                                 <option value="02" {{ $machno == '02' ? 'selected': '' }}>02</option>
@@ -59,7 +58,7 @@
                     <div class="form-group">
                         <label for="snm" class="col-md-3 control-label">產品名稱</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control" name="snm" id="snm" value="" maxlength="10" required>
+                            <input type="text" class="form-control" id="snm" value="" maxlength="10" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -93,13 +92,13 @@
                     <div class="form-group">
                         <label for="startShutdown" class="col-md-3 control-label">停機時間(起)</label>
                         <div class="col-md-2">
-                            <input type="text" class="form-control time form_datetime" readonly id="startShutdown" name="startShutdown">
+                            <input type="text" class="form-control time form_datetime" id="startShutdown" name="startShutdown">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="endShutdown" class="col-md-3 control-label">停機時間(迄)</label>
                         <div class="col-md-2">
-                            <input type="text" class="form-control time form_datetime" readonly id="endShutdown"  name="endShutdown">
+                            <input type="text" class="form-control time form_datetime" id="endShutdown"  name="endShutdown">
                         </div>
                     </div>
                     <div class="form-group">

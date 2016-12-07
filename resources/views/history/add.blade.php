@@ -1,4 +1,4 @@
-@inject('form', 'App\Presenters\FormPresenter')
+<script src="{{ url('/js/history/add.js?v=1') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -11,26 +11,106 @@
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
                     <input type="hidden" id="type" name="type" value="">
                     <input type="hidden" id="id" name="id" value="">
-                    {!! $form->formGroupInput('圖號', '', '') !!}
-                    {!! $form->formGroupInput('圖名', '', '') !!}
-                    {!! $form->formGroupInput('量規', '', '') !!}
-                    {!! $form->formGroupInput('吹製方法', '', '') !!}
-                    {!! $form->formGroupInput('其它', '', '') !!}
-                    {!! $form->formGroupInput('生產日期', '', '') !!}
-                    {!! $form->formGroupInput('線別', '', '') !!}
-                    {!! $form->formGroupInput('重量', '', '') !!}
-                    {!! $form->formGroupInput('實際生產重量', '', '') !!}
-                    {!! $form->formGroupInput('歪力', '', '') !!}
-                    {!! $form->formGroupInput('熱震', '', '') !!}
-                    {!! $form->formGroupInput('機速(支/分)', '', '') !!}
-                    {!! $form->formGroupInput('檢瓶率/繳庫率', '', '') !!}
-                    {!! $form->formGroupInput('客戶/麥頭', '', '') !!}
-                    {!! $form->formGroupInput('客戶/麥頭', '', '') !!}
-                    {!! $form->formGroupInput('加工別', '', '') !!}
-                    {!! $form->formGroupInput('預定生產數量', '', '') !!}
-                    {!! $form->formGroupInput('生產數量', '', '') !!}
-                    {!! $form->formGroupInput('繳庫數量', '', '') !!}
-                    {!! $form->formGroupInput('缺點', '', '') !!}
+                    <input type="hidden" id="mk_no" name="mk_no" value="--">
+                    <div class="form-group">
+                        <label for="productionDate" class="col-md-3 control-label">生產日期</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control date form_datetime" readonly id="productionDate" name="productionDate" value="{{ \Carbon\Carbon::today()->toDateString() }}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="snm" class="col-md-3 control-label">產品名稱</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="snm" name="snm" value="" maxlength="10" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="machno" class="col-md-3 control-label">線別</label>
+                        <div class="col-md-2">
+                            {{ $machno = '' }}
+                            <select class="form-control" id="machno" name="1-1">
+                                <option value="1-1" {{ $machno == '1-1' ? 'selected': '' }}>1-1</option>
+                                <option value="01" {{ $machno == '01' ? 'selected': '' }}>01</option>
+                                <option value="02" {{ $machno == '02' ? 'selected': '' }}>02</option>
+                                <option value="03" {{ $machno == '03' ? 'selected': '' }}>03</option>
+                                <option value="05" {{ $machno == '05' ? 'selected': '' }}>05</option>
+                                <option value="06" {{ $machno == '06' ? 'selected': '' }}>06</option>
+                                <option value="07" {{ $machno == '07' ? 'selected': '' }}>07</option>
+                                <option value="08" {{ $machno == '08' ? 'selected': '' }}>08</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="searchCustomer" class="col-md-3 control-label">客戶</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="hidden" id="cus_no" name="cus_no" value="">
+                                <input type="text" class="form-control" id="searchCustomer" required>
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" style="height: 350px;">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="gauge" class="col-md-3 control-label">量規</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="gauge" name="gauge" value="" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="blow" class="col-md-3 control-label">吹製方法</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="blow" name="blow" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="other" class="col-md-3 control-label">其它</label>
+                        <div class="col-md-9">
+                            <input type="text" class="form-control" id="other" name="other" value="">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="weight" class="col-md-3 control-label">重量</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="weight" name="weight" value="" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="actualWeight" class="col-md-3 control-label">實際生產重量</label>
+                        <div class="col-md-4">
+                            <input type="text" class="form-control" id="actualWeight" name="actualWeight" value="" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="skewPower" class="col-md-3 control-label">歪力</label>
+                        <div class="col-md-2">
+                            <input type="text" class="form-control" id="skewPower" name="skewPower" value="" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="termalShock" class="col-md-3 control-label">熱震</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="termalShock" name="termalShock" value="" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="speed" class="col-md-3 control-label">機速(支/分)</label>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" id="speed" name="speed" value="" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="efficiency" class="col-md-3 control-label">檢瓶率/繳庫率</label>
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" id="efficiency" name="efficiency" value="" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="defect" class="col-md-3 control-label">缺點</label>
+                        <div class="col-md-9">
+                            <textarea class="form-control" name="defect" id="defect" rows="5" style="resize: none;"></textarea>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>

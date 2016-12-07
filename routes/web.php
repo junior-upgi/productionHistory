@@ -22,10 +22,20 @@ Route::get('nav/{view}', function($view) {
 
 
 Route::group(['prefix' => 'Duty'], function() {
-    Route::get('ScheduleList', 'ProductionController@scheduleList');
+    Route::get('ScheduleList', 'ProductionController@dutySchedule');
     Route::get('DutyList', 'ProductionController@dutyList');
     Route::post('GetSchedule', 'ProductionController@getSchedule');
     Route::post('GetDuty', 'ProductionController@getDuty');
     Route::get('GetStaff', 'ProductionController@getStaff');
     Route::post('SaveDuty', 'ProductionController@saveDuty');
+});
+
+Route::group(['prefix' => 'History'], function() {
+    Route::get('GetCustomer', 'ProductionController@getCustomer');
+    Route::get('ScheduleList', 'ProductionController@historySchedule');
+    Route::get('HistoryList', 'ProductionController@historyList');
+    Route::post('GetSchedule', 'ProductionController@getSchedule');
+    Route::post('GetHistory', 'ProductionController@getHistory');
+    Route::get('GetStaff', 'ProductionController@getStaff');
+    Route::post('SaveHistory', 'ProductionController@saveHistory');
 });

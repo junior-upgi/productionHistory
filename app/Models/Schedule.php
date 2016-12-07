@@ -11,7 +11,9 @@ class Schedule extends Model
 
     public function scheduleList()
     {
-        $list = $this->join('DB_U105.dbo.PRDT', 'Z_DB_U105.dbo.tbmkno.prd_no', '=', 'DB_U105.dbo.PRDT.PRD_NO');
+        $list = $this
+            ->join('DB_U105.dbo.PRDT', 'Z_DB_U105.dbo.tbmkno.prd_no', '=', 'DB_U105.dbo.PRDT.PRD_NO')
+            ->join('UPGWeb.dbo.vCustomer', 'Z_DB_U105.dbo.tbmkno.cus_no', 'UPGWeb.dbo.vCustomer.ID');
         return $list;
     }
 }

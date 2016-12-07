@@ -5,12 +5,19 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<title>產品履歷</title>
+	<title>生產履歷</title>
 
-	<!--<link href="/css/app.css" rel="stylesheet">-->
+	<!-- 最新編譯和最佳化的 CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+	<!-- 選擇性佈景主題 -->
+	<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css">-->
+
+	<!-- 最新編譯和最佳化的 JavaScript -->
+	<!--<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>-->
 
 	<link rel="stylesheet" href="{{ url('/css/bootstrap-theme.min.css') }}">
-	<link rel="stylesheet" href="{{ url('/css/bootstrap.css') }}">
+	<!--<link rel="stylesheet" href="{{ url('/css/bootstrap.css') }}">-->
 	
 	<link rel="stylesheet" href="{{ url('/css/bootstrap-datetimepicker.min.css?x=2') }}">
 	<link rel="stylesheet" href="{{ url('/css/jquery-ui.css') }}">

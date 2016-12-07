@@ -1,13 +1,14 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/duty/schedule.js?x=1') }}"></script>
+<script src="{{ url('/js/history/schedule.js?v=1') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>生產排程清單</h2>
         <div class="pull-left">
-            <a class="btn btn-default" href="{{ url('/Duty/DutyList') }}">返回值班表清單</a>
+            <a class="btn btn-default" href="{{ url('/History/HistoryList') }}">返回履歷表清單</a>
+            <button class="btn btn-primary" onclick="testModel()">填寫試模履歷表</button>
         </div>
-        <form class="form-inline pull-right" action="{{ url('/Duty/ScheduleList') }}" role="form">
+        <form class="form-inline pull-right" action="{{ url('/History/ScheduleList') }}" role="form">
             <div class="row form-group">
                 <div class="col-md-3">
                     <input type="text" name="pname" class="form-control" placeholder="請輸入瓶號" value="{{ $pname }}">
@@ -57,7 +58,7 @@
                 @foreach($list as $item)
                     <tr>
                         <td>
-                            <button class="btn btn-primary" onclick="duty('{{ $item->mk_no }}')">填寫值班表</button>
+                            <button class="btn btn-primary" onclick="history('{{ $item->mk_no }}')">填寫履歷表</button>
                         </td>
                         <td>{{ $item->schedate }}</td>
                         <td>{{ $item->NAME }}</td>
@@ -72,9 +73,9 @@
             </tbody>
         </table>
         <p>
-            {{ $list->setPath('/Duty/ScheduleList?pname=' . $pname . '&machno=' . $machno) }}
+            {{ $list->setPath('/History/ScheduleList?pname=' . $pname . '&machno=' . $machno) }}
         </p>
     </div>
 </div>
-@include('duty.add')
+@include('history.add')
 @endsection

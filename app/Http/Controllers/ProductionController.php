@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 
 use App\Repositories\ProductionRepository;
@@ -27,43 +28,82 @@ class productionController extends Controller
         return $json;
     }
 
-    public function scheduleList()
+    public function getCustomer()
     {
-        $request = request();
-        $list = $this->production->getSchedule($request)->paginate(20);
-
-        return view('duty.schedule')
-            ->with('list', $list)
-            ->with('prd_no', $request->input('prd_no'))
-            ->with('machno', $request->input('machno'));            
-    }
-
-    public function dutyList()
-    {
-        $request = request();
-        $page = $request->input('page', 1);
-        $paginate = 20;
-        $list = $this->production->getDutyList($request)->get()->toArray();
-
-        $slice = array_slice($list, $paginate * ($page - 1), $paginate);
-        $paginator = new Paginator($slice, count($list), $paginate);
-        $result = $paginator;
-
-        return view('duty.list')
-            ->with('list', $result)
-            ->with('prd_no', $request->input('prd_no'))
-            ->with('machno', $request->input('machno'));  
+        $staff = $this->production->getCustomer()->get()->toArray();
+        $json = [];
+        $json['message'] = '';
+        $json['value'] = $staff;
+        return $json;
     }
 
     public function getSchedule()
     {
         $id = request()->input('id');
         $data = $this->production->getTable('schedule')->scheduleList()->where('mk_no', $id)
-            ->select('mk_no', 'NAME', 'machno')->first();
+            ->select('mk_no', 'DB_U105.dbo.PRDT.NAME', 'machno', 'Z_DB_U105.dbo.tbmkno.cus_no as cus_no',
+                'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName')->first();
         if (isset($data)) {
             return ['success' => true, 'data' => $data];
         }
         return ['success' => false];
+    }
+
+    public function dutySchedule()
+    {
+        $request = request();
+        $list = $this->production->getSchedule($request)->paginate(20);
+
+        return view('duty.schedule')
+            ->with('list', $list)
+            ->with('pname', $request->input('pname'))
+            ->with('machno', $request->input('machno'));            
+    }
+
+    public function historySchedule()
+    {
+        $request = request();
+        $list = $this->production->getSchedule($request)->paginate(20);
+
+        return view('history.schedule')
+            ->with('list', $list)
+            ->with('pname', $request->input('pname'))
+            ->with('machno', $request->input('machno'));            
+    }
+
+    public function dutyList()
+    {
+        $request = request();
+        $list = $this->production->getDutyList($request)->paginate(20);
+
+        return view('duty.list')
+            ->with('list', $list)
+            ->with('pname', $request->input('pname'))
+            ->with('machno', $request->input('machno'));  
+    }
+
+    public function historyList()
+    {
+        $request = request();
+        $page = $request->input('page', 1);
+        $paginate = 20;
+        
+        //$list = $this->production->getHistoryList($request)->paginate(20);
+
+        $list = $this->production->getHistoryList($request)->get()->toArray();
+
+        $offSet = ($page * $paginate) - $paginate;
+		$itemsForCurrentPage = array_slice($list, $offSet, $paginate, true);
+        $result = new LengthAwarePaginator($itemsForCurrentPage, count($list), $paginate, $page);
+        //$slice = array_slice($list, $paginate * ($page - 1), $paginate);
+        //$paginator = new Paginator($slice, count($list), $paginate);
+        //$result = $paginator;
+        
+
+        return view('history.list')
+            ->with('list', $result)
+            ->with('pname', $request->input('pname'))
+            ->with('machno', $request->input('machno'));  
     }
 
     public function getDuty()
@@ -78,12 +118,27 @@ class productionController extends Controller
         return ['success' => false];
     }
 
+    public function getHistory()
+    {
+
+    }
+
     public function saveDuty()
     {
         $request = request();
         $input = $request->input();
-        $ignore = ['mk_no', 'snm', 'machno'];
         $result = $this->production->saveDuty($input);
+        return $result;
+    }
+
+    public function saveHistory()
+    {
+        $request = request();
+        $input = $request->input();
+        if ($input['mk_no'] != '--') {
+            $input = array_except($input, ['snm', 'cus_no']);
+        }
+        $result = $this->production->saveHistory($input);
         return $result;
     }
 }

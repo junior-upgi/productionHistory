@@ -1,7 +1,7 @@
-function edit(id) {
+function duty(id) {
     var data = {'id': id};
     $.ajax({
-        url: url + '/Duty/GetDuty',
+        url: url + '/Duty/GetSchedule',
         type: 'POST',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -20,16 +20,14 @@ function edit(id) {
     });
 }
 
-
 function setDutyData(data) {
-    $('#modalTitle').html('編輯生產值班表');
-    $('#btnSave').html('更新');
-    $('#type').val('edit');
+    $('#modalTitle').html('新增生產值班表');
+    $('#btnSave').html('新增');
+    $('#type').val('add');
     $('#id').val(data['id']);
     $('#name').val('');
     $('#mk_no').val(data['mk_no']);
-    $('#dutyDate').val($.datepicker.formatDate('yy-mm-dd', new Date(data['dutyDate'])));
-    $('#class').val(data['class']);
+    $('#class').val('1');
     $('#staffID').val(data['staffID']);
     $('#searchStaff').val(data['staffName']);
     var machno = formatMachno(data['machno']);

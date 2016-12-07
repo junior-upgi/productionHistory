@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/duty/list.js?x=1') }}"></script>
+<script src="{{ url('/js/duty/list.js?x=2') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>生產值班清單</h2>
@@ -10,12 +10,11 @@
         <form class="form-inline pull-right" action="{{ url('/Duty/DutyList') }}" role="form">
             <div class="row form-group">
                 <div class="col-md-3">
-                    <input type="text" name="prd_no" class="form-control" placeholder="請輸入瓶號">
+                    <input type="text" name="pname" class="form-control" placeholder="請輸入瓶號" value="{{ $pname }}">
                 </div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">
-                    {{ $machno = '' }}
                     <select class="form-control" name="machno">
                         <option value="" {{ $machno == '' ? 'selected': '' }}>全部產線</option>
                         <option value="1-1" {{ $machno == '1-1' ? 'selected': '' }}>1-1</option>
@@ -44,12 +43,12 @@
             <thead>
                 <tr>
                     <td style="width: 51px;"></td>
-                    <td>製令單號</td>
+                    <td>瓶號</td>
+                    <!--<td>製令單號</td>-->
                     <td>值班日期</td>
                     <td>班別</td>
                     <td>產線</td>
                     <td>機台人員</td>
-                    <td>瓶號</td>
                     <td>生產數量</td>
                     <td>效率</td>
                     <td>退火等級</td>
@@ -75,7 +74,8 @@
                             </button>
                             -->
                         </td>
-                        <td>{{ isset($item['mk_no'])? $item['mk_no']: '試模' }}</td>
+                        <!--<td>{{ isset($item['mk_no'])? $item['mk_no']: '試模' }}</td>-->
+                        <td>{{ $item['NAME'] }}</td>
                         <td>{{ date('Y-m-d', strtotime($item['dutyDate'])) }}</td>
                         @php
                             switch ($item['class']) {
@@ -95,7 +95,6 @@
                         <td>{{ $class }}</td>
                         <td>{{ substr($item['machno'], 0, 3) }}</td>
                         <td>{{ $item['staffName'] }}</td>
-                        <td>{{ $item['NAME'] }}</td>
                         <td>{{ $item['quantity'] }}</td>
                         <td>{{ $item['efficiency'] }}</td>
                         <td>{{ $item['anneal'] }}</td>
@@ -111,6 +110,9 @@
                 @endforeach
             </tbody>
         </table>
+        <p>
+            {{ $list->setPath('/Duty/DutyList?pname=' . $pname . '&machno=' . $machno) }}
+        </p>
     </div>
 </div>
 @include('duty.add')
