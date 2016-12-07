@@ -21,13 +21,15 @@ function edit(id) {
 }
 
 function setHistoryData(data) {
-    $('#modalTitle').html('新增產品履歷表');
-    $('#btnSave').html('新增');
-    $('#type').val('add');
+    $('#modalTitle').html('編輯產品履歷表');
+    $('#btnSave').html('更新');
+    $('#type').val('edit');
     $('#id').val(data['id']);
     $('#name').val('');
     $('#mk_no').val(data['mk_no']);
     $('#snm').val(data['NAME']);
+    $('#cus_no').val(data['cus_no']);
+    $('#searchCustomer').val(data['customerSName']);
     var machno = formatMachno(data['machno']);
     $('#machno').val(machno);
     $('#gauge').val(data['blow']);

@@ -28,7 +28,7 @@
                         <label for="machno" class="col-md-3 control-label">線別</label>
                         <div class="col-md-2">
                             {{ $machno = '' }}
-                            <select class="form-control" id="machno" name="1-1">
+                            <select class="form-control" id="machno" name="machno">
                                 <option value="1-1" {{ $machno == '1-1' ? 'selected': '' }}>1-1</option>
                                 <option value="01" {{ $machno == '01' ? 'selected': '' }}>01</option>
                                 <option value="02" {{ $machno == '02' ? 'selected': '' }}>02</option>

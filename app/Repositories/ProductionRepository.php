@@ -88,7 +88,7 @@ class ProductionRepository extends BaseRepository
             ->where('snm', 'like', "%$pname%")
             ->where('machno', 'like', "%$machno%")
             ->union($formSchedule)
-            ->orderBy('productionDate', 'class', 'machno')
+            ->orderBy('productionDate', 'machno')
             ->select('productionHistory.id', 'mk_no', 'productionDate', 'machno', 'gauge', 
                 'snm as NAME', 'blow', 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'skewPower', 
                 'termalShock', 'productionHistory.speed', 'productionHistory.defect',
@@ -113,18 +113,35 @@ class ProductionRepository extends BaseRepository
     {
         $list = $this->getTable('duty')->where('productionDuty.id', $id);
         if ($list->exists()) {
-            if (isset($list->first()->mk_no)) {
-                $list->join('Z_DB_U105.dbo.tbmkno', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionHistory.dbo.productionDuty.mk_no')
+            $list = $list->join('Z_DB_U105.dbo.tbmkno', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionHistory.dbo.productionDuty.mk_no')
+                ->join('DB_U105.dbo.PRDT', 'Z_DB_U105.dbo.tbmkno.prd_no', 'DB_U105.dbo.PRDT.PRD_NO')
+                ->join('UPGWeb.dbo.vStaffNode', 'UPGWeb.dbo.vStaffNode.ID', 'productionDuty.staffID')
+                ->select('productionDuty.id', 'Z_DB_U105.dbo.tbmkno.mk_no', 'dutyDate', 'class', 'Z_DB_U105.dbo.tbmkno.machno', 
+                    'UPGWeb.dbo.vStaffNode.name as staffName', 'UPGWeb.dbo.vStaffNode.ID as staffID', 'DB_U105.dbo.PRDT.NAME', 'quantity', 'piece', 
+                    'productionDuty.efficiency', 'anneal', 'startShutdown', 'endShutdown', 'changeModel', 'changeSpeed', 'improve', 'suggest');
+            return $list;
+        }
+        return null;
+    }
+
+    public function getHistory($id)
+    {
+        $list = $this->getTable('history')->where('productionHistory.id', $id);
+        if ($list->exists()) {
+            if ($list->first()->mk_no != '--') {
+                $list = $list->join('Z_DB_U105.dbo.tbmkno', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionHistory.dbo.productionHistory.mk_no')
                     ->join('DB_U105.dbo.PRDT', 'Z_DB_U105.dbo.tbmkno.prd_no', 'DB_U105.dbo.PRDT.PRD_NO')
-                    ->join('UPGWeb.dbo.vStaffNode', 'UPGWeb.dbo.vStaffNode.ID', 'productionDuty.staffID')
-                    ->select('productionDuty.id', 'Z_DB_U105.dbo.tbmkno.mk_no', 'dutyDate', 'class', 'Z_DB_U105.dbo.tbmkno.machno', 
-                        'UPGWeb.dbo.vStaffNode.name as staffName', 'UPGWeb.dbo.vStaffNode.ID as staffID', 'DB_U105.dbo.PRDT.NAME', 'quantity', 'piece', 
-                        'productionDuty.efficiency', 'anneal', 'startShutdown', 'endShutdown', 'changeModel', 'changeSpeed', 'improve', 'suggest');
+                    ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'Z_DB_U105.dbo.tbmkno.cus_no')
+                    ->select('productionHistory.id', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionDate', 'Z_DB_U105.dbo.tbmkno.machno', 'gauge', 
+                        'DB_U105.dbo.PRDT.NAME', 'blow', 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'skewPower', 
+                        'termalShock', 'productionHistory.speed', 'productionHistory.defect',
+                        'Z_DB_U105.dbo.tbmkno.cus_no as cus_no', 'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName');
             } else {
-                $list->join('UPGWeb.dbo.vStaffNode', 'UPGWeb.dbo.vStaffNode.ID', 'productionDuty.staffID')
-                    ->orderBy('dutyDate', 'class', 'machno')
-                    ->select('productionDuty.id', 'mk_no', 'dutyDate', 'class', 'machno', 'UPGWeb.dbo.vStaffNode.name as staffName', 
-                        'UPGWeb.dbo.vStaffNode.ID as staffID', 'snm as NAME', 'quantity', 'piece', 'efficiency', 'anneal', 'startShutdown', 'endShutdown', 'changeModel', 'changeSpeed', 'improve', 'suggest');
+                $list = $list->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'productionHistory.cus_no')
+                    ->select('productionHistory.id', 'mk_no', 'productionDate', 'machno', 'gauge', 
+                        'snm as NAME', 'blow', 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'skewPower', 
+                        'termalShock', 'productionHistory.speed', 'productionHistory.defect',
+                        'cus_no', 'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName');
             }
             return $list;
         }

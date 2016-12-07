@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 
@@ -87,18 +86,12 @@ class productionController extends Controller
         $request = request();
         $page = $request->input('page', 1);
         $paginate = 20;
-        
-        //$list = $this->production->getHistoryList($request)->paginate(20);
 
         $list = $this->production->getHistoryList($request)->get()->toArray();
 
         $offSet = ($page * $paginate) - $paginate;
 		$itemsForCurrentPage = array_slice($list, $offSet, $paginate, true);
         $result = new LengthAwarePaginator($itemsForCurrentPage, count($list), $paginate, $page);
-        //$slice = array_slice($list, $paginate * ($page - 1), $paginate);
-        //$paginator = new Paginator($slice, count($list), $paginate);
-        //$result = $paginator;
-        
 
         return view('history.list')
             ->with('list', $result)
@@ -120,7 +113,12 @@ class productionController extends Controller
 
     public function getHistory()
     {
-
+        $id = request()->input('id');
+        $data = $this->production->getHistory($id)->first();
+        if (isset($data)) {
+            return ['success' => true, 'data' => $data];
+        }
+        return ['success' => false];
     }
 
     public function saveDuty()

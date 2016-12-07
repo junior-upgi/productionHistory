@@ -63,8 +63,11 @@
 				</a>
 			</div>
 			<div class="collapse navbar-collapse navbar-left">
-				<div class="nav navbar-nav">
-				</div>
+				<ul class="nav navbar-nav">
+					<li><a href="{{ url('/Duty/DutyList') }}">生產職班表</a></li>
+					<li><a href="{{ url('/History/HistoryList') }}">生產履歷表</a></li>
+					<li><a href="">生產條件</a></li>
+				</ul>
 			</div>
 			<div class="collapse navbar-collapse navbar-right">
 			</div>

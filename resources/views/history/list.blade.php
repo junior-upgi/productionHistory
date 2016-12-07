@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/history/list.js') }}"></script>
+<script src="{{ url('/js/history/list.js?v=1') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>品質管制產品履歷表</h2>
@@ -42,9 +42,10 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <td style="width: 127px;"></td>
+                    <td style="width: 51px;"></td>
                     <td>圖號</td>
                     <td>日期</td>
+                    <td>客戶/麥頭</td>
                     <td>線別</td>
                     <td>重量</td>
                     <td>實際生產重量</td>
@@ -52,7 +53,7 @@
                     <td>熱震</td>
                     <td>機速</td>
                     <td>檢瓶率/繳庫率</td>
-                    <td>客戶/麥頭</td>
+                    
                 </tr>
             </thead>
             <tbody>
@@ -64,16 +65,16 @@
                                 <span class="glyphicon glyphicon-edit"></span>
                             </button>
                         </td>
-                        <td>圖號</td>
-                        <td>日期</td>
-                        <td>線別</td>
-                        <td>重量</td>
-                        <td>實際生產重量</td>
-                        <td>歪力</td>
-                        <td>熱震</td>
-                        <td>機速</td>
-                        <td>檢瓶率/繳庫率</td>
-                        <td>客戶/麥頭</td>
+                        <td>{{ $item['NAME'] }}</td>
+                        <td>{{ date('Y-m-d', strtotime($item['productionDate'])) }}</td>
+                        <td>{{ $item['customerSName'] }}</td>
+                        <td>{{ substr($item['machno'], 0, 3) }}</td>
+                        <td>{{ $item['weight'] }}</td>
+                        <td>{{ $item['actualWeight'] }}</td>
+                        <td>{{ $item['skewPower'] }}</td>
+                        <td>{{ $item['termalShock'] }}</td>
+                        <td>{{ $item['speed'] }}</td>
+                        <td>{{ $item['efficiency'] }}</td>
                     </tr>
                 @endforeach
             </tbody>
