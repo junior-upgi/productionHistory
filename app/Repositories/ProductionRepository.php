@@ -8,6 +8,11 @@ use App\Models\ProductionHistory;
 use App\Models\Customer;
 use App\Models\Schedule;
 use App\Models\Staff;
+use App\Models\GlassRun;
+use App\Models\GlassRunDetail;
+use App\Models\GlassRunPlan;
+use App\Models\GlassRunPlanDetail;
+use App\Models\AllGlassRun;
 
 class ProductionRepository extends BaseRepository
 {
@@ -16,13 +21,23 @@ class ProductionRepository extends BaseRepository
     public $customer;
     public $schedule;
     public $staff;
+    public $glass;
+    public $glassDetail;
+    public $plan;
+    public $planDetail;
+    public $allGlass;
 
     public function __construct(
         ProductionDuty $duty,
         Schedule $schedule,
         Staff $staff,
         ProductionHistory $history,
-        Customer $customer
+        Customer $customer,
+        GlassRun $glass,
+        GlassRunDetail $glassDetail,
+        GlassRunPlan $plan,
+        GlassRunPlanDetail $planDetail,
+        AllGlassRun $allGlass
     ) {
         parent::__construct();
         $this->duty = $duty;
@@ -30,37 +45,56 @@ class ProductionRepository extends BaseRepository
         $this->staff = $staff;
         $this->history = $history;
         $this->customer = $customer;
+        $this->glass = $glass;
+        $this->glassDetail = $glassDetail;
+        $this->plan = $plan;
+        $this->planDetail = $planDetail;
+        $this->allGlass = $allGlass;
     }
 
     public function getSchedule($request)
     {
-        $pname = $request->input('pname');
-        $machno = $request->input('machno');
-        $table = $this->getTable('schedule');
-        $list = $table->scheduleList()
-            ->where('DB_U105.dbo.PRDT.NAME', 'like', "%$pname%")
-            ->where('machno', 'like', "%$machno%")
-            ->orderBy('schedate', 'desc')->orderBy('machno')
-            ->select('mk_no', 'schedate', 'DB_U105.dbo.PRDT.NAME', 'scheqty', 'allscheqty', 'machno', 'speed', 'Z_DB_U105.dbo.tbmkno.weight', 'worktime', 'outqty', 
-                'Z_DB_U105.dbo.tbmkno.cus_no as cus_no', 'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName');
+        $snm = $request->input('snm');
+        $glassProdLineID = $request->input('glassProdLineID');
+        $schedate = $request->input('schedate');
+        if ($schedate != '') {
+            $schedate = date('Y/m/d', strtotime($request->input('schedate')));
+        }
+        $table = $this->getTable('allGlass');
+        $list = $table
+            ->where('PRDT_SNM', 'like', "%$snm%")
+            ->where('glassProdLineID', 'like', "%$glassProdLineID%")
+            ->where('schedate', 'like', "%$schedate%")
+            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
+            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID');
         return $list;
     }
 
     public function getDutyList($request)
     {
-        $pname = $request->input('pname');
-        $machno = $request->input('machno');
+        $snm = $request->input('snm');
+        $glassProdLineID = $request->input('glassProdLineID');
+        $dutyDateOp = 'like';
+        $dutyDate = '%' . $request->input('dutyDate') . '%';
+        if ($dutyDate != '') {
+            $dutyDateOp = '=';
+            $dutyDate = date('Y-m-d', strtotime($request->input('dutyDate')));
+        }
         $schedule = $this->getTable('duty');
         $scheduleList = $schedule
-            ->join('Z_DB_U105.dbo.tbmkno', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionHistory.dbo.productionDuty.mk_no')
-            ->join('DB_U105.dbo.PRDT', 'Z_DB_U105.dbo.tbmkno.prd_no', 'DB_U105.dbo.PRDT.PRD_NO')
+            ->join('allGlassRun', function ($join) {
+                $join->on('productionDuty.glassProdLineID', 'allGlassRun.glassProdLineID')
+                    ->on('productionDuty.prd_no', 'allGlassRun.prd_no')
+                    ->on('productionDuty.schedate', 'allGlassRun.schedate');
+            })
             ->join('UPGWeb.dbo.vStaffNode', 'UPGWeb.dbo.vStaffNode.ID', 'productionDuty.staffID')
-            ->where('DB_U105.dbo.PRDT.NAME', 'like', "%$pname%")
-            ->where('Z_DB_U105.dbo.tbmkno.machno', 'like', "%$machno%")
-            ->orderBy('dutyDate', 'class', 'machno')
-            ->select('productionDuty.id', 'Z_DB_U105.dbo.tbmkno.mk_no', 'dutyDate', 
-                'class', 'Z_DB_U105.dbo.tbmkno.machno', 'UPGWeb.dbo.vStaffNode.name as staffName', 'DB_U105.dbo.PRDT.NAME as NAME', 
-                'quantity', 'piece', 'productionDuty.efficiency', 'anneal', 'startShutdown', 'endShutdown');
+            ->where('allGlassRun.PRDT_SNM', 'like', "%$snm%")
+            ->where('productionDuty.glassProdLineID', 'like', "%$glassProdLineID%")
+            ->where('productionDuty.dutyDate', $dutyDateOp, $dutyDate)
+            ->orderBy('dutyDate', 'desc')->orderBy('shift')->orderBy('glassProdLineID')
+            ->select('productionDuty.id', 'productionDuty.glassProdLineID', 'dutyDate', 
+                'shift', 'UPGWeb.dbo.vStaffNode.name as staffName', 'allGlassRun.PRDT_SNM as snm', 
+                'quantity', 'pack', 'productionDuty.efficiency', 'annealGrade', 'startShutdown', 'endShutdown');
         return $scheduleList;
     }
 
@@ -111,15 +145,21 @@ class ProductionRepository extends BaseRepository
 
     public function getDuty($id)
     {
-        $list = $this->getTable('duty')->where('productionDuty.id', $id);
-        if ($list->exists()) {
-            $list = $list->join('Z_DB_U105.dbo.tbmkno', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionHistory.dbo.productionDuty.mk_no')
-                ->join('DB_U105.dbo.PRDT', 'Z_DB_U105.dbo.tbmkno.prd_no', 'DB_U105.dbo.PRDT.PRD_NO')
+        $data = $this->getTable('duty')->where('productionDuty.id', $id);
+        if ($data->exists()) {
+            $data = $data
+                ->join('allGlassRun', function ($join) {
+                $join->on('productionDuty.glassProdLineID', 'allGlassRun.glassProdLineID')
+                    ->on('productionDuty.prd_no', 'allGlassRun.prd_no')
+                    ->on('productionDuty.schedate', 'allGlassRun.schedate');
+                })
                 ->join('UPGWeb.dbo.vStaffNode', 'UPGWeb.dbo.vStaffNode.ID', 'productionDuty.staffID')
-                ->select('productionDuty.id', 'Z_DB_U105.dbo.tbmkno.mk_no', 'dutyDate', 'class', 'Z_DB_U105.dbo.tbmkno.machno', 
-                    'UPGWeb.dbo.vStaffNode.name as staffName', 'UPGWeb.dbo.vStaffNode.ID as staffID', 'DB_U105.dbo.PRDT.NAME', 'quantity', 'piece', 
-                    'productionDuty.efficiency', 'anneal', 'startShutdown', 'endShutdown', 'changeModel', 'changeSpeed', 'improve', 'suggest');
-            return $list;
+                ->orderBy('dutyDate', 'shift', 'glassProdLineID')
+                ->select('productionDuty.id', 'productionDuty.glassProdLineID', 'productionDuty.schedate', 'productionDuty.prd_no', 
+                    'dutyDate', 'shift', 'UPGWeb.dbo.vStaffNode.ID as staffID', 'UPGWeb.dbo.vStaffNode.name as staffName', 
+                    'allGlassRun.PRDT_SNM as snm', 'quantity', 'pack', 'productionDuty.efficiency', 'annealGrade', 
+                    'startShutdown', 'endShutdown', 'jobChange', 'speedChange', 'improve');
+            return $data;
         }
         return null;
     }
@@ -181,6 +221,26 @@ class ProductionRepository extends BaseRepository
 
             case 'customer':
                 return $this->customer;
+                break;
+
+            case 'glass':
+                return $this->glass;
+                break;
+
+            case 'glassDetail':
+                return $this->glassDetail;
+                break;
+
+            case 'plan':
+                return $this->plan;
+                break;
+
+            case 'planDetail':
+                return $this->planDetail;
+                break;
+
+            case 'allGlass':
+                return $this->allGlass;
                 break;
 
             default:

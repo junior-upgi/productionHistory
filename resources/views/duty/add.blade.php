@@ -1,4 +1,4 @@
-<script src="{{ url('/js/duty/add.js?v=3') }}"></script>
+<script src="{{ url('/js/duty/add.js?v=1') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -11,7 +11,8 @@
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
                     <input type="hidden" id="type" name="type" value="">
                     <input type="hidden" id="id" name="id" value="">
-                    <input type="hidden" id="mk_no" name="mk_no" value="">
+                    <input type="hidden" id="prd_no" name="prd_no" value="">
+                    <input type="hidden" id="schedate" name="schedate" value="">
                     <div class="form-group">
                         <label for="dutyDate" class="col-md-3 control-label">值班日期</label>
                         <div class="col-md-3">
@@ -19,9 +20,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="class" class="col-md-3 control-label">班別</label>
+                        <label for="shift" class="col-md-3 control-label">班別</label>
                         <div class="col-md-3">
-                            <select class="form-control" name="class" id="class">
+                            <select class="form-control" name="shift" id="shift">
                                 <option value="1">早班</option>
                                 <option value="2">中班</option>
                                 <option value="3">晚班</option>
@@ -40,25 +41,24 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="machno" class="col-md-3 control-label">線別</label>
+                        <label for="glassProdLineID" class="col-md-3 control-label">線別</label>
                         <div class="col-md-2">
-                            {{ $machno = '' }}
-                            <select class="form-control" id="machno">
-                                <option value="1-1" {{ $machno == '1-1' ? 'selected': '' }}>1-1</option>
-                                <option value="01" {{ $machno == '01' ? 'selected': '' }}>01</option>
-                                <option value="02" {{ $machno == '02' ? 'selected': '' }}>02</option>
-                                <option value="03" {{ $machno == '03' ? 'selected': '' }}>03</option>
-                                <option value="05" {{ $machno == '05' ? 'selected': '' }}>05</option>
-                                <option value="06" {{ $machno == '06' ? 'selected': '' }}>06</option>
-                                <option value="07" {{ $machno == '07' ? 'selected': '' }}>07</option>
-                                <option value="08" {{ $machno == '08' ? 'selected': '' }}>08</option>
+                            <select class="form-control disable" id="glassProdLineID" name="glassProdLineID">
+                                <option value="L1-1">L1-1</option>
+                                <option value="L1">L1</option>
+                                <option value="L2">L2</option>
+                                <option value="L3">L3</option>
+                                <option value="L5">L5</option>
+                                <option value="L6">L6</option>
+                                <option value="L7">L7</option>
+                                <option value="L8">L8</option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="snm" class="col-md-3 control-label">產品名稱</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control" id="snm" value="" maxlength="10" required>
+                            <input type="text" class="form-control disable" id="snm" value="" maxlength="10" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -70,7 +70,7 @@
                     <div class="form-group">
                         <label for="piece" class="col-md-3 control-label">生產件數</label>
                         <div class="col-md-3">
-                            <input type="number" class="form-control" name="piece" id="piece" value="" min="0" required>
+                            <input type="number" class="form-control" name="pack" id="pack" value="" min="0" required>
                         </div>
                     </div>
                     <div class="form-group">
@@ -82,7 +82,7 @@
                     <div class="form-group">
                         <label for="anneal" class="col-md-3 control-label">退火等級</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control" name="anneal" id="anneal" value="" maxlength="10" required>
+                            <input type="text" class="form-control" name="annealGrade" id="annealGrade" value="" maxlength="10" required>
                         </div>
                     </div>
                     @php
@@ -102,27 +102,21 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="changeModel" class="col-md-3 control-label">換模記錄</label>
+                        <label for="jobChange" class="col-md-3 control-label">換模記錄</label>
                         <div class="col-md-9">
-                            <textarea class="form-control" name="changeModel" id="changeModel" rows="5" style="resize: none;"></textarea>
+                            <textarea class="form-control" name="jobChange" id="jobChange" rows="5" style="resize: none;"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="changeSpeed" class="col-md-3 control-label">升降機速</label>
+                        <label for="speedChange" class="col-md-3 control-label">升降機速</label>
                         <div class="col-md-9">
-                            <textarea class="form-control" name="changeSpeed" id="changeSpeed" rows="5" style="resize: none;"></textarea>
+                            <textarea class="form-control" name="speedChange" id="speedChange" rows="5" style="resize: none;"></textarea>
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="improve" class="col-md-3 control-label">缺點改進</label>
                         <div class="col-md-9">
                             <textarea class="form-control" name="improve" id="improve" rows="5" style="resize: none;"></textarea>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="suggest" class="col-md-3 control-label">建議事項</label>
-                        <div class="col-md-9">
-                            <textarea class="form-control" name="suggest" id="suggest" rows="5" style="resize: none;"></textarea>
                         </div>
                     </div>
                 </div>

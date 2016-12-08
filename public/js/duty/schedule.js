@@ -1,5 +1,9 @@
-function duty(id) {
-    var data = {'id': id};
+function duty(prd_no, glassProdLineID, schedate) {
+    var data = {
+        'prd_no': prd_no,
+        'glassProdLineID': glassProdLineID,
+        'schedate': schedate
+    };
     $.ajax({
         url: url + '/Duty/GetSchedule',
         type: 'POST',
@@ -26,30 +30,18 @@ function setDutyData(data) {
     $('#type').val('add');
     $('#id').val(data['id']);
     $('#name').val('');
-    $('#mk_no').val(data['mk_no']);
-    $('#class').val('1');
-    $('#staffID').val(data['staffID']);
-    $('#searchStaff').val(data['staffName']);
-    var machno = formatMachno(data['machno']);
-    $('#machno').val(machno);
-    $('#snm').val(data['NAME']);
-    $('#quantity').val(data['quantity']);
-    $('#piece').val(data['piece']);
-    $('#efficiency').val(data['efficiency']);
-    $('#anneal').val(data['anneal']);
-    $('#startShutdown').val(data['startShutdown']);
-    $('#endShutdown').val(data['endShutdown']);
-    $('#changeModel').val(data['changeModel']);
-    $('#changeSpeed').val(data['changespeed']);
-    $('#improve').val(data['improve']);
-    $('#suggest').val(data['suggest']);
+    $('#prd_no').val(data['prd_no']);
+    $('#schedate').val(data['schedate']);
+    $('#glassProdLineID').val(data['glassProdLineID']);
+    $('#snm').val(data['snm']);
+    $('#quantity').val('');
+    $('#pack').val('');
+    $('#efficiency').val('');
+    $('#annealGrade').val('');
+    $('#startShutdown').val('');
+    $('#endShutdown').val('');
+    $('#jobChange').val('');
+    $('#speedChange').val('');
+    $('#improve').val('');
     $('#addModal').modal('show');
-}
-
-function formatMachno(val) {
-    if (val.substr(0, 1) == '1') {
-        return val.substr(0, 3);
-    } else {
-        return val.substr(0, 2);
-    }
 }

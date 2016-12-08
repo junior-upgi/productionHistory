@@ -10,22 +10,27 @@
         <form class="form-inline pull-right" action="{{ url('/Duty/DutyList') }}" role="form">
             <div class="row form-group">
                 <div class="col-md-3">
-                    <input type="text" name="pname" class="form-control" placeholder="請輸入瓶號" value="{{ $pname }}">
+                    <input type="text" name="snm" class="form-control" placeholder="請輸入瓶號" value="{{ $snm }}">
                 </div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">
-                    <select class="form-control" name="machno">
-                        <option value="" {{ $machno == '' ? 'selected': '' }}>全部產線</option>
-                        <option value="1-1" {{ $machno == '1-1' ? 'selected': '' }}>1-1</option>
-                        <option value="01" {{ $machno == '01' ? 'selected': '' }}>01</option>
-                        <option value="02" {{ $machno == '02' ? 'selected': '' }}>02</option>
-                        <option value="03" {{ $machno == '03' ? 'selected': '' }}>03</option>
-                        <option value="05" {{ $machno == '05' ? 'selected': '' }}>05</option>
-                        <option value="06" {{ $machno == '06' ? 'selected': '' }}>06</option>
-                        <option value="07" {{ $machno == '07' ? 'selected': '' }}>07</option>
-                        <option value="08" {{ $machno == '08' ? 'selected': '' }}>08</option>
+                    <select class="form-control" name="glassProdLineID">
+                        <option value="" {{ $glassProdLineID == '' ? 'selected': '' }}>全部產線</option>
+                        <option value="L1-1" {{ $glassProdLineID == 'L1-1' ? 'selected': '' }}>L1-1</option>
+                        <option value="L1" {{ $glassProdLineID == 'L1' ? 'selected': '' }}>L1</option>
+                        <option value="L2" {{ $glassProdLineID == 'L2' ? 'selected': '' }}>L2</option>
+                        <option value="L3" {{ $glassProdLineID == 'L3' ? 'selected': '' }}>L3</option>
+                        <option value="L5" {{ $glassProdLineID == 'L5' ? 'selected': '' }}>L5</option>
+                        <option value="L6" {{ $glassProdLineID == 'L6' ? 'selected': '' }}>L6</option>
+                        <option value="L7" {{ $glassProdLineID == 'L7' ? 'selected': '' }}>L7</option>
+                        <option value="L8" {{ $glassProdLineID == 'L8' ? 'selected': '' }}>L8</option>
                     </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <input type="text" name="dutyDate" class="form-control date form_datetime" placeholder="請輸入值班日期" value="{{ $dutyDate }}">
                 </div>
             </div>
             <div class="row form-group">
@@ -75,29 +80,29 @@
                             -->
                         </td>
                         <!--<td>{{ isset($item['mk_no'])? $item['mk_no']: '試模' }}</td>-->
-                        <td>{{ $item['NAME'] }}</td>
+                        <td>{{ $item['snm'] }}</td>
                         <td>{{ date('Y-m-d', strtotime($item['dutyDate'])) }}</td>
                         @php
-                            switch ($item['class']) {
+                            switch ($item['shift']) {
                                 case 1:
-                                    $class = '早班';
+                                    $shift = '早班';
                                     break;
                                 case 2:
-                                    $class = '中班';
+                                    $shift = '中班';
                                     break;
                                 case 3:
-                                    $class = '晚班';
+                                    $shift = '晚班';
                                     break;
                                 default:
-                                    $class = '';
+                                    $shift = '';
                             }
                         @endphp
-                        <td>{{ $class }}</td>
-                        <td>{{ substr($item['machno'], 0, 3) }}</td>
+                        <td>{{ $shift }}</td>
+                        <td>{{ $item['glassProdLineID'] }}</td>
                         <td>{{ $item['staffName'] }}</td>
                         <td>{{ $item['quantity'] }}</td>
                         <td>{{ $item['efficiency'] }}</td>
-                        <td>{{ $item['anneal'] }}</td>
+                        <td>{{ $item['annealGrade'] }}</td>
                         <td>
                             @if(!isset($item['startShutdown']))
                                 {{ date('hh:ii', strtotime($item['startShutdown'])) }}
@@ -111,7 +116,7 @@
             </tbody>
         </table>
         <p>
-            {{ $list->setPath('/Duty/DutyList?pname=' . $pname . '&machno=' . $machno) }}
+            {{ $list->setPath('/Duty/DutyList?snm=' . $snm . '&glassProdLineID=' . $glassProdLineID . '&dutyDate=' . $dutyDate) }}
         </p>
     </div>
 </div>

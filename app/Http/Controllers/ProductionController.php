@@ -38,10 +38,14 @@ class productionController extends Controller
 
     public function getSchedule()
     {
-        $id = request()->input('id');
-        $data = $this->production->getTable('schedule')->scheduleList()->where('mk_no', $id)
-            ->select('mk_no', 'DB_U105.dbo.PRDT.NAME', 'machno', 'Z_DB_U105.dbo.tbmkno.cus_no as cus_no',
-                'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName')->first();
+        $snm = request()->input('snm');
+        $glassProdLineID = request()->input('glassProdLineID');
+        $schedate = date('Y/m/d', strtotime(request()->input('schedate')));
+        $data = $this->production->getTable('allGlass')
+            ->where('PRDT_SNM', 'like', "%$snm%")
+            ->where('glassProdLineID', 'like', "%$glassProdLineID%")
+            ->where('schedate', 'like', "%$schedate%")
+            ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate')->first();
         if (isset($data)) {
             return ['success' => true, 'data' => $data];
         }
@@ -55,8 +59,9 @@ class productionController extends Controller
 
         return view('duty.schedule')
             ->with('list', $list)
-            ->with('pname', $request->input('pname'))
-            ->with('machno', $request->input('machno'));            
+            ->with('snm', $request->input('snm'))
+            ->with('glassProdLineID', $request->input('glassProdLineID'))
+            ->with('schedate', $request->input('schedate'));       
     }
 
     public function historySchedule()
@@ -74,11 +79,11 @@ class productionController extends Controller
     {
         $request = request();
         $list = $this->production->getDutyList($request)->paginate(20);
-
         return view('duty.list')
             ->with('list', $list)
-            ->with('pname', $request->input('pname'))
-            ->with('machno', $request->input('machno'));  
+            ->with('snm', $request->input('snm'))
+            ->with('glassProdLineID', $request->input('glassProdLineID'))
+            ->with('dutyDate', $request->input('dutyDate'));  
     }
 
     public function historyList()
