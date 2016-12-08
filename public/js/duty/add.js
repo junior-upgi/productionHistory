@@ -84,6 +84,7 @@ function save() {
         $('#searchStaff').val('');
         alert('請選擇正確的機台人員');
     } else {
+        $('#glassProdLineID').attr('disabled', false);
         $("#addForm").submit();
     }
 }

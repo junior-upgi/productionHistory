@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/duty/list.js?x=2') }}"></script>
+<script src="{{ url('/js/duty/list.js?x=5') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>生產值班清單</h2>

@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/duty/schedule.js?x=2') }}"></script>
+<script src="{{ url('/js/duty/schedule.js?x=5') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>生產排程清單</h2>
@@ -17,20 +17,20 @@
                 <div class="col-md-3">
                     <select class="form-control" name="glassProdLineID">
                         <option value="" {{ $glassProdLineID == '' ? 'selected': '' }}>全部產線</option>
-                        <option value="1-1" {{ $glassProdLineID == '1-1' ? 'selected': '' }}>1-1</option>
-                        <option value="01" {{ $glassProdLineID == '01' ? 'selected': '' }}>01</option>
-                        <option value="02" {{ $glassProdLineID == '02' ? 'selected': '' }}>02</option>
-                        <option value="03" {{ $glassProdLineID == '03' ? 'selected': '' }}>03</option>
-                        <option value="05" {{ $glassProdLineID == '05' ? 'selected': '' }}>05</option>
-                        <option value="06" {{ $glassProdLineID == '06' ? 'selected': '' }}>06</option>
-                        <option value="07" {{ $glassProdLineID == '07' ? 'selected': '' }}>07</option>
-                        <option value="08" {{ $glassProdLineID == '08' ? 'selected': '' }}>08</option>
+                        <option value="L1-1" {{ $glassProdLineID == 'L1-1' ? 'selected': '' }}>L1-1</option>
+                        <option value="L1" {{ $glassProdLineID == 'L1' ? 'selected': '' }}>L1</option>
+                        <option value="L2" {{ $glassProdLineID == 'L2' ? 'selected': '' }}>L2</option>
+                        <option value="L3" {{ $glassProdLineID == 'L3' ? 'selected': '' }}>L3</option>
+                        <option value="L5" {{ $glassProdLineID == 'L5' ? 'selected': '' }}>L5</option>
+                        <option value="L6" {{ $glassProdLineID == 'L6' ? 'selected': '' }}>L6</option>
+                        <option value="L7" {{ $glassProdLineID == 'L7' ? 'selected': '' }}>L7</option>
+                        <option value="L8" {{ $glassProdLineID == 'L8' ? 'selected': '' }}>L8</option>
                     </select>
                 </div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">
-                    <input type="text" name="schedate" readonly class="form-control date form_datetime" value="{{ $schedate }}">
+                    <input type="text" name="schedate" readonly class="form-control date form_datetime" placeholder="請輸入排程日期" value="{{ $schedate }}">
                 </div>
             </div>
             <div class="row form-group">

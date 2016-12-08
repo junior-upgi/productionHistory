@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/history/list.js?v=1') }}"></script>
+<script src="{{ url('/js/history/list.js?v=2') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>品質管制產品履歷表</h2>
@@ -10,22 +10,27 @@
         <form class="form-inline pull-right" action="{{ url('/History/HistoryList') }}" role="form">
             <div class="row form-group">
                 <div class="col-md-3">
-                    <input type="text" name="pname" class="form-control" placeholder="請輸入瓶號" value="{{ $pname }}">
+                    <input type="text" name="snm" class="form-control" placeholder="請輸入瓶號" value="{{ $snm }}">
                 </div>
             </div>
             <div class="row form-group">
                 <div class="col-md-3">
-                    <select class="form-control" name="machno">
-                        <option value="" {{ $machno == '' ? 'selected': '' }}>全部產線</option>
-                        <option value="1-1" {{ $machno == '1-1' ? 'selected': '' }}>1-1</option>
-                        <option value="01" {{ $machno == '01' ? 'selected': '' }}>01</option>
-                        <option value="02" {{ $machno == '02' ? 'selected': '' }}>02</option>
-                        <option value="03" {{ $machno == '03' ? 'selected': '' }}>03</option>
-                        <option value="05" {{ $machno == '05' ? 'selected': '' }}>05</option>
-                        <option value="06" {{ $machno == '06' ? 'selected': '' }}>06</option>
-                        <option value="07" {{ $machno == '07' ? 'selected': '' }}>07</option>
-                        <option value="08" {{ $machno == '08' ? 'selected': '' }}>08</option>
+                    <select class="form-control" name="glassProdLineID">
+                        <option value="" {{ $glassProdLineID == '' ? 'selected': '' }}>全部產線</option>
+                        <option value="L1-1" {{ $glassProdLineID == 'L1-1' ? 'selected': '' }}>L1-1</option>
+                        <option value="L1" {{ $glassProdLineID == 'L1' ? 'selected': '' }}>L1</option>
+                        <option value="L2" {{ $glassProdLineID == 'L2' ? 'selected': '' }}>L2</option>
+                        <option value="L3" {{ $glassProdLineID == 'L3' ? 'selected': '' }}>L3</option>
+                        <option value="L5" {{ $glassProdLineID == 'L5' ? 'selected': '' }}>L5</option>
+                        <option value="L6" {{ $glassProdLineID == 'L6' ? 'selected': '' }}>L6</option>
+                        <option value="L7" {{ $glassProdLineID == 'L7' ? 'selected': '' }}>L7</option>
+                        <option value="L8" {{ $glassProdLineID == 'L8' ? 'selected': '' }}>L8</option>
                     </select>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-md-3">
+                    <input type="text" name="productionDate" class="form-control date form_datetime" placeholder="請輸入生產日期" value="{{ $productionDate }}">
                 </div>
             </div>
             <div class="row form-group">
@@ -45,7 +50,8 @@
                     <td style="width: 51px;"></td>
                     <td>圖號</td>
                     <td>日期</td>
-                    <td>客戶/麥頭</td>
+                    <td>類型</td>
+                    <!--<td>客戶/麥頭</td>-->
                     <td>線別</td>
                     <td>重量</td>
                     <td>實際生產重量</td>
@@ -65,14 +71,19 @@
                                 <span class="glyphicon glyphicon-edit"></span>
                             </button>
                         </td>
-                        <td>{{ $item['NAME'] }}</td>
+                        <td>{{ $item['snm'] }}</td>
                         <td>{{ date('Y-m-d', strtotime($item['productionDate'])) }}</td>
-                        <td>{{ $item['customerSName'] }}</td>
-                        <td>{{ substr($item['machno'], 0, 3) }}</td>
+                         @if(isset($item['prd_no']))
+                            <td>量產</td>
+                        @else
+                            <td>試模</td>
+                        @endif
+                        <!--<td>{{ $item['weight'] }}</td>-->
+                        <td>{{ $item['glassProdLineID'] }}</td>
                         <td>{{ $item['weight'] }}</td>
                         <td>{{ $item['actualWeight'] }}</td>
-                        <td>{{ $item['skewPower'] }}</td>
-                        <td>{{ $item['termalShock'] }}</td>
+                        <td>{{ $item['stressLevel'] }}</td>
+                        <td>{{ $item['thermalShock'] }}</td>
                         <td>{{ $item['speed'] }}</td>
                         <td>{{ $item['efficiency'] }}</td>
                     </tr>
@@ -80,7 +91,7 @@
             </tbody>
         </table>
         <p>
-            {{ $list->setPath('/History/HistoryList?pname=' . $pname . '&machno=' . $machno) }}
+            {{ $list->setPath('/History/HistoryList?snm=' . $snm . '&glassProdLineID=' . $glassProdLineID . '&productionDate' . $productionDate) }}
         </p>
     </div>
 </div>

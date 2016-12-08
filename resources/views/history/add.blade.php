@@ -11,7 +11,8 @@
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
                     <input type="hidden" id="type" name="type" value="">
                     <input type="hidden" id="id" name="id" value="">
-                    <input type="hidden" id="mk_no" name="mk_no" value="--">
+                    <input type="hidden" id="prd_no" name="prd_no" value="">
+                    <input type="hidden" id="schedate" name="schedate" value="">
                     <div class="form-group">
                         <label for="productionDate" class="col-md-3 control-label">生產日期</label>
                         <div class="col-md-3">
@@ -25,27 +26,26 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="machno" class="col-md-3 control-label">線別</label>
+                        <label for="glassProdLineID" class="col-md-3 control-label">線別</label>
                         <div class="col-md-2">
-                            {{ $machno = '' }}
-                            <select class="form-control" id="machno" name="machno">
-                                <option value="1-1" {{ $machno == '1-1' ? 'selected': '' }}>1-1</option>
-                                <option value="01" {{ $machno == '01' ? 'selected': '' }}>01</option>
-                                <option value="02" {{ $machno == '02' ? 'selected': '' }}>02</option>
-                                <option value="03" {{ $machno == '03' ? 'selected': '' }}>03</option>
-                                <option value="05" {{ $machno == '05' ? 'selected': '' }}>05</option>
-                                <option value="06" {{ $machno == '06' ? 'selected': '' }}>06</option>
-                                <option value="07" {{ $machno == '07' ? 'selected': '' }}>07</option>
-                                <option value="08" {{ $machno == '08' ? 'selected': '' }}>08</option>
+                            <select class="form-control disable" id="glassProdLineID" name="glassProdLineID">
+                                <option value="L1-1">L1-1</option>
+                                <option value="L1">L1</option>
+                                <option value="L2">L2</option>
+                                <option value="L3">L3</option>
+                                <option value="L5">L5</option>
+                                <option value="L6">L6</option>
+                                <option value="L7">L7</option>
+                                <option value="L8">L8</option>
                             </select>
                         </div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group cus">
                         <label for="searchCustomer" class="col-md-3 control-label">客戶</label>
                         <div class="col-md-9">
                             <div class="input-group">
                                 <input type="hidden" id="cus_no" name="cus_no" value="">
-                                <input type="text" class="form-control" id="searchCustomer" required>
+                                <input type="text" class="form-control" id="searchCustomer">
                                 <ul class="dropdown-menu dropdown-menu-right" role="menu" style="height: 350px;">
                                 </ul>
                             </div>
@@ -58,9 +58,9 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="blow" class="col-md-3 control-label">吹製方法</label>
+                        <label for="formingMethod" class="col-md-3 control-label">吹製方法</label>
                         <div class="col-md-9">
-                            <input type="text" class="form-control" id="blow" name="blow" value="">
+                            <input type="text" class="form-control" id="formingMethod" name="formingMethod" value="">
                         </div>
                     </div>
                     <div class="form-group">
@@ -82,15 +82,15 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="skewPower" class="col-md-3 control-label">歪力</label>
+                        <label for="stressLevel" class="col-md-3 control-label">歪力</label>
                         <div class="col-md-2">
-                            <input type="text" class="form-control" id="skewPower" name="skewPower" value="" required>
+                            <input type="text" class="form-control" id="stressLevel" name="stressLevel" value="" required>
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="termalShock" class="col-md-3 control-label">熱震</label>
+                        <label for="thermalShock" class="col-md-3 control-label">熱震</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control" id="termalShock" name="termalShock" value="" required>
+                            <input type="text" class="form-control" id="thermalShock" name="thermalShock" value="" required>
                         </div>
                     </div>
                     <div class="form-group">

@@ -44,6 +44,7 @@ function setDutyData(data) {
     $('#prd_no').val(data['prd_no']);
     $('#schedate').val(data['schedate']);
     $('#glassProdLineID').val(data['glassProdLineID']);
+    $('#glassProdLineID').attr('disabled', true);
     $('#staffID').val(data['staffID']);
     $('#searchStaff').val(data['staffName']);
     $('#snm').val(data['snm']);
@@ -57,12 +58,4 @@ function setDutyData(data) {
     $('#speedChange').val(data['speedChange']);
     $('#improve').val(data['improve']);
     $('#addModal').modal('show');
-}
-
-function formatMachno(val) {
-    if (val.substr(0, 1) == '1') {
-        return val.substr(0, 3);
-    } else {
-        return val.substr(0, 2);
-    }
 }

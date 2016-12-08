@@ -2,7 +2,8 @@ function duty(prd_no, glassProdLineID, schedate) {
     var data = {
         'prd_no': prd_no,
         'glassProdLineID': glassProdLineID,
-        'schedate': schedate
+        'schedate': schedate,
+        'view': 'allGlass'
     };
     $.ajax({
         url: url + '/Duty/GetSchedule',

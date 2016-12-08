@@ -54,17 +54,36 @@ class ProductionRepository extends BaseRepository
 
     public function getSchedule($request)
     {
+        $prd_no = $request->input('prd_no');
+        $glassProdLineID = $request->input('glassProdLineID');
+        $schedate = date('Y/m/d', strtotime($request->input('schedate')));
+        $view = $request->input('view');
+        $data = $this->getTable($view)
+            ->where('prd_no', $prd_no)
+            ->where('glassProdLineID', $glassProdLineID)
+            ->where('schedate', $schedate)
+            ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate')->first();
+        if (isset($data)) {
+            return ['success' => true, 'data' => $data];
+        }
+        return ['success' => false];
+    }
+    
+    public function getScheduleList($view, $request)
+    {
         $snm = $request->input('snm');
         $glassProdLineID = $request->input('glassProdLineID');
-        $schedate = $request->input('schedate');
-        if ($schedate != '') {
-            $schedate = date('Y/m/d', strtotime($request->input('schedate')));
+        $schedateOp = 'like';
+        $schedate = '%' . $request->input('schedate') . '%';
+        if ($schedate != '%%') {
+            $schedateOp = '=';
+            $schedate = date('Y-m-d', strtotime($request->input('schedate')));
         }
-        $table = $this->getTable('allGlass');
+        $table = $this->getTable($view);
         $list = $table
             ->where('PRDT_SNM', 'like', "%$snm%")
             ->where('glassProdLineID', 'like', "%$glassProdLineID%")
-            ->where('schedate', 'like', "%$schedate%")
+            ->where('schedate', $schedateOp, $schedate)
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
             ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID');
         return $list;
@@ -76,7 +95,7 @@ class ProductionRepository extends BaseRepository
         $glassProdLineID = $request->input('glassProdLineID');
         $dutyDateOp = 'like';
         $dutyDate = '%' . $request->input('dutyDate') . '%';
-        if ($dutyDate != '') {
+        if ($dutyDate != '%%') {
             $dutyDateOp = '=';
             $dutyDate = date('Y-m-d', strtotime($request->input('dutyDate')));
         }
@@ -95,38 +114,47 @@ class ProductionRepository extends BaseRepository
             ->select('productionDuty.id', 'productionDuty.glassProdLineID', 'dutyDate', 
                 'shift', 'UPGWeb.dbo.vStaffNode.name as staffName', 'allGlassRun.PRDT_SNM as snm', 
                 'quantity', 'pack', 'productionDuty.efficiency', 'annealGrade', 'startShutdown', 'endShutdown');
+        $a = $scheduleList->get();
         return $scheduleList;
     }
 
     public function getHistoryList($request)
     {
-        $pname = $request->input('pname');
-        $machno = $request->input('machno');
+        $snm = $request->input('snm');
+        $glassProdLineID = $request->input('glassProdLineID');
+        $productionDateOp = 'like';
+        $productionDate = '%' . $request->input('productionDate') . '%';
+        if ($productionDate != '%%') {
+            $productionDateOp = '=';
+            $productionDate = date('Y-m-d', strtotime($request->input('productionDate')));
+        }
         $schedule = $this->getTable('history');
         
         $formSchedule = $schedule
-            ->join('Z_DB_U105.dbo.tbmkno', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionHistory.dbo.productionHistory.mk_no')
-            ->join('DB_U105.dbo.PRDT', 'Z_DB_U105.dbo.tbmkno.prd_no', 'DB_U105.dbo.PRDT.PRD_NO')
-            ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'Z_DB_U105.dbo.tbmkno.cus_no')
-            ->where('DB_U105.dbo.PRDT.NAME', 'like', "%$pname%")
-            ->where('Z_DB_U105.dbo.tbmkno.machno', 'like', "%$machno%")
-            ->select('productionHistory.id', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionDate', 'Z_DB_U105.dbo.tbmkno.machno', 'gauge', 
-                'DB_U105.dbo.PRDT.NAME', 'blow', 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'skewPower', 
-                'termalShock', 'productionHistory.speed', 'productionHistory.defect',
-                'Z_DB_U105.dbo.tbmkno.cus_no as cus_no', 'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName');
+            ->join('allGlassRun', function ($join) {
+                $join->on('productionHistory.glassProdLineID', 'allGlassRun.glassProdLineID')
+                    ->on('productionHistory.prd_no', 'allGlassRun.prd_no')
+                    ->on('productionHistory.schedate', 'allGlassRun.schedate');
+            })
+            ->where('allGlassRun.PRDT_SNM', 'like', "%$snm%")
+            ->where('productionHistory.glassProdLineID', 'like', "%$glassProdLineID%")
+            ->where('productionhistory.productionDate', $productionDateOp, $productionDate)
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
+                'productionDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $a = $formSchedule->get();
         $testModel = $this->getTable('history');
         $formTestModel = $testModel
-            ->where('mk_no', '--')
-            ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'productionHistory.cus_no')
-            ->where('snm', 'like', "%$pname%")
-            ->where('machno', 'like', "%$machno%")
+            ->whereNull('prd_no')
+            ->whereNull('schedate')
+            ->where('snm', 'like', "%$snm%")
+            ->where('productionHistory.glassProdLineID', 'like', "%$glassProdLineID%")
+            ->where('productionHistory.productionDate', $productionDateOp, $productionDate)
             ->union($formSchedule)
-            ->orderBy('productionDate', 'machno')
-            ->select('productionHistory.id', 'mk_no', 'productionDate', 'machno', 'gauge', 
-                'snm as NAME', 'blow', 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'skewPower', 
-                'termalShock', 'productionHistory.speed', 'productionHistory.defect',
-                'cus_no', 'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName');
+            ->orderBy('productionDate')->orderBy('glassProdLineID')->orderBy('prd_no')
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
+                'productionDate', 'gauge', 'snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $b = $formTestModel->get();
         return $formTestModel;
     }
@@ -166,24 +194,27 @@ class ProductionRepository extends BaseRepository
 
     public function getHistory($id)
     {
-        $list = $this->getTable('history')->where('productionHistory.id', $id);
-        if ($list->exists()) {
-            if ($list->first()->mk_no != '--') {
-                $list = $list->join('Z_DB_U105.dbo.tbmkno', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionHistory.dbo.productionHistory.mk_no')
-                    ->join('DB_U105.dbo.PRDT', 'Z_DB_U105.dbo.tbmkno.prd_no', 'DB_U105.dbo.PRDT.PRD_NO')
-                    ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'Z_DB_U105.dbo.tbmkno.cus_no')
-                    ->select('productionHistory.id', 'Z_DB_U105.dbo.tbmkno.mk_no', 'productionDate', 'Z_DB_U105.dbo.tbmkno.machno', 'gauge', 
-                        'DB_U105.dbo.PRDT.NAME', 'blow', 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'skewPower', 
-                        'termalShock', 'productionHistory.speed', 'productionHistory.defect',
-                        'Z_DB_U105.dbo.tbmkno.cus_no as cus_no', 'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName');
+        $data = $this->getTable('history')->where('productionHistory.id', $id);
+        if ($data->exists()) {
+            if (isset($data->first()->prd_no)) {
+                $data = $data
+                    ->join('allGlassRun', function ($join) {
+                        $join->on('productionHistory.glassProdLineID', 'allGlassRun.glassProdLineID')
+                            ->on('productionHistory.prd_no', 'allGlassRun.prd_no')
+                            ->on('productionHistory.schedate', 'allGlassRun.schedate');
+                    })
+                    ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
+                        'productionDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                        'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
             } else {
-                $list = $list->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'productionHistory.cus_no')
-                    ->select('productionHistory.id', 'mk_no', 'productionDate', 'machno', 'gauge', 
-                        'snm as NAME', 'blow', 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'skewPower', 
-                        'termalShock', 'productionHistory.speed', 'productionHistory.defect',
-                        'cus_no', 'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName');
+                $data = $data
+                    ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'cus_no')
+                    ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
+                        'productionDate', 'gauge', 'snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'cus_no', 
+                        'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName', 
+                        'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
             }
-            return $list;
+            return $data;
         }
         return null;
     }

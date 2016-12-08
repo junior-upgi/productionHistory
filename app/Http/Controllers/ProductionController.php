@@ -38,24 +38,15 @@ class productionController extends Controller
 
     public function getSchedule()
     {
-        $snm = request()->input('snm');
-        $glassProdLineID = request()->input('glassProdLineID');
-        $schedate = date('Y/m/d', strtotime(request()->input('schedate')));
-        $data = $this->production->getTable('allGlass')
-            ->where('PRDT_SNM', 'like', "%$snm%")
-            ->where('glassProdLineID', 'like', "%$glassProdLineID%")
-            ->where('schedate', 'like', "%$schedate%")
-            ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate')->first();
-        if (isset($data)) {
-            return ['success' => true, 'data' => $data];
-        }
-        return ['success' => false];
+        $request = request();
+        $data = $this->production->getSchedule($request);
+        return $data;
     }
 
     public function dutySchedule()
     {
         $request = request();
-        $list = $this->production->getSchedule($request)->paginate(20);
+        $list = $this->production->getScheduleList('allGlass', $request)->paginate(20);
 
         return view('duty.schedule')
             ->with('list', $list)
@@ -67,12 +58,13 @@ class productionController extends Controller
     public function historySchedule()
     {
         $request = request();
-        $list = $this->production->getSchedule($request)->paginate(20);
+        $list = $this->production->getScheduleList('glass', $request)->paginate(20);
 
         return view('history.schedule')
             ->with('list', $list)
-            ->with('pname', $request->input('pname'))
-            ->with('machno', $request->input('machno'));            
+            ->with('snm', $request->input('snm'))
+            ->with('glassProdLineID', $request->input('glassProdLineID'))
+            ->with('schedate', $request->input('schedate'));            
     }
 
     public function dutyList()
@@ -100,16 +92,25 @@ class productionController extends Controller
 
         return view('history.list')
             ->with('list', $result)
-            ->with('pname', $request->input('pname'))
-            ->with('machno', $request->input('machno'));  
+            ->with('snm', $request->input('snm'))
+            ->with('glassProdLineID', $request->input('glassProdLineID'))
+            ->with('productionDate', $request->input('productionDate')); 
     }
 
     public function getDuty()
     {
         $id = request()->input('id');
         $data = $this->production->getDuty($id)->first();
-        $data['startShutdown'] = date('h:i', strtotime($data['startShutdown']));
-        $data['endShutdown'] = date('h:i', strtotime($data['endShutdown']));
+        if ($data['startShutdown'] == '1900-01-01 00:00:00') {
+            $data['startShutdown'] = '';
+        } else {
+            $data['startShutdown'] = date('h:i', strtotime($data['startShutdown']));
+        }
+        if ($data['endShutdown'] == '1900-01-01 00:00:00') {
+            $data['endShutdown'] = '';
+        } else {
+            $data['endShutdown'] = date('h:i', strtotime($data['endShutdown']));
+        }
         if (isset($data)) {
             return ['success' => true, 'data' => $data];
         }
@@ -138,7 +139,9 @@ class productionController extends Controller
     {
         $request = request();
         $input = $request->input();
-        if ($input['mk_no'] != '--') {
+        if ($input['prd_no'] == '' && $input['schedate'] == '') {
+            $input = array_except($input, ['prd_no', 'schedate']);
+        } else {
             $input = array_except($input, ['snm', 'cus_no']);
         }
         $result = $this->production->saveHistory($input);

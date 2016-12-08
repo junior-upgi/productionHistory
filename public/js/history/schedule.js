@@ -1,5 +1,10 @@
-function history(id) {
-    var data = {'id': id};
+function history(prd_no, glassProdLineID, schedate) {
+    var data = {
+        'prd_no': prd_no,
+        'glassProdLineID': glassProdLineID,
+        'schedate': schedate,
+        'view': 'glass'
+    };
     $.ajax({
         url: url + '/History/GetSchedule',
         type: 'POST',
@@ -24,49 +29,50 @@ function setHistoryData(data) {
     $('#modalTitle').html('新增產品履歷表');
     $('#btnSave').html('新增');
     $('#type').val('add');
-    $('#mk_no').val(data['mk_no']);
-    $('#snm').val(data['NAME']);
-    $('#cus_no').val(data['cus_no']);
-    $('#searchCustomer').val(data['customerSName']);
-    var machno = formatMachno(data['machno']);
-    $('#machno').val(machno);
+    $('#prd_no').val(data['prd_no']);
+    $('#schedate').val(data['schedate']);
+    $("#glassProdLineID").attr("disabled", true);
+    $('#glassProdLineID').val(data['glassProdLineID']);
+    $('#snm').attr("disabled", true);
+    $('#snm').val(data['snm']);
+    $('.cus').hide();
+    $('searchCustomer').removeAttr("required");
+    $('searchCustomer').val('');
+    $('cus_no').val('');
     $('#gauge').val('');
-    $('#blow').val('');
+    $('#formingMethod').val('');
     $('#other').val('');
     $('#weight').val('');
     $('#actualWeight').val('');
-    $('#skewPower').val('');
-    $('#termalShock').val('');
+    $('#stressLevel').val('');
+    $('#thermalShock').val('');
     $('#speed').val('');
     $('#efficiency').val('');
     $('#defect').val('');
     $('#addModal').modal('show');
 }
 
-function formatMachno(val) {
-    if (val.substr(0, 1) == '1') {
-        return val.substr(0, 3);
-    } else {
-        return val.substr(0, 2);
-    }
-}
-
 function testModel() {
     $('#modalTitle').html('新增試模履歷表');
     $('#btnSave').html('新增');
     $('#type').val('add');
-    $('#mk_no').val('--');
+    $('#prd_no').val('');
+    $('#schedate').val('');
+    $('#snm').attr("disabled", false);
     $('#snm').val('');
     $('#cus_no').val('');
+    $('.cus').show();
+    $('#searchCustomer').attr("required", true);
     $('#searchCustomer').val('');
-    $('#machno').val('1-1');
+    $("#glassProdLineID").attr("disabled", false);
+    $('#glassProdLineID').val('L1-1');
     $('#gauge').val('');
-    $('#blow').val('');
+    $('#formingMethod').val('');
     $('#other').val('');
     $('#weight').val('');
     $('#actualWeight').val('');
-    $('#skewPower').val('');
-    $('#termalShock').val('');
+    $('#stressLevel').val('');
+    $('#thermalShock').val('');
     $('#speed').val('');
     $('#efficiency').val('');
     $('#defect').val('');

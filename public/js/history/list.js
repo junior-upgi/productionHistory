@@ -1,3 +1,17 @@
+$(document).ready(function () { 
+    $(".date").datetimepicker({
+        format: 'yyyy-mm-dd',
+        //startDate: timInMs,
+        startView: 2,
+        minView: 2,
+        maxView: 4, 
+        autoclose: true,
+        todayBtn: true,
+        todayHighlight: true,
+        language: 'zh-TW',
+    });
+});
+
 function edit(id) {
     var data = {'id': id};
     $.ajax({
@@ -25,30 +39,33 @@ function setHistoryData(data) {
     $('#btnSave').html('更新');
     $('#type').val('edit');
     $('#id').val(data['id']);
-    $('#name').val('');
-    $('#mk_no').val(data['mk_no']);
-    $('#snm').val(data['NAME']);
+    $('#prd_no').val(data['prd_no']);
+    $('#schedate').val(data['schedate']);
+    $('#glassProdLineID').val(data['glassProdLineID']);
+    $('#snm').val(data['snm']);
+    if (data['cus_no'] == null) {
+        $("#glassProdLineID").attr("disabled", true);
+        $('#snm').attr("disabled", true);
+        $('.cus').hide();
+        $('#searchCustomer').removeAttr("required");
+        $('#searchCustomer').val('');
+    } else {
+        $("#glassProdLineID").attr("disabled", false);
+        $('#snm').attr("disabled", false);
+        $('.cus').show();
+        $('#searchCustomer').attr("required", true);
+        $('#searchCustomer').val(data['customerSName']);
+    }
     $('#cus_no').val(data['cus_no']);
-    $('#searchCustomer').val(data['customerSName']);
-    var machno = formatMachno(data['machno']);
-    $('#machno').val(machno);
-    $('#gauge').val(data['blow']);
-    $('#blow').val(data['blow']);
+    $('#gauge').val(data['gauge']);
+    $('#formingMethod').val(data['formingMethod']);
     $('#other').val(data['other']);
     $('#weight').val(data['weight']);
     $('#actualWeight').val(data['actualWeight']);
-    $('#skewPower').val(data['skewPower']);
-    $('#termalShock').val(data['termalShock']);
+    $('#stressLevel').val(data['stressLevel']);
+    $('#thermalShock').val(data['thermalShock']);
     $('#speed').val(data['speed']);
     $('#efficiency').val(data['efficiency']);
     $('#defect').val(data['defect']);
     $('#addModal').modal('show');
-}
-
-function formatMachno(val) {
-    if (val.substr(0, 1) == '1') {
-        return val.substr(0, 3);
-    } else {
-        return val.substr(0, 2);
-    }
 }

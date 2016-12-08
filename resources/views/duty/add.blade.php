@@ -1,4 +1,4 @@
-<script src="{{ url('/js/duty/add.js?v=1') }}"></script>
+<script src="{{ url('/js/duty/add.js?v=2') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -43,7 +43,7 @@
                     <div class="form-group">
                         <label for="glassProdLineID" class="col-md-3 control-label">線別</label>
                         <div class="col-md-2">
-                            <select class="form-control disable" id="glassProdLineID" name="glassProdLineID">
+                            <select class="form-control" id="glassProdLineID" name="glassProdLineID" disabled="disabled">
                                 <option value="L1-1">L1-1</option>
                                 <option value="L1">L1</option>
                                 <option value="L2">L2</option>
@@ -58,7 +58,7 @@
                     <div class="form-group">
                         <label for="snm" class="col-md-3 control-label">產品名稱</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control disable" id="snm" value="" maxlength="10" required>
+                            <input type="text" class="form-control" readonly id="snm" value="" maxlength="10" required>
                         </div>
                     </div>
                     <div class="form-group">
