@@ -43,6 +43,15 @@ class productionController extends Controller
         return $data;
     }
 
+    public function getQCSchedule()
+    {
+        $request = request();
+        $data = $this->production->getSchedule($request)->get()->toArray();
+        $customer = $this->production->getScheduleCustomer($request);
+        $data['customer'] = $customer;
+        return $data;
+    }
+
     public function dutySchedule()
     {
         $request = request();
@@ -65,6 +74,18 @@ class productionController extends Controller
             ->with('snm', $request->input('snm'))
             ->with('glassProdLineID', $request->input('glassProdLineID'))
             ->with('schedate', $request->input('schedate'));            
+    }
+
+    public function qcSchedule()
+    {
+        $request = request();
+        $list = $this->production->getScheduleList('plan', $request)->paginate(20);
+
+        return view('qc.schedule')
+            ->with('list', $list)
+            ->with('snm', $request->input('snm'))
+            ->with('glassProdLineID', $request->input('glassProdLineID'))
+            ->with('schedate', $request->input('schedate'));    
     }
 
     public function dutyList()
@@ -97,6 +118,17 @@ class productionController extends Controller
             ->with('productionDate', $request->input('productionDate')); 
     }
 
+    public function qcList()
+    {
+        $request = request();
+        $list = $this->production->getQCList($request)->paginate(20);
+        return view('qc.list')
+            ->with('list', $list)
+            ->with('snm', $request->input('snm'))
+            ->with('glassProdLineID', $request->input('glassProdLineID'))
+            ->with('schedate', $request->input('schedate'));  
+    }
+
     public function getDuty()
     {
         $id = request()->input('id');
@@ -127,6 +159,11 @@ class productionController extends Controller
         return ['success' => false];
     }
 
+    public function getQC()
+    {
+
+    }
+
     public function saveDuty()
     {
         $request = request();
@@ -146,5 +183,10 @@ class productionController extends Controller
         }
         $result = $this->production->saveHistory($input);
         return $result;
+    }
+
+    public function saveQC()
+    {
+
     }
 }

@@ -15,11 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('nav/{view}', function($view) {
+Route::get('nav/{view}', function ($view) {
     return view($view);
 });
-
-
 
 Route::group(['prefix' => 'Duty'], function() {
     Route::get('ScheduleList', 'ProductionController@dutySchedule');
@@ -30,7 +28,7 @@ Route::group(['prefix' => 'Duty'], function() {
     Route::post('SaveDuty', 'ProductionController@saveDuty');
 });
 
-Route::group(['prefix' => 'History'], function() {
+Route::group(['prefix' => 'History'], function () {
     Route::get('GetCustomer', 'ProductionController@getCustomer');
     Route::get('ScheduleList', 'ProductionController@historySchedule');
     Route::get('HistoryList', 'ProductionController@historyList');
@@ -38,4 +36,14 @@ Route::group(['prefix' => 'History'], function() {
     Route::post('GetHistory', 'ProductionController@getHistory');
     Route::get('GetStaff', 'ProductionController@getStaff');
     Route::post('SaveHistory', 'ProductionController@saveHistory');
+});
+
+Route::group(['prefix' => 'QC'], function () {
+    Route::get('GetCustomer', 'ProductionController@getCustomer');
+    Route::get('ScheduleList', 'ProductionController@qcSchedule');
+    Route::get('QCList', 'ProductionController@qcList');
+    Route::post('GetSchedule', 'ProductionController@getQCSchedule');
+    Route::post('GetQC', 'ProductionController@getQC');
+    Route::get('GetStaff', 'ProductionController@getStaff');
+    Route::post('SaveQC', 'ProductionController@saveQC');
 });

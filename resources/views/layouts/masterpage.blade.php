@@ -66,7 +66,8 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/Duty/DutyList') }}">生產職班表</a></li>
 					<li><a href="{{ url('/History/HistoryList') }}">產品履歷表</a></li>
-					<li><a href="">生產條件</a></li>
+					<li><a href="{{ url('/nav/isProdDataForm') }}">生產條件記錄表</a></li>
+					<li><a href="{{ url('/QC/QCList') }}">品管管制表</a></li>
 				</ul>
 			</div>
 			<div class="collapse navbar-collapse navbar-right">

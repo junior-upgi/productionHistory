@@ -13,6 +13,7 @@ use App\Models\GlassRunDetail;
 use App\Models\GlassRunPlan;
 use App\Models\GlassRunPlanDetail;
 use App\Models\AllGlassRun;
+use App\Models\QualityControl;
 
 class ProductionRepository extends BaseRepository
 {
@@ -26,6 +27,7 @@ class ProductionRepository extends BaseRepository
     public $plan;
     public $planDetail;
     public $allGlass;
+    public $qc;
 
     public function __construct(
         ProductionDuty $duty,
@@ -37,7 +39,8 @@ class ProductionRepository extends BaseRepository
         GlassRunDetail $glassDetail,
         GlassRunPlan $plan,
         GlassRunPlanDetail $planDetail,
-        AllGlassRun $allGlass
+        AllGlassRun $allGlass,
+        QualityControl $qc
     ) {
         parent::__construct();
         $this->duty = $duty;
@@ -50,6 +53,7 @@ class ProductionRepository extends BaseRepository
         $this->plan = $plan;
         $this->planDetail = $planDetail;
         $this->allGlass = $allGlass;
+        $this->qc = $qc;
     }
 
     public function getSchedule($request)
@@ -62,11 +66,25 @@ class ProductionRepository extends BaseRepository
             ->where('prd_no', $prd_no)
             ->where('glassProdLineID', $glassProdLineID)
             ->where('schedate', $schedate)
-            ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate')->first();
+            ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
         if (isset($data)) {
             return ['success' => true, 'data' => $data];
         }
         return ['success' => false];
+    }
+
+    public function getScheduleCustomer($request)
+    {
+        $prd_no = $request->input('prd_no');
+        $glassProdLineID = $request->input('glassProdLineID');
+        $schedate = date('Y/m/d', strtotime($request->input('schedate')));
+        $view = $request->input('view');
+        $data = $this->getTable($view . 'Detail')
+            ->where('prd_no', $prd_no)
+            ->where('glassProdLineID', $glassProdLineID)
+            ->where('schedate', $schedate)->get()->toArray();
+        $str = implode(',', $data);
+        return $str;
     }
     
     public function getScheduleList($view, $request)
@@ -157,6 +175,30 @@ class ProductionRepository extends BaseRepository
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $b = $formTestModel->get();
         return $formTestModel;
+    }
+
+    public function getQCList($request)
+    {
+        $snm = $request->input('snm');
+        $glassProdLineID = $request->input('glassProdLineID');
+        $schedateOp = 'like';
+        $schedate = '%' . $request->input('schedate') . '%';
+        if ($schedate != '%%') {
+            $schedateOp = '=';
+            $schedate = date('Y-m-d', strtotime($request->input('schedate')));
+        }
+        $schedule = $this->getTable('qc');
+        $scheduleList = $schedule
+            ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'qualityControl.cus_no')
+            ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no' )
+            ->where('DB_U105.dbo.PRDT.SNM', 'like', "%$snm%")
+            ->where('qualityControl.glassProdLineID', 'like', "%$glassProdLineID%")
+            ->where('qualityControl.schedate', $schedateOp, $schedate)
+            ->orderBy('schedate', 'desc')->orderBy('DB_U105.dbo.PRDT.SNM')->orderBy('glassProdLineID')
+            ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm', 
+                'UPGWeb.dbo.vCustomer.SName as customerSName', 'UPGWeb.dbo.vCustomer.Name as customerName');
+        $a = $scheduleList->get();
+        return $scheduleList;
     }
 
     public function getStaff()
@@ -272,6 +314,10 @@ class ProductionRepository extends BaseRepository
 
             case 'allGlass':
                 return $this->allGlass;
+                break;
+
+            case 'qc':
+                return $this->qc;
                 break;
 
             default:
