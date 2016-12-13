@@ -10,31 +10,25 @@ $(document).ready(function () {
         todayHighlight: true,
         language: 'zh-TW',
     });
-    
-    $('#searchCustomer').bsSuggest('init', {
-        url: url + '/History/GetCustomer',
-        getDataMethod: 'firstByUrl',
-        effectiveFields: ['name'],
-        searchFields: ['name', 'sname'],
-        effectiveFieldsAlias:{name: '顧客名稱'},
-        ignorecase: true,
-        showHeader: true,
-        showBtn: false,
-        delayUntilKeyup: false, //获取数据的方式为 firstByUrl 时，延迟到有输入/获取到焦点时才请求数据
-        idField: 'ID',
-        keyField: 'sname'
-    }).on('onDataRequestSuccess', function (e, result) {
-        //console.log('onDataRequestSuccess: ', result);
-    }).on('onSetSelectValue', function (e, keyword, data) {
-        //console.log('onSetSelectValue: ', keyword, data);
-        $('#cus_no').val(keyword['id']);
-    }).on('onUnsetSelectValue', function () {
-        //console.log('onUnsetSelectValue');
-        $('#cus_no').val('');
+
+    $('#draw').fileinput({
+        language: 'zh-TW',
+        browseClass: "btn btn-success",
+        browseLabel: "選擇檔案",
+        browseIcon: "<i class=\"glyphicon glyphicon-picture\"></i> ",
+        removeClass: "btn btn-danger",
+        removeLabel: "移除",
+        removeIcon: "<i class=\"glyphicon glyphicon-trash\"></i> ",
+        fileActionSettings: {
+            showZoom: false,
+            zoomIcon: "",
+            zoomClass: "",
+            zoomTitle: "",
+        }
     });
 
     $("#addForm").ajaxForm({
-        url: url + '/History/SaveHistory',
+        url: url + '/QC/SaveQC',
         type: 'POST',
         beforeSubmit: function () {
             //$('#BtnSave').attr('disabled', 'disabled');
@@ -52,7 +46,7 @@ $(document).ready(function () {
                     closeOnConfirm: false
                 },
                 function () {
-                    document.location.href = url + '/History/HistoryList';
+                    document.location.href = url + '/QC/QCList';
                 });
             } else {
                 swal("新增資料失敗!", obj.msg, "error");

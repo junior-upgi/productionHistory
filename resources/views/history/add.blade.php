@@ -1,4 +1,4 @@
-<script src="{{ url('/js/history/add.js?v=1') }}"></script>
+<script src="{{ url('/js/history/add.js?v=3') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -28,7 +28,7 @@
                     <div class="form-group">
                         <label for="glassProdLineID" class="col-md-3 control-label">線別</label>
                         <div class="col-md-2">
-                            <select class="form-control disable" id="glassProdLineID" name="glassProdLineID">
+                            <select class="form-control" id="glassProdLineID" name="glassProdLineID">
                                 <option value="L1-1">L1-1</option>
                                 <option value="L1">L1</option>
                                 <option value="L2">L2</option>
@@ -114,7 +114,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-                    <button type="submit" class="btn btn-primary" data-loading-text="資料送出中..." autocomplete="off" id="btnSave"></button>
+                    <button type="button" class="btn btn-primary" data-loading-text="資料送出中..." autocomplete="off" id="btnSave" onclick="save()"></button>
                 </div>
             </form>
         </div><!-- /.modal-content -->

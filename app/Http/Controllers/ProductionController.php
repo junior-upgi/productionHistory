@@ -46,10 +46,17 @@ class productionController extends Controller
     public function getQCSchedule()
     {
         $request = request();
-        $data = $this->production->getSchedule($request)->get()->toArray();
-        $customer = $this->production->getScheduleCustomer($request);
-        $data['customer'] = $customer;
-        return $data;
+        $result = $this->production->getSchedule($request);
+        $data = $result['data']->toArray();
+        $data['schedate'] = date('Y-m-d', strtotime($data['schedate']));
+        $data['customer'] = $this->production->getScheduleCustomer($request);
+        $data['recentProdDefectList'] = $this->production->getQCDefect($data['prd_no']);
+        $data['packRate'] = $this->production->getQCPackRate($data['prd_no']);
+        $data['note'] = $this->production->getQCNote($request);
+        $data['decoration'] = $this->production->getQCDecoration($request);
+
+        $result['data'] = $data;
+        return $result;
     }
 
     public function dutySchedule()
@@ -161,7 +168,12 @@ class productionController extends Controller
 
     public function getQC()
     {
-
+        $id = request()->input('id');
+        $data = $this->production->getQC($id)->first();
+        if (isset($data)) {
+            return ['success' => true, 'data' => $data];
+        }
+        return ['success' => false];
     }
 
     public function saveDuty()
@@ -187,6 +199,18 @@ class productionController extends Controller
 
     public function saveQC()
     {
-
+        $request = request();
+        $input = $request->input();
+        $file = $request->file('draw');
+        if (isset($file)) {
+            $fileID = $this->production->saveFile($file);
+            if (!isset($fileID)) {
+                return ['success' => false, 'msg' => '檔案上傳失敗'];
+            }
+            $input['draw'] = $fileID;
+        }
+        $a = implode(',', $input);
+        $result = $this->production->saveQC($input);
+        return $result;
     }
 }

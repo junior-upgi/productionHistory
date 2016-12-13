@@ -9,6 +9,8 @@
  */
 namespace App\Service;
 
+use App\Models\File;
+
 /**
  * Class ProductRepository
  *
@@ -81,7 +83,7 @@ class Common
             $table->getConnection()->rollback();
             return array(
                 'success' => false,
-                'msg' => $e['errorInfo'][2],
+                'msg' => $e->errorInfo[2],
             );
         }
     }
@@ -135,5 +137,69 @@ class Common
                 'msg' => $e['errorInfo'][2],
             );
         }
+    }
+
+    /**
+     * 取得檔案base64編碼
+     * 
+     * @param string $id 檔案id
+     * @return string base64編碼
+     */
+    public function getFile($id)
+    {
+        $file = new File();
+        return $file->getFileCode($id);
+    }
+
+    /**
+     * 取得檔案資訊
+     * 
+     * @param string $id 檔案id
+     * @return File Module
+     */
+    public function getFileInfo($id)
+    {
+        $file = new File();
+        return $file->getFile($id);
+    }
+    
+    /**
+     * 將檔案進行base64轉碼存入資料庫中，並回傳對應id
+     * 
+     * @param object $data 檔案物件
+     * @return string 檔案id
+     */
+    public function saveFile($data)
+    {
+        $name = $data->getClientOriginalName();
+        $fe = $data->getClientOriginalExtension();
+        $type = $data->getMimeType();
+        $file = new file();
+        $id = $this->getNewGUID();
+        $result = $file->saveFile($data, $type, $name, $fe, $id);
+        if ($result) {
+            return $id;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * 產生GUID
+     *
+     * @return string 回傳GUID
+     */
+    public static function getNewGUID()
+    {
+        $charid = strtoupper(md5(uniqid(mt_rand(), true)));
+        $hyphen = chr(45);// "-"
+        $uuid = ""
+        .substr($charid, 0, 8).$hyphen
+        .substr($charid, 8, 4).$hyphen
+        .substr($charid,12, 4).$hyphen
+        .substr($charid,16, 4).$hyphen
+        .substr($charid,20,12);
+        
+        return $uuid;
     }
 }

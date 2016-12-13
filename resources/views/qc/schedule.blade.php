@@ -3,9 +3,9 @@
 <script src="{{ url('/js/qc/schedule.js?v=5') }}"></script>
 <div class="row">
     <div class="col-md-12">
-        <h2>生產排程清單</h2>
+        <h2>品管管制表-生產排程清單</h2>
         <div class="pull-left col-xs-6 row">
-            <a class="btn btn-default" href="{{ url('/QC/qcList') }}" style="margin-bottom: 10px;">返回履歷表清單</a>
+            <a class="btn btn-default" href="{{ url('/QC/qcList') }}" style="margin-bottom: 10px;">返回品管管制表清單</a>
         </div>
         <form class="form-inline pull-right" action="{{ url('/QC/ScheduleList') }}" role="form" style="margin-bottom: 10px;">
             <div class="row form-group">
@@ -57,7 +57,7 @@
                 @foreach($list as $item)
                     <tr>
                         <td>
-                            <button class="btn btn-primary" onclick="qc('{{ $item->prd_no }}', '{{ $item->glassProdLineID }}', '{{ $item->schedate }}')">填寫履歷表</button>
+                            <button class="btn btn-primary" onclick="qc('{{ $item->prd_no }}', '{{ $item->glassProdLineID }}', '{{ $item->schedate }}')">填寫管制表</button>
                         </td>
                         <td>{{ $item->schedate }}</td>
                         <td>{{ $item->snm }}</td>

@@ -48,8 +48,8 @@ function setQCData(data) {
     $('#saftyRingNoGo').val(data['saftyRingNoGo']);
     $('#bodyDiaGo').val(data['bodyDiaGo']);
     $('#bodyDiaNoGo').val(data['bodyDiaNoGo']);
-    $('#hSettingGo').val(data['hSettingGo']);
-    $('#hSettingNoGo').val(data['hSettingNoGo']);
+    $('#hSettingMin').val(data['hSettingMin']);
+    $('#hSettingMax').val(data['hSettingMax']);
     $('#heightGo').val(data['heightGo']);
     $('#heightNoGo').val(data['heightNoGo']);
     $('#verticality').val(data['verticality']);

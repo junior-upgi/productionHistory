@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/qc/list.js?v=2') }}"></script>
+<script src="{{ url('/js/qc/list.js?v=1') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>品管管制表</h2>
@@ -52,7 +52,6 @@
                     <td>預定生產數量</td>
                     <td>預定生產日期</td>
                     <td>線別</td>
-                    <td>加工別</td>
                     <td>客戶</td>
                     <td>級別</td>
                     <td>國別</td>
@@ -70,10 +69,8 @@
                         <td>{{ $item['snm'] }}</td>
                         <td>{{ $item['orderQty'] }}</td>
                         <td>{{ $item['schedate'] }}</td>
-                        <td>{{ $item['glassProdLineID'] }}</td>
-                        <td>{{ $item['weight'] }}</td>
-                        <td>{{ $item['decoration'] }}</td>
-                        <td>{{ $item['customerSName'] }}</td>
+                        <td>{{ $item['glassProdLineID'] }}</td>                      
+                        <td>{{ $item['customer'] }}</td>
                         <td>{{ $item['qualityLevel'] }}</td>
                         <td>{{ $item['country'] }}</td>
                     </tr>

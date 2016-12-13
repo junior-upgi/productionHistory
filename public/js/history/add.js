@@ -67,5 +67,6 @@ $(document).ready(function () {
 });
 
 function save() {
+    $('#glassProdLineID').attr('disabled', false);
     $("#addForm").submit();
 }

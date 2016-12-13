@@ -2,6 +2,7 @@
 namespace App\Repositories;
 
 use App\Repositories\BaseRepository;
+use DB;
 
 use App\Models\ProductionDuty;
 use App\Models\ProductionHistory;
@@ -82,7 +83,63 @@ class ProductionRepository extends BaseRepository
         $data = $this->getTable($view . 'Detail')
             ->where('prd_no', $prd_no)
             ->where('glassProdLineID', $glassProdLineID)
-            ->where('schedate', $schedate)->get()->toArray();
+            ->where('schedate', $schedate)
+            ->select('CUS_SNM')->get()->toArray();
+        $data = array_collapse($data);
+        $str = implode(' , ', $data);
+        return $str;
+    }
+
+    public function getQCDefect($prd_no)
+    {
+        $table = $this->getTable('history');
+        $defect = $table->where('prd_no', $prd_no)->orderBy('schedate', 'desc')->select('defect')->first();
+        return $defect['defect'];
+    }
+
+    public function getQCPackRate($prd_no)
+    {
+        $table = $this->getTable('history');
+        $packRate = $table->where('prd_no', $prd_no)->orderBy('schedate', 'desc')->select('efficiency')->first();
+        return $packRate['efficiency'];
+    }
+
+    public function getQCNote($request)
+    {
+        $prd_no = $request->input('prd_no');
+        $glassProdLineID = $request->input('glassProdLineID');
+        $schedate = date('Y/m/d', strtotime($request->input('schedate')));
+        $view = $request->input('view');
+        $data = $this->getTable($view . 'Detail')
+            ->where('prd_no', $prd_no)
+            ->where('glassProdLineID', $glassProdLineID)
+            ->where('schedate', $schedate)
+            ->groupBy('SPC_NAME')
+            ->select('SPC_NAME', DB::raw('SUM(QTY) as QTY'))
+            ->get()->toArray();
+        $array = [];
+        $str = '';
+        foreach ($data as $d) {
+            array_push($array, $d['SPC_NAME'] . number_format($d['QTY']));
+        }
+        $str = implode(' ', $array);
+        return $str;
+    }
+
+    public function getQCDecoration($request)
+    {
+        $prd_no = $request->input('prd_no');
+        $glassProdLineID = $request->input('glassProdLineID');
+        $schedate = date('Y/m/d', strtotime($request->input('schedate')));
+        $view = $request->input('view');
+        $data = $this->getTable($view . 'Detail')
+            ->where('prd_no', $prd_no)
+            ->where('glassProdLineID', $glassProdLineID)
+            ->where('schedate', $schedate)
+            ->groupBy('SPC_NAME')
+            ->select('SPC_NAME')
+            ->get()->toArray();
+        $data = array_collapse($data);
         $str = implode(',', $data);
         return $str;
     }
@@ -189,14 +246,13 @@ class ProductionRepository extends BaseRepository
         }
         $schedule = $this->getTable('qc');
         $scheduleList = $schedule
-            ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'qualityControl.cus_no')
-            ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no' )
+            //->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'qualityControl.cus_no')
+            ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no')
             ->where('DB_U105.dbo.PRDT.SNM', 'like', "%$snm%")
             ->where('qualityControl.glassProdLineID', 'like', "%$glassProdLineID%")
             ->where('qualityControl.schedate', $schedateOp, $schedate)
             ->orderBy('schedate', 'desc')->orderBy('DB_U105.dbo.PRDT.SNM')->orderBy('glassProdLineID')
-            ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm', 
-                'UPGWeb.dbo.vCustomer.SName as customerSName', 'UPGWeb.dbo.vCustomer.Name as customerName');
+            ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm');
         $a = $scheduleList->get();
         return $scheduleList;
     }
@@ -261,6 +317,18 @@ class ProductionRepository extends BaseRepository
         return null;
     }
 
+    public function getQC($id)
+    {
+        $data = $this->getTable('qc')->where('qualityControl.id', $id);
+        if ($data->exists()) {
+            $data = $data
+                ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no')
+                ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm');
+            return $data;
+        }
+        return null;
+    }
+
     public function saveDuty($input)
     {
         $result = $this->save('duty', $input);
@@ -271,6 +339,17 @@ class ProductionRepository extends BaseRepository
     {
         $result = $this->save('history', $input);
         return $result;
+    }
+
+    public function saveQC($input)
+    {
+        $result = $this->save('qc', $input);
+        return $result;
+    }
+
+    public function saveFile($file)
+    {
+        return $this->common->saveFile($file);
     }
 
     public function getTable($table)
