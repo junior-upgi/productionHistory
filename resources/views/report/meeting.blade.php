@@ -36,7 +36,7 @@
     </div>
     <div class="col-md-9">
         <!--顯示提示訊息-->
-        @if (isset($task))
+        @if (count($task) > 0)
             <div style="height: 120px; overflow: auto; margin-bottom:10px; border: solid 1px #a0a0a0; border-radius: 4px;" id="task">
                 <table class="table table-bordered" style="margin-bottom: 0px;">
                     <tbody id="taskDetail">
