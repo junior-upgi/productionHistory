@@ -24,8 +24,7 @@ class ReportController extends Controller
         $input = $request->input();
         $snm = $request->input('snm');
 
-        //$prd_no = $this->production->getGlass()->where('snm', $snm)->first()->prd_no;
-        $historyList = $this->production->getHistoryList($request)->get()->toArray();
+        $historyList = $this->production->getReportHistoryList($snm)->get()->toArray();
         if (count($historyList) > 0) {
             $qcData = $this->production->getQCList($request)->first()->toArray();
             $task = $this->production->getTaskDetailByPrdNO($historyList[0]['prd_no'])->orderBy('deadline', 'desc')->get()->toArray();
