@@ -35,7 +35,9 @@ class ReportController extends Controller
                 ->with('qc', $qcData)
                 ->with('task', $task);
         }
-
+        if ($snm == '') {
+            return view('report.meeting')->with('snm', null);
+        }
         return view('report.meeting')->with('snm', $snm);
     }
 
