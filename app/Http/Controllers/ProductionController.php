@@ -218,7 +218,10 @@ class productionController extends Controller
             }
             $input['draw'] = $fileID;
         }
-        $a = implode(',', $input);
+        //$a = implode(',', $input);
+        if (isset($input['fullInspection'])) {
+            $input['fullInspection'] = implode(',', $input['fullInspection']);
+        }
         $result = $this->production->saveQC($input);
         return $result;
     }

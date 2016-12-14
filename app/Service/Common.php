@@ -9,7 +9,7 @@
  */
 namespace App\Service;
 
-use App\Models\File;
+use App\Models\upgiSystem\File;
 
 /**
  * Class ProductRepository

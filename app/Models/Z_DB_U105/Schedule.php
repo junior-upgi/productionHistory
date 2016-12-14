@@ -1,5 +1,5 @@
 <?php
-namespace App\Models;
+namespace App\Models\Z_DB_U105;
 
 use Illuminate\Database\Eloquent\Model;
 

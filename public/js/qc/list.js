@@ -76,5 +76,18 @@ function setHistoryData(data) {
     $('#note').val(data['note']);
     $('#recentProdDefectList').val(data['recentProdDefectList']);
     $('#packRate').val(data['packRate']);
+    setInspection(data['fullInspection']);
     $('#addModal').modal('show');
+}
+
+function setInspection(list) {
+    $('input[name="fullInspection[]"]').each(function() {
+         $(this).prop("checked", false);
+     });
+    if (list != null) {
+        var str = list.split(',');
+        for (i=0; i < str.length; i++) {
+            $('#ch_' + str[i]).prop("checked", true);
+        }
+    }
 }

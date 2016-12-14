@@ -49,6 +49,56 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="finishDiaGo" class="col-md-3 control-label">全程管制項目</label>
+                        <div class="col-md-9">
+                            <div class="col-md-4">
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_finishDia" name="fullInspection[]" value="finishDia">口外徑
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_finishInnerDia" name="fullInspection[]" value="finishInnerDia">口內徑
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_threadDia" name="fullInspection[]" value="threadDia">螺牙徑
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_lipDia" name="fullInspection[]" value="lipDia">唇徑
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_saftyRing" name="fullInspection[]" value="saftyRing">護圈徑
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_bodyDia" name="fullInspection[]" value="bodyDia">胴徑
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_hSetting" name="fullInspection[]" value="hSetting">天肩高
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_height" name="fullInspection[]" value="height">高度規
+                                </label>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_verticality" name="fullInspection[]" value="verticality">垂直度
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_wavyFinish" name="fullInspection[]" value="wavyFinish">天波
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_slantedFinish" name="fullInspection[]" value="slantedFinish">天傾斜
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_weight" name="fullInspection[]" value="weight">重量
+                                </label>
+                                <label class="checkbox">
+                                    <input type="checkbox" id="ch_brimCapueity" name="fullInspection[]" value="brimCapueity">滿(容)量
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="finishDiaGo" class="col-md-3 control-label">口外徑GO</label>
                         <div class="col-md-9">
                             <input type="text" class="form-control" id="finishDiaGo" name="finishDiaGo" value="">

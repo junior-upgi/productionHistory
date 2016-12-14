@@ -4,19 +4,21 @@ namespace App\Repositories;
 use App\Repositories\BaseRepository;
 use DB;
 
-use App\Models\ProductionDuty;
-use App\Models\ProductionHistory;
-use App\Models\Customer;
-use App\Models\Schedule;
-use App\Models\Staff;
-use App\Models\GlassRun;
-use App\Models\GlassRunDetail;
-use App\Models\GlassRunPlan;
-use App\Models\GlassRunPlanDetail;
-use App\Models\AllGlassRun;
-use App\Models\QualityControl;
-use App\Models\IsProdData;
-use App\Models\Glass;
+use App\Models\productionHistory\ProductionDuty;
+use App\Models\productionHistory\ProductionHistory;
+use App\Models\UPGWeb\Customer;
+use App\Models\Z_DB_U105\Schedule;
+use App\Models\UPGWeb\Staff;
+use App\Models\productionHistory\GlassRun;
+use App\Models\productionHistory\GlassRunDetail;
+use App\Models\productionHistory\GlassRunPlan;
+use App\Models\productionHistory\GlassRunPlanDetail;
+use App\Models\productionHistory\AllGlassRun;
+use App\Models\productionHistory\QualityControl;
+use App\Models\productionHistory\IsProdData;
+use App\Models\UPGWeb\Glass;
+use App\Models\taskTracking\TaskList;
+use App\Models\taskTracking\TaskListDetail;
 
 class ProductionRepository extends BaseRepository
 {
@@ -33,6 +35,8 @@ class ProductionRepository extends BaseRepository
     public $qc;
     public $prod;
     public $glass;
+    public $task;
+    public $taskDetail;
 
     public function __construct(
         ProductionDuty $duty,
@@ -47,7 +51,9 @@ class ProductionRepository extends BaseRepository
         AllGlassRun $allGlass,
         QualityControl $qc,
         IsProdData $prod,
-        Glass $glass
+        Glass $glass,
+        TaskList $task,
+        TaskListDetail $taskDetail
     ) {
         parent::__construct();
         $this->duty = $duty;
@@ -63,6 +69,8 @@ class ProductionRepository extends BaseRepository
         $this->qc = $qc;
         $this->prod = $prod;
         $this->glass = $glass;
+        $this->task = $task;
+        $this->taskDetail = $taskDetail;
     }
 
     public function getSchedule($request)
@@ -283,6 +291,12 @@ class ProductionRepository extends BaseRepository
         return $list;
     }
 
+    public function getTaskDetailByPrdNO($prd_no)
+    {
+        $list = $this->taskDetail->where('PRD_NO', $prd_no);
+        return $list;
+    }
+
     public function getDuty($id)
     {
         $data = $this->getTable('duty')->where('productionDuty.id', $id);
@@ -420,6 +434,14 @@ class ProductionRepository extends BaseRepository
             
             case 'glass':
                 return $this->glass;
+                break;
+
+            case 'task':
+                return $this->task;
+                break;
+            
+            case 'taskDetail':
+                return $this->taskDetail;
                 break;
 
             default:

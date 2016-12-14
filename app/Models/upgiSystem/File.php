@@ -7,7 +7,7 @@
  * @date 16/10/14
  * @since 1.0.0 spark: 於此版本開始編寫註解
 */
-namespace App\Models;
+namespace App\Models\upgiSystem;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

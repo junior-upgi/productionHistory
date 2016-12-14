@@ -5,7 +5,7 @@
     <div class="col-md-12">
         <h2>品管管制表-生產排程清單</h2>
         <div class="pull-left col-xs-6 row">
-            <a class="btn btn-default" href="{{ url('/QC/qcList') }}" style="margin-bottom: 10px;">返回品管管制表清單</a>
+            <a class="btn btn-default" href="{{ url('/QC/QCList') }}" style="margin-bottom: 10px;">返回品管管制表清單</a>
         </div>
         <form class="form-inline pull-right" action="{{ url('/QC/ScheduleList') }}" role="form" style="margin-bottom: 10px;">
             <div class="row form-group">

@@ -1,5 +1,5 @@
 $(function () {
-    $("#historyDetail").sortable({
+    $("#sort").sortable({
         helper: fixWidthHelper,
         update: function(event, ui) {
             
@@ -12,14 +12,6 @@ $(function () {
         });
         return ui;
     };
-    $('.ch').change( function () {
-        if ($(this).prop('checked')) {
-            var a = $(this).val();
-            $('#hi_' + a).show();
-        } else {
-            $('#hi_' + $(this).val()).hide();
-        }
-    });
 });
 
 function search() {
@@ -128,8 +120,4 @@ function setQC(list) {
     $('#qc').show();
     $('#qcDetail').empty();
     
-}
-
-function select(id) {
-    $('#hi_' + id).show();
 }
