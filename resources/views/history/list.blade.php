@@ -1,9 +1,9 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/history/list.js?v=2') }}"></script>
+<script src="{{ url('/js/history/list.js?v=3') }}"></script>
 <div class="row">
     <div class="col-md-12">
-        <h2>品質管制產品履歷表</h2>
+        <h2>產品履歷表</h2>
         <div class="pull-left">
             <a class="btn btn-primary" href="{{ url('/History/ScheduleList') }}">新增</a>
         </div>
@@ -73,7 +73,7 @@
                         </td>
                         <td>{{ $item['snm'] }}</td>
                         <td>{{ date('Y-m-d', strtotime($item['productionDate'])) }}</td>
-                         @if(isset($item['prd_no']))
+                         @if(isset($item['schedate']))
                             <td>量產</td>
                         @else
                             <td>試模</td>

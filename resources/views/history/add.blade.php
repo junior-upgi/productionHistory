@@ -1,4 +1,4 @@
-<script src="{{ url('/js/history/add.js?v=3') }}"></script>
+<script src="{{ url('/js/history/add.js?v=5') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -11,7 +11,7 @@
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
                     <input type="hidden" id="type" name="type" value="">
                     <input type="hidden" id="id" name="id" value="">
-                    <input type="hidden" id="prd_no" name="prd_no" value="">
+                    <!--<input type="hidden" id="prd_no" name="prd_no" value="">-->
                     <input type="hidden" id="schedate" name="schedate" value="">
                     <div class="form-group">
                         <label for="productionDate" class="col-md-3 control-label">生產日期</label>
@@ -19,10 +19,23 @@
                             <input type="text" class="form-control date form_datetime" readonly id="productionDate" name="productionDate" value="{{ \Carbon\Carbon::today()->toDateString() }}">
                         </div>
                     </div>
+                    <!--
                     <div class="form-group">
                         <label for="snm" class="col-md-3 control-label">產品名稱</label>
                         <div class="col-md-3">
                             <input type="text" class="form-control" id="snm" name="snm" value="" maxlength="10" required>
+                        </div>
+                    </div>
+                    -->
+                    <div class="form-group prd">
+                        <label for="searchProd" class="col-md-3 control-label">產品名稱</label>
+                        <div class="col-md-9">
+                            <div class="input-group">
+                                <input type="hidden" id="prd_no" name="prd_no" value="">
+                                <input type="text" class="form-control" id="searchProd">
+                                <ul class="dropdown-menu dropdown-menu-right" role="menu" style="height: 350px;">
+                                </ul>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group">

@@ -22,7 +22,7 @@ function edit(id) {
         },
         data: data,
         error: function(xhr) {
-            swal("取讀資料失敗!", xhr.statusText, "error");
+            swal("讀取資料失敗!", xhr.statusText, "error");
         },
         success: function(result) {
             if (result.success) {

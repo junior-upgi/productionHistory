@@ -30,6 +30,7 @@ Route::group(['prefix' => 'Duty'], function() {
 
 Route::group(['prefix' => 'History'], function () {
     Route::get('GetCustomer', 'ProductionController@getCustomer');
+    Route::get('GetGlass', 'ProductionController@getGlass');
     Route::get('ScheduleList', 'ProductionController@historySchedule');
     Route::get('HistoryList', 'ProductionController@historyList');
     Route::post('GetSchedule', 'ProductionController@getSchedule');
@@ -46,4 +47,8 @@ Route::group(['prefix' => 'QC'], function () {
     Route::post('GetQC', 'ProductionController@getQC');
     Route::get('GetStaff', 'ProductionController@getStaff');
     Route::post('SaveQC', 'ProductionController@saveQC');
+});
+
+Route::group(['prefix' => 'Report'], function () {
+    Route::post('GetHistory', 'ReportController@getHistory');
 });

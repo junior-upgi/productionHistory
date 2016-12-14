@@ -22,7 +22,7 @@ function edit(id) {
         },
         data: data,
         error: function(xhr) {
-            swal("取讀資料失敗!", xhr.statusText, "error");
+            swal("讀取資料失敗!", xhr.statusText, "error");
         },
         success: function(result) {
             if (result.success) {
@@ -42,17 +42,19 @@ function setHistoryData(data) {
     $('#prd_no').val(data['prd_no']);
     $('#schedate').val(data['schedate']);
     $('#glassProdLineID').val(data['glassProdLineID']);
-    $('#snm').val(data['snm']);
-    if (data['cus_no'] == null) {
+    $('#searchProd').val(data['snm']);
+    if (data['schedate'] != null) {
         $("#glassProdLineID").attr("disabled", true);
-        $('#snm').attr("disabled", true);
         $('.cus').hide();
+        //$('.prd').hide();
+        $('#searchProd').attr("disabled", true);
         $('#searchCustomer').removeAttr("required");
         $('#searchCustomer').val('');
     } else {
         $("#glassProdLineID").attr("disabled", false);
-        $('#snm').attr("disabled", false);
+        $('.prd').attr("disabled", false);
         $('.cus').show();
+        $('#searchProd').attr("disabled", false);
         $('#searchCustomer').attr("required", true);
         $('#searchCustomer').val(data['customerSName']);
     }

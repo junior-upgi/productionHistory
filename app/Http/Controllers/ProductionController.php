@@ -36,6 +36,15 @@ class productionController extends Controller
         return $json;
     }
 
+    public function getGlass()
+    {
+        $glass = $this->production->getGlass()->get()->toArray();
+        $json = [];
+        $json['message'] = '';
+        $json['value'] = $glass;
+        return $json;
+    }
+
     public function getSchedule()
     {
         $request = request();
@@ -74,7 +83,7 @@ class productionController extends Controller
     public function historySchedule()
     {
         $request = request();
-        $list = $this->production->getScheduleList('glass', $request)->paginate(20);
+        $list = $this->production->getScheduleList('run', $request)->paginate(20);
 
         return view('history.schedule')
             ->with('list', $list)
@@ -188,10 +197,10 @@ class productionController extends Controller
     {
         $request = request();
         $input = $request->input();
-        if ($input['prd_no'] == '' && $input['schedate'] == '') {
-            $input = array_except($input, ['prd_no', 'schedate']);
+        if ($input['schedate'] == '') {
+            $input = array_except($input, ['schedate']);
         } else {
-            $input = array_except($input, ['snm', 'cus_no']);
+            $input = array_except($input, ['cus_no']);
         }
         $result = $this->production->saveHistory($input);
         return $result;

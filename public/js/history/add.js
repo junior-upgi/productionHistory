@@ -33,6 +33,28 @@ $(document).ready(function () {
         $('#cus_no').val('');
     });
 
+    $('#searchProd').bsSuggest('init', {
+        url: url + '/History/GetGlass',
+        getDataMethod: 'firstByUrl',
+        effectiveFields: ['snm'],
+        searchFields: ['snm'],
+        effectiveFieldsAlias:{snm: '產品編號'},
+        ignorecase: true,
+        showHeader: true,
+        showBtn: false,
+        delayUntilKeyup: false, //获取数据的方式为 firstByUrl 时，延迟到有输入/获取到焦点时才请求数据
+        idField: 'prd_no',
+        keyField: 'snm'
+    }).on('onDataRequestSuccess', function (e, result) {
+        //console.log('onDataRequestSuccess: ', result);
+    }).on('onSetSelectValue', function (e, keyword, data) {
+        //console.log('onSetSelectValue: ', keyword, data);
+        $('#prd_no').val(keyword['id']);
+    }).on('onUnsetSelectValue', function () {
+        //console.log('onUnsetSelectValue');
+        $('#prd_no').val('');
+    });
+
     $("#addForm").ajaxForm({
         url: url + '/History/SaveHistory',
         type: 'POST',

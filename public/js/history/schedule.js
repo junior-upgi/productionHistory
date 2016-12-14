@@ -3,7 +3,7 @@ function history(prd_no, glassProdLineID, schedate) {
         'prd_no': prd_no,
         'glassProdLineID': glassProdLineID,
         'schedate': schedate,
-        'view': 'glass'
+        'view': 'run'
     };
     $.ajax({
         url: url + '/History/GetSchedule',
@@ -13,7 +13,7 @@ function history(prd_no, glassProdLineID, schedate) {
         },
         data: data,
         error: function(xhr) {
-            swal("取讀資料失敗!", xhr.statusText, "error");
+            swal("讀取資料失敗!", xhr.statusText, "error");
         },
         success: function(result) {
             if (result.success) {
@@ -33,9 +33,8 @@ function setHistoryData(data) {
     $('#schedate').val(data['schedate']);
     $("#glassProdLineID").attr("disabled", true);
     $('#glassProdLineID').val(data['glassProdLineID']);
-    $('#snm').attr("disabled", true);
-    $('#snm').val(data['snm']);
     $('.cus').hide();
+    $('.prd').hide();
     $('searchCustomer').removeAttr("required");
     $('searchCustomer').val('');
     $('cus_no').val('');
@@ -57,11 +56,11 @@ function testModel() {
     $('#btnSave').html('新增');
     $('#type').val('add');
     $('#prd_no').val('');
+    $('#searchProd').val('');
     $('#schedate').val('');
-    $('#snm').attr("disabled", false);
-    $('#snm').val('');
     $('#cus_no').val('');
     $('.cus').show();
+    $('.prd').show();
     $('#searchCustomer').attr("required", true);
     $('#searchCustomer').val('');
     $("#glassProdLineID").attr("disabled", false);
