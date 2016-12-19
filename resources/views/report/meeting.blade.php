@@ -26,7 +26,7 @@
                 @foreach ($historyList as $item)
                     <tr>
                         <td><input type="checkbox" class="ch" value="{{ $item['id'] }}"></td>
-                        <td>{{ date('Y-m-d', strtotime($item['productionDate'])) }}</td>
+                        <td>{{ date('Y-m-d', strtotime($item['schedate'])) }}</td>
                         <td>{{ $item['glassProdLineID'] }}</td>
                         <td>{{ $item['efficiency'] }}</td>
                     </tr>
@@ -96,44 +96,71 @@
                     <td></td><td></td><td></td>
                     <td></td>
                 </tr>
-                <tr><td colspan="2">客戶要求注意事項</td><td colspan="12">{{ $qc['requirement'] }}</td></tr>
+                <tr><td colspan="2">客戶要求注意事項</td><td colspan="12">{!! nl2br($qc['requirement']) !!}</td></tr>
                 <tr>
                     <td colspan="1">加工別</td><td colspan="8">{{ $qc['decoration'] }}</td>
                     <td>級別</td><td>{{ $qc['qualityLevel'] }}</td>
                     <td>國別</td><td>{{ $qc['country'] }}</td>
                 </tr>
                 <tr>
-                    <td colspan="2">附註</td><td colspan="12">{{ $qc['note'] }}</td>
+                    <td colspan="2">附註</td><td colspan="10">{{ $qc['note'] }}</td>
+                    <td>圖示</td>
+                    <td>
+                        <a href="{{ url('/Service/BlankPic/' . $qc['draw']) }}" target="_blank">
+                            <span class="glyphicon glyphicon-picture"></span>
+                        </a>
+                    </td>
                 </tr>
             </table>
         </div>
 
         <!--顯示生產履歷資訊-->
-        <ul class="list-group" id="historyDetail">
-            @foreach ($historyList as $item)
-                <li class="list-group-item" id="{{ 'hi_' . $item['id'] }}" style="display:none;">
-                    <p>{{ $item['id'] }} 濃縮品管記錄</p>
-                    <p>{{ $item['id'] }} 濃縮生產條件</p>
-                </li>
+        <div id="historyDetail">
+            @foreach ($prodData as $item)
+                @if (isset($item['id']))
+                    <div class="panel panel-warning" id="{{ 'hi_' . $item['historyID'] }}" style="display:none;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">生產日期： {{ $item['schedate'] }}</h3>
+                        </div>
+                        <table class="table table-bordered">
+                            <tr>
+                                <td>套筒</td><td>心棒間隔物</td><td>承受螺絲</td><td>接收槽</td><td>直槽</td><td>彎槽</td>
+                                <td>出口杯規格</td><td>剪刀規格</td><td>磚棒規格</td><td>口模規</td>
+                                <td>冷卻段</td><td>調溫段</td><td>Gob溫度</td>
+                            </tr>
+                            <tr>
+                                <td>{{ $item['thimble'] }}</td>
+                                <td>{{ $item['spacer'] }}</td>
+                                <td>{{ $item['stopScrew'] }}</td>
+                                <td>{{ $item['scoop'] }}</td>
+                                <td>{{ $item['trough'] }}</td>
+                                <td>{{ $item['deflector'] }}</td>
+                                <td>{{ $item['orificeRing'] }}</td>
+                                <td>{{ $item['shear'] }}</td>
+                                <td>{{ $item['plunger'] }}</td>
+                                <td>{{ $item['nrGauge'] }}</td>
+                                <td>{{ $item['fhCoolingTemp'] }}</td>
+                                <td>{{ $item['fhAdjustTemp'] }}</td>
+                                <td>{{ $item['gobTemp'] }}</td>
+                            </tr>
+                            <tr>
+                                <td>生產狀況記錄</td>
+                                <td>{!! nl2br($item['note']) !!}</td>
+                            </tr>
+                        </table>
+                    </div>
+                @else
+                    <div class="panel panel-warning" id="{{ 'hi_' . $item['historyID'] }}" style="display:none;">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">生產日期： {{ $item['hschedate'] }}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <h4>無此次生產條件資料</h4>
+                        </div>
+                    </div>
+                @endif
             @endforeach
-            
-            <!--
-            <li class="list-group-item">
-                <p>濃縮品管記錄1</p>
-                <p>濃縮生產條件1</p>
-            </li>
-
-            <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <td></td>
-                        </tr>
-                    </thead>
-                    <tbody id="basicData_tbody">
-                    </tbody>
-                </table>
-            -->
-        </ul>
+        </div>
     </div>
 </div>
 @else

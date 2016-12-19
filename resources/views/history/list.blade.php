@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/history/list.js?v=3') }}"></script>
+<script src="{{ url('/js/history/list.js?v=4') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>產品履歷表</h2>
@@ -72,8 +72,8 @@
                             </button>
                         </td>
                         <td>{{ $item['snm'] }}</td>
-                        <td>{{ date('Y-m-d', strtotime($item['productionDate'])) }}</td>
-                         @if(isset($item['schedate']))
+                        <td>{{ date('Y-m-d', strtotime($item['schedate'])) }}</td>
+                         @if($item['sampling'] == 0)
                             <td>量產</td>
                         @else
                             <td>試模</td>

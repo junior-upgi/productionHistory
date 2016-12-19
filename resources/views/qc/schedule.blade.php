@@ -30,7 +30,7 @@
             </div>
             <div class="row form-group">
                 <div class="col-md-3">
-                    <input type="text" name="schedate" readonly class="form-control date form_datetime" placeholder="請輸入排程日期" value="{{ $schedate }}">
+                    <input type="text" name="schedate" readonly class="form-control date form_datetime" placeholder="請輸入預計日期" value="{{ $schedate }}">
                 </div>
             </div>
             <div class="row form-group">
@@ -47,7 +47,7 @@
             <thead>
                 <tr>
                     <td style="width: 127px;"></td>
-                    <td>排程日期</td>
+                    <td>預計生產日期</td>
                     <td>產品名稱</td>
                     <td>線別</td>
                     <td>預計排程量</td>

@@ -1,6 +1,8 @@
 @extends('layouts.masterpage')
 @section('content')
 <script src="{{ url('/js/qc/list.js?v=1') }}"></script>
+@inject('service', 'App\Presenters\ServicePresenter')
+{!! $service->picScript() !!}
 <div class="row">
     <div class="col-md-12">
         <h2>品管管制表</h2>
@@ -49,6 +51,7 @@
                 <tr>
                     <td style="width: 51px;"></td>
                     <td>圖號</td>
+                    <td style="width: 45px;">圖示</td>
                     <td>預定生產數量</td>
                     <td>預定生產日期</td>
                     <td>線別</td>
@@ -67,6 +70,14 @@
                             </button>
                         </td>
                         <td>{{ $item['snm'] }}</td>
+                        <td>
+                            <!--顯示圖示{!! $service->picIcon($item->draw) !!}-->
+                            @if (trim($item->draw) != '')
+                                <a href="{{ url('/Service/BlankPic/' . $item->draw) }}" target="_blank">
+                                    <span class="glyphicon glyphicon-picture"></span>
+                                </a>
+                            @endif
+                        </td>
                         <td>{{ $item['orderQty'] }}</td>
                         <td>{{ $item['schedate'] }}</td>
                         <td>{{ $item['glassProdLineID'] }}</td>                      
@@ -83,4 +94,5 @@
     </div>
 </div>
 @include('qc.add')
+@include('service.picModal')
 @endsection

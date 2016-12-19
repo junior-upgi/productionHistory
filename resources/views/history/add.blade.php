@@ -1,4 +1,4 @@
-<script src="{{ url('/js/history/add.js?v=5') }}"></script>
+<script src="{{ url('/js/history/add.js?v=7') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -6,27 +6,32 @@
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
                 <h4 class="modal-title" id="modalTitle"></h4>
             </div>
-            <form id="addForm" class="form-horizontal" method="POST">
+            <form id="addForm" class="form-horizontal">
                 <div class="modal-body">
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
                     <input type="hidden" id="type" name="type" value="">
                     <input type="hidden" id="id" name="id" value="">
+                    <input type="hidden" id="sampling" name="sampling" value="">
                     <!--<input type="hidden" id="prd_no" name="prd_no" value="">-->
-                    <input type="hidden" id="schedate" name="schedate" value="">
+                    <!--<input type="hidden" id="schedate" name="schedate" value="">-->
                     <div class="form-group">
-                        <label for="productionDate" class="col-md-3 control-label">生產日期</label>
+                        <label for="productionDate" class="col-md-3 control-label">填表日期</label>
                         <div class="col-md-3">
                             <input type="text" class="form-control date form_datetime" readonly id="productionDate" name="productionDate" value="{{ \Carbon\Carbon::today()->toDateString() }}">
                         </div>
                     </div>
-                    <!--
                     <div class="form-group">
-                        <label for="snm" class="col-md-3 control-label">產品名稱</label>
+                        <label for="schedate" class="col-md-3 control-label">生產日期</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control" id="snm" name="snm" value="" maxlength="10" required>
+                            <input type="text" class="form-control date form_datetime" id="schedate" name="schedate" value="" required>
                         </div>
                     </div>
-                    -->
+                    <div class="form-group allscheqty">
+                        <label for="allscheqty" class="col-md-3 control-label">生產數量</label>
+                        <div class="col-md-5">
+                            <input type="number" class="form-control" id="allscheqty" name="allscheqty" value="" maxlength="10">
+                        </div>
+                    </div>
                     <div class="form-group prd">
                         <label for="searchProd" class="col-md-3 control-label">產品名稱</label>
                         <div class="col-md-9">
@@ -127,7 +132,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-                    <button type="button" class="btn btn-primary" data-loading-text="資料送出中..." autocomplete="off" id="btnSave" onclick="save()"></button>
+                    <button type="submit" class="btn btn-primary" data-loading-text="資料送出中..." autocomplete="off" id="btnSave"></button>
                 </div>
             </form>
         </div><!-- /.modal-content -->

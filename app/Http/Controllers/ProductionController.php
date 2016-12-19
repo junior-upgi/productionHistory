@@ -197,11 +197,25 @@ class productionController extends Controller
     {
         $request = request();
         $input = $request->input();
-        if ($input['schedate'] == '') {
-            $input = array_except($input, ['schedate']);
+        if ($input['sampling'] == '1') {
+            $params = [
+                'id' => '1231231',
+                'type' => 'add',
+                'sampling' => $input['sampling'],
+                'glassProdLineID' => $input['glassProdLineID'],
+                'schedate' => $input['schedate'],
+                'prd_no' => $input['prd_no'],
+                'allscheqty' => $input['allscheqty'],
+            ];
+            $insertOld = $this->production->saveOldSchedule($params);
+            if (!$insertOld['success']) {
+                return $insertOld;
+            }
+            $input = array_except($input, ['sampling', 'allscheqty']);
         } else {
-            $input = array_except($input, ['cus_no']);
+            $input = array_except($input, ['cus_no', 'sampling', 'allscheqty']);
         }
+        $input['schedate'] = date('Y/m/d', strtotime($input['schedate']));
         $result = $this->production->saveHistory($input);
         return $result;
     }

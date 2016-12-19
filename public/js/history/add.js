@@ -59,7 +59,8 @@ $(document).ready(function () {
         url: url + '/History/SaveHistory',
         type: 'POST',
         beforeSubmit: function () {
-            //$('#BtnSave').attr('disabled', 'disabled');
+            $('#glassProdLineID').attr('disabled', false);
+            $('#BtnSave').attr('disabled', 'disabled');
             $('#BtnSave').button('loading');
         },
         success: function (obj) {

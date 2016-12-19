@@ -31,6 +31,8 @@ function setHistoryData(data) {
     $('#type').val('add');
     $('#prd_no').val(data['prd_no']);
     $('#schedate').val(data['schedate']);
+    $('#sampling').val(0);
+    $('.allscheqty').hide();
     $("#glassProdLineID").attr("disabled", true);
     $('#glassProdLineID').val(data['glassProdLineID']);
     $('.cus').hide();
@@ -58,7 +60,11 @@ function testModel() {
     $('#prd_no').val('');
     $('#searchProd').val('');
     $('#schedate').val('');
+    $('#sampling').val(1);
+    $('#allscheqty').val('');
     $('#cus_no').val('');
+    $('#allscheqty').val('');
+    $('.allscheqty').show();
     $('.cus').show();
     $('.prd').show();
     $('#searchCustomer').attr("required", true);

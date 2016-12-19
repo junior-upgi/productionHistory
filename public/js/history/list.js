@@ -41,6 +41,7 @@ function setHistoryData(data) {
     $('#id').val(data['id']);
     $('#prd_no').val(data['prd_no']);
     $('#schedate').val(data['schedate']);
+    $('#sampling').val(data['sampling']);
     $('#glassProdLineID').val(data['glassProdLineID']);
     $('#searchProd').val(data['snm']);
     if (data['schedate'] != null) {
