@@ -72,7 +72,8 @@
                             </button>
                         </td>
                         <td>
-                            <a class="btn btn-default btn-sm" href="{{ url('/Report/QCForm/' . $item['id']) }}" target="_blank">
+                            <a class="btn btn-default btn-sm" href="{{ url('/Report/QCForm/' . $item['id']) }}" target="_blank"
+                                data-toggle="tooltip" data-placement="top" title="表單列印">
                                 <span class="glyphicon glyphicon-print"></span>
                             </a>
                         </td>
@@ -80,7 +81,8 @@
                         <td>
                             <!--顯示圖示{!! $service->picIcon($item->draw) !!}-->
                             @if (trim($item->draw) != '')
-                                <a href="{{ url('/Service/BlankPic/' . $item->draw) }}" target="_blank">
+                                <a href="{{ url('/Service/BlankPic/' . $item->draw) }}" target="_blank"
+                                    data-toggle="tooltip" data-placement="top" title="顯示圖片">
                                     <span class="glyphicon glyphicon-picture"></span>
                                 </a>
                             @endif
