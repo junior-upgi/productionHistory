@@ -39,13 +39,16 @@ function setHistoryData(data) {
     $('#btnSave').html('更新');
     $('#type').val('edit');
     $('#id').val(data['id']);
+    $('#tbmknoID').val(data['tbmknoID']);
     $('#prd_no').val(data['prd_no']);
     $('#schedate').val(data['schedate']);
     $('#sampling').val(data['sampling']);
     $('#glassProdLineID').val(data['glassProdLineID']);
     $('#searchProd').val(data['snm']);
-    if (data['schedate'] != null) {
+    $('#orderQty').val(data['orderQty']);
+    if (data['sampling'] == 0) {
         $("#glassProdLineID").attr("disabled", true);
+        $('#orderQty').attr("disabled", true);
         $('.cus').hide();
         //$('.prd').hide();
         $('#searchProd').attr("disabled", true);
@@ -53,6 +56,7 @@ function setHistoryData(data) {
         $('#searchCustomer').val('');
     } else {
         $("#glassProdLineID").attr("disabled", false);
+        $('#orderQty').attr("disabled", false);
         $('.prd').attr("disabled", false);
         $('.cus').show();
         $('#searchProd').attr("disabled", false);

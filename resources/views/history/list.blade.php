@@ -1,6 +1,6 @@
 @extends('layouts.masterpage')
 @section('content')
-<script src="{{ url('/js/history/list.js?v=4') }}"></script>
+<script src="{{ url('/js/history/list.js?v=8') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>產品履歷表</h2>

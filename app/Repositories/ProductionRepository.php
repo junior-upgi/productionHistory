@@ -339,7 +339,9 @@ class ProductionRepository extends BaseRepository
                     ->on('isProdData.glassProdLineID', 'productionHistory.glassProdLineID')
                     ->on('isProdData.prodReference', 'productionHistory.prd_no');
             })
-            ->select('productionHistory.id as historyID', 'productionHistory.schedate as hschedate', 'isProdData.*');
+            ->select('productionHistory.id as historyID', 'productionHistory.schedate as hschedate', 'productionHistory.glassProdLineID as hline', 
+                'productionHistory.efficiency', 'productionHistory.gauge', 'productionHistory.formingMethod', 'productionHistory.weight',
+                'productionHistory.defect', 'productionHistory.speed', 'isProdData.*');
             
         return $list;
     }
@@ -378,15 +380,20 @@ class ProductionRepository extends BaseRepository
                     })
                     ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
                         'productionDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
-                        'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
+                        'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling', 'allGlassRun.orderQty');
             } else {
                 $data = $data
+                    ->join('tbmkno', function ($join) {
+                        $join->on('productionHistory.glassProdLineID', 'tbmkno.glassProdLineID')
+                            ->on('productionHistory.prd_no', 'tbmkno.prd_no')
+                            ->on('productionHistory.schedate', 'tbmkno.schedate');
+                    })
                     ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'cus_no')
                     ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
                     ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
                         'productionDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'cus_no', 
-                        'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName', 
-                        'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
+                        'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName', 'tbmkno.id as tbmknoID', 
+                        'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling', 'tbmkno.orderQty');
             }
             return $data;
         }

@@ -11,25 +11,29 @@
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
                     <input type="hidden" id="type" name="type" value="">
                     <input type="hidden" id="id" name="id" value="">
+                    <input type="hidden" id="tbmknoID" name="tbmknoID" value="">
                     <input type="hidden" id="sampling" name="sampling" value="">
                     <!--<input type="hidden" id="prd_no" name="prd_no" value="">-->
                     <!--<input type="hidden" id="schedate" name="schedate" value="">-->
+                    @php
+                        $now = date('Y-m-d', strtotime(\Carbon\Carbon::today()->toDateString()));
+                    @endphp
                     <div class="form-group">
                         <label for="productionDate" class="col-md-3 control-label">填表日期</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control date form_datetime" readonly id="productionDate" name="productionDate" value="{{ \Carbon\Carbon::today()->toDateString() }}">
+                            <input type="text" class="form-control date form_datetime" readonly id="productionDate" name="productionDate" value="{{ $now }}">
                         </div>
                     </div>
                     <div class="form-group">
                         <label for="schedate" class="col-md-3 control-label">生產日期</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control date form_datetime" id="schedate" name="schedate" value="" required>
+                            <input type="text" class="form-control date form_datetime" readonly id="schedate" name="schedate" value="{{ $now }}" required>
                         </div>
                     </div>
-                    <div class="form-group allscheqty">
-                        <label for="allscheqty" class="col-md-3 control-label">生產數量</label>
+                    <div class="form-group orderQty">
+                        <label for="orderQty" class="col-md-3 control-label">生產數量</label>
                         <div class="col-md-5">
-                            <input type="number" class="form-control" id="allscheqty" name="allscheqty" value="" maxlength="10">
+                            <input type="number" class="form-control" id="orderQty" name="orderQty" value="" maxlength="10">
                         </div>
                     </div>
                     <div class="form-group prd">
