@@ -57,7 +57,6 @@ class BaseRepository
     public function delete($table, $id, $pk)
     {
         $table = $table->where($pk, $id);
-        $a = $table->get();
         $obj = $this->common->delete($table);
         return $obj;
     }

@@ -52,6 +52,7 @@ Route::group(['prefix' => 'QC'], function () {
 Route::group(['prefix' => 'Report'], function () {
     Route::get('ProductionMeeting', 'ReportController@productionMeeting');
     Route::post('GetHistory', 'ReportController@getHistory');
+    Route::get('QCForm/{id}', 'ReportController@qcForm');
 });
 
 Route::group(['prefix' => 'Service'], function () {

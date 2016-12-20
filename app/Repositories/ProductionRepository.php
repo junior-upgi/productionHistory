@@ -180,7 +180,10 @@ class ProductionRepository extends BaseRepository
             ->where('glassProdLineID', 'like', "%$runProdLineID%")
             ->where('schedate', $schedateOp, $schedate)
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
-            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
+            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID');
+        if ($view == 'glass') {
+            $list = $list->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
+        }
         return $list;
     }
 

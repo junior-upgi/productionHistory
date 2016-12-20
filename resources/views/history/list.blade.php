@@ -1,9 +1,10 @@
 @extends('layouts.masterpage')
+@section('title', '生產履歷表清單')
 @section('content')
 <script src="{{ url('/js/history/list.js?v=8') }}"></script>
 <div class="row">
     <div class="col-md-12">
-        <h2>產品履歷表</h2>
+        <h2>生產履歷表清單</h2>
         <div class="pull-left">
             <a class="btn btn-primary" href="{{ url('/History/ScheduleList') }}">新增</a>
         </div>

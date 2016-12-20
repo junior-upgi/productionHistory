@@ -68,4 +68,25 @@ class ReportController extends Controller
             ];
         }
     }
+
+    public function qcForm($id)
+    {
+        $qc = $this->production->getQC($id)
+            ->leftJoin('upgiSystem.dbo.file', 'qualityControl.draw', 'file.ID')
+            ->join('UPGWeb.dbo.glass', 'qualityControl.prd_no', 'glass.prd_no')
+            ->select('qualityControl.*', 'file.type', 'file.code', 'glass.snm')
+            ->first();
+            
+        if (isset($qc)) {
+            $prd_no = $qc->prd_no;
+            $history = $this->production->getTable('history')
+                ->where('prd_no', $prd_no)
+                ->orderBy('schedate', 'desc')
+                ->first();
+            return view('report.history')
+                ->with('qc', $qc)
+                ->with('history', $history);
+        }
+        return view('report.history');
+    }
 }

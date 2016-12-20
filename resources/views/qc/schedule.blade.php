@@ -1,4 +1,5 @@
 @extends('layouts.masterpage')
+@section('title', '品管管製表-生產排程清單')
 @section('content')
 <script src="{{ url('/js/qc/schedule.js?v=5') }}"></script>
 <div class="row">

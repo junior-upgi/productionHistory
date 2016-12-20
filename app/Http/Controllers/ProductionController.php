@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -12,7 +11,11 @@ class productionController extends Controller
 {
     public $prouction;
     
-
+    /**
+     * 建構式
+     * 
+     * @param ProductionRepostiry $production 注入ProductionRepository
+     */
     public function __construct(ProductionRepository $production) 
     {
         $this->production = $production;

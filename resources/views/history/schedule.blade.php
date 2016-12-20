@@ -1,4 +1,5 @@
 @extends('layouts.masterpage')
+@section('title', '生產履歷表-生產排程清單')
 @section('content')
 <script src="{{ url('/js/history/schedule.js?v=10') }}"></script>
 <div class="row">

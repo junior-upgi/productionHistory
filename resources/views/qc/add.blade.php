@@ -260,6 +260,7 @@
                             <input type="text" class="form-control" readonly id="note" name="note" value="">
                         </div>
                     </div>
+                    <!--
                     <div class="form-group">
                         <label for="recentProdDefectList" class="col-md-3 control-label">上次生產缺點</label>
                         <div class="col-md-9">
@@ -272,6 +273,7 @@
                             <input type="text" class="form-control" id="packRate" name="packRate" value="">
                         </div>
                     </div>
+                    -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>

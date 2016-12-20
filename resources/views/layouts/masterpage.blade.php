@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="csrf-token" content="{{ csrf_token() }}">
-	<title>生產履歷</title>
+	<title>生產履歷系統-@yield('title')</title>
 
 	<!-- 最新編譯和最佳化的 CSS -->
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
@@ -68,7 +68,7 @@
 					<li><a href="{{ url('/History/HistoryList') }}">產品履歷表</a></li>
 					<li><a href="{{ url('/nav/isProdDataForm') }}">生產條件記錄表</a></li>
 					<li><a href="{{ url('/QC/QCList') }}">品管管制表</a></li>
-					<li><a href="{{ url('/Report/ProductionMeeting') }}">產品履歷報表</a></li>
+					<li><a href="{{ url('/Report/ProductionMeeting') }}" target="_blank">生產資訊報表</a></li>
 				</ul>
 			</div>
 			<div class="collapse navbar-collapse navbar-right">

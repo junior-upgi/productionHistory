@@ -1,11 +1,12 @@
 @extends('layouts.masterpage')
+@section('title', '品管管制表清單')
 @section('content')
 <script src="{{ url('/js/qc/list.js?v=1') }}"></script>
 @inject('service', 'App\Presenters\ServicePresenter')
 {!! $service->picScript() !!}
 <div class="row">
     <div class="col-md-12">
-        <h2>品管管制表</h2>
+        <h2>品管管制表清單</h2>
         <div class="pull-left">
             <a class="btn btn-primary" href="{{ url('/QC/ScheduleList') }}">新增</a>
         </div>
@@ -50,6 +51,7 @@
             <thead>
                 <tr>
                     <td style="width: 51px;"></td>
+                    <td style="width: 51px;"></td>
                     <td>圖號</td>
                     <td style="width: 45px;">圖示</td>
                     <td>預定生產數量</td>
@@ -68,6 +70,11 @@
                                 data-placement="top" title="編輯" onclick="edit('{{ $item['id'] }}')">
                                 <span class="glyphicon glyphicon-edit"></span>
                             </button>
+                        </td>
+                        <td>
+                            <a class="btn btn-default btn-sm" href="{{ url('/Report/QCForm/' . $item['id']) }}" target="_blank">
+                                <span class="glyphicon glyphicon-print"></span>
+                            </a>
                         </td>
                         <td>{{ $item['snm'] }}</td>
                         <td>

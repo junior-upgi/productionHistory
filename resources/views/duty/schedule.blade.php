@@ -1,4 +1,5 @@
 @extends('layouts.masterpage')
+@section('title', '生產值班表-生產排程清單')
 @section('content')
 <script src="{{ url('/js/duty/schedule.js?x=5') }}"></script>
 <div class="row">

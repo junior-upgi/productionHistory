@@ -1,4 +1,5 @@
 @extends('layouts.report')
+@section('title', '生產資訊報表')
 @section('content')
 <script src="{{ url('/js/report/meeting.js?v=3') }}"></script>
 @if (isset($historyList)) 
@@ -75,9 +76,10 @@
                 <table class="table table-bordered">
                     <tr>
                         <td>線別</td><td>{{ $qc['glassProdLineID'] }}</td>
-                        <td>預定生產日期</td><td>{{ $qc['schedate'] }}</td>
-                        <td>預定生產數量</td><td>{{ $qc['orderQty'] }}</td>
+                        <td colspan="2">預定生產日期</td><td>{{ $qc['schedate'] }}</td>
+                        <td colspan="2">預定生產數量</td><td>{{ $qc['orderQty'] }}</td>
                         <td>口部</td><td>{{ $qc['finishType'] }}</td>
+                        <td colspan="4"></td>
                     </tr>
                     <tr>
                         <td></td><td>口外徑</td><td>口內徑</td><td>螺牙徑</td><td>唇徑</td><td>護圈徑</td><td>胴徑</td>

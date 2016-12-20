@@ -1,9 +1,10 @@
 @extends('layouts.masterpage')
+@section('title', '生產值班表清單')
 @section('content')
 <script src="{{ url('/js/duty/list.js?x=5') }}"></script>
 <div class="row">
     <div class="col-md-12">
-        <h2>生產值班清單</h2>
+        <h2>生產值班表清單</h2>
         <div class="pull-left">
             <a class="btn btn-primary" href="{{ url('/Duty/ScheduleList') }}">新增</a>
         </div>
