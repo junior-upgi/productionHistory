@@ -1,4 +1,4 @@
-<script src="{{ url('/js/history/add.js?v=7') }}"></script>
+<script src="{{ url('/js/history/add.js?v=9') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -136,7 +136,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-                    <button type="submit" class="btn btn-primary" data-loading-text="資料送出中..." autocomplete="off" id="btnSave"></button>
+                    <button type="button" class="btn btn-primary" data-loading-text="資料送出中..." autocomplete="off" id="btnSave" onclick="save()"></button>
+                    <button type="submit" style="display:none;" id="formSubmit"></button>
                 </div>
             </form>
         </div><!-- /.modal-content -->

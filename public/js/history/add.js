@@ -90,6 +90,14 @@ $(document).ready(function () {
 });
 
 function save() {
+    if ($('#prd_no').val() == '') {
+        alert('請選擇正確的產品名稱');
+        return;
+    }
+    if ($('#cus_no').val() == '') {
+        alert('請選擇正確的客戶名稱');
+        return;
+    }
     $('#glassProdLineID').attr('disabled', false);
-    $("#addForm").submit();
+    $('#formSubmit').click();
 }
