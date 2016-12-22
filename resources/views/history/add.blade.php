@@ -1,4 +1,4 @@
-<script src="{{ url('/js/history/add.js?v=9') }}"></script>
+<script src="{{ url('/js/history/add.js?v=10') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
