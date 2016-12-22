@@ -134,7 +134,7 @@
                             <table class="table table-bordered">
                                 <!--生產條件資料-->
                                 <tr>
-                                    <td style="width: 120px;">套筒</td><td>心棒間隔物</td><td>承受螺絲</td><td>接收槽</td><td>直槽</td><td>彎槽</td>
+                                    <td style="width: 100px;">套筒</td><td>心棒間隔物</td><td>承受螺絲</td><td>接收槽</td><td>直槽</td><td>彎槽</td>
                                     <td>出口杯規格</td><td>剪刀規格</td><td>磚棒規格</td><td>口模規</td>
                                     <td>冷卻段</td><td>調溫段</td><td>Gob溫度</td>
                                 </tr>
