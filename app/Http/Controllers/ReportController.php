@@ -27,7 +27,7 @@ class ReportController extends Controller
         $historyList = $this->production->getReportHistoryList($snm)->get()->toArray();
         if (count($historyList) > 0) {
             $prd_no = $historyList[0]['prd_no'];
-            $qcData = $this->production->getQCList($request)->first()->toArray();
+            $qcData = $this->production->getQCList($request)->first();
             $task = $this->production->getTaskDetailByPrdNO($prd_no)->orderBy('deadline', 'desc')->get()->toArray();
             $prodData = $this->production->getProdData($prd_no)->orderBy('productionHistory.schedate', 'desc')->orderBy('glassProdLineID')->get()->toArray();
 
