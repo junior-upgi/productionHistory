@@ -25,16 +25,14 @@
                         'thermalShock', 'speed', 'efficiency', 'customer', '', '', '', '', ''];
                     $setName = ['生產日期', '線別', '重量(gr)', '實際生產重量', '歪力', '熱震', '機速(支/分)', '檢瓶率/繳庫率', '客戶/麥頭', 
                         '客戶/麥頭', '加工別', '預定生產數量', '生產數量', '繳庫數量'];
+                    if (count($historyList) >= 8 ) {
+                        $h = 8;
+                    } else {
+                        $h = count($historyList);
+                    }
                 @endphp
                 @for ($s = 0; $s < count($setItem); $s++)
                     <tr>
-                        @php
-                            if (count($historyList) >= 8 ) {
-                                $h = 8;
-                            } else {
-                                $h = count($historyList);
-                            }
-                        @endphp
                         @if ($s == 8)
                             <td>{{ $setName[$s] }}</td>
                             @for ($i = ($h - 1); $i >= 0; $i--)
@@ -66,12 +64,12 @@
                         @endif
                     </tr>      
                 @endfor
-                @foreach ($historyList as $item)
+                @for ($i = ($h - 1); $i >=0; $i--)
                     <tr>
-                        <td>{{ $item['schedate'] }}</td>
-                        <td colspan="8">{{ $item['defect'] }}</td>
+                        <td>{{ $historyList[$i]['schedate'] }}</td>
+                        <td colspan="8">{{ $historyList[$i]['defect'] }}</td>
                     </tr>
-                @endforeach
+                @endfor
             </table>
         @else
         @endif
