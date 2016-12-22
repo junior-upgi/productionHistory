@@ -105,5 +105,4 @@
 </div>
 @include('qc.add')
 @include('service.picModal')
-@include('service.task')
 @endsection

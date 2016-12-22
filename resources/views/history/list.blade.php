@@ -105,5 +105,4 @@
     </div>
 </div>
 @include('history.add')
-@include('service.task')
 @endsection
