@@ -75,7 +75,7 @@
                 </div>
                 <table class="table table-bordered">
                     <tr>
-                        <td>線別</td><td>{{ $qc['glassProdLineID'] }}</td>
+                        <td style="width: 120px;">線別</td><td>{{ $qc['glassProdLineID'] }}</td>
                         <td colspan="2">預定生產日期</td><td>{{ $qc['schedate'] }}</td>
                         <td colspan="2">預定生產數量</td><td>{{ $qc['orderQty'] }}</td>
                         <td>口部</td><td>{{ $qc['finishType'] }}</td>
