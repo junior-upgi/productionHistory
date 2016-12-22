@@ -98,7 +98,6 @@ class ReportController extends Controller
             ->select('productionHistory.*', 'glass.snm', 'glass.spc')
             ->first();
         $historyList = $this->production->getFormhistoryList($history->prd_no)->take(8)->get()->toArray();
-        
         $customer = $this->production->getFormHistoryCustomer($historyList);
         return view('report.history')
             ->with('history', $history)

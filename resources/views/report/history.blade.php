@@ -28,9 +28,16 @@
                 @endphp
                 @for ($s = 0; $s < count($setItem); $s++)
                     <tr>
+                        @php
+                            if (count($historyList) >= 8 ) {
+                                $h = 8;
+                            } else {
+                                $h = count($historyList);
+                            }
+                        @endphp
                         @if ($s == 8)
                             <td>{{ $setName[$s] }}</td>
-                            @for ($i = (count($historyList) - 1); $i >= 0; $i--)
+                            @for ($i = ($h - 1); $i >= 0; $i--)
                                 @if ($historyList[$i]['sampling'] == 0) 
                                     @foreach($customer as $c)
                                         @if ($c['id'] == $historyList[$i]['id'])
@@ -41,19 +48,19 @@
                                     <td>{{ $historyList[$i]['sname'] }}</td>
                                 @endif
                             @endfor
-                            @for ($i = (8 - count($historyList)); $i > 0; $i-- )
+                            @for ($i = (8 - $h); $i > 0; $i-- )
                                 <td></td>
                             @endfor
                         @else
                             <td>{{ $setName[$s] }}</td>
-                            @for ($i = (count($historyList) - 1); $i >= 0; $i--)
+                            @for ($i = ($h - 1); $i >= 0; $i--)
                                 @if (isset($historyList[$i][$setItem[$s]]))
                                     <td>{{ $historyList[$i][$setItem[$s]] }}</td>
                                 @else
                                     <td></td>
                                 @endif
                             @endfor
-                            @for ($i = (8 - count($historyList)); $i > 0; $i-- )
+                            @for ($i = (8 - $h); $i > 0; $i-- )
                                 <td></td>
                             @endfor
                         @endif
