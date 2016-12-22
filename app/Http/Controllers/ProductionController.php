@@ -210,16 +210,18 @@ class productionController extends Controller
                 'prd_no' => $input['prd_no'],
                 'orderQty' => $input['orderQty'],
             ];
-            $insertOld = $this->production->saveOldSchedule($params);
-            if (!$insertOld['success']) {
-                return $insertOld;
-            }
             $input = array_except($input, ['sampling', 'orderQty', 'tbmknoID']);
         } else {
             $input = array_except($input, ['cus_no', 'sampling', 'orderQty', 'tbmknoID']);
         }
         $input['schedate'] = date('Y/m/d', strtotime($input['schedate']));
         $result = $this->production->saveHistory($input);
+        if ($result['success']) {
+            $insertOld = $this->production->saveOldSchedule($params);
+            if (!$insertOld['success']) {
+                return $insertOld;
+            }
+        }
         return $result;
     }
 
