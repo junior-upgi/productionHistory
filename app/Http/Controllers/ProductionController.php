@@ -216,7 +216,7 @@ class productionController extends Controller
         }
         $input['schedate'] = date('Y/m/d', strtotime($input['schedate']));
         $result = $this->production->saveHistory($input);
-        if ($result['success']) {
+        if ($result['success'] && $input['sampling'] == '1') {
             $insertOld = $this->production->saveOldSchedule($params);
             if (!$insertOld['success']) {
                 return $insertOld;
