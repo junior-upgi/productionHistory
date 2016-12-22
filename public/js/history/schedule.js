@@ -33,7 +33,7 @@ function setHistoryData(data) {
     $('#schedate').val(data['schedate']);
     $('#sampling').val(0);
     $('.orderQty').hide();
-    $("#glassProdLineID").attr("disabled", true);
+    //$("#glassProdLineID").attr("disabled", true);
     $('#glassProdLineID').val(data['glassProdLineID']);
     $('.cus').hide();
     $('.prd').hide();
@@ -69,7 +69,7 @@ function testModel() {
     $('.prd').show();
     $('#searchCustomer').attr("required", true);
     $('#searchCustomer').val('');
-    $("#glassProdLineID").attr("disabled", false);
+    //$("#glassProdLineID").attr("disabled", false);
     $('#glassProdLineID').val('L1-1');
     $('#gauge').val('');
     $('#formingMethod').val('');

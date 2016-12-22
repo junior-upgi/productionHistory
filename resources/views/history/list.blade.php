@@ -1,7 +1,7 @@
 @extends('layouts.masterpage')
 @section('title', '產品履歷表清單')
 @section('content')
-<script src="{{ url('/js/history/list.js?v=9') }}"></script>
+<script src="{{ url('/js/history/list.js?v=12') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>產品履歷表清單</h2>
@@ -32,7 +32,7 @@
             </div>
             <div class="row form-group">
                 <div class="col-md-3">
-                    <input type="text" name="productionDate" class="form-control date form_datetime" placeholder="請輸入生產日期" value="{{ $productionDate }}">
+                    <input type="text" name="schedate" class="form-control date form_datetime" placeholder="請輸入生產日期" value="{{ $schedate }}">
                 </div>
             </div>
             <div class="row form-group">
@@ -100,7 +100,7 @@
             </tbody>
         </table>
         <p>
-            {{ $list->setPath('/History/HistoryList?snm=' . $snm . '&glassProdLineID=' . $glassProdLineID . '&productionDate' . $productionDate) }}
+            {{ $list->setPath('/History/HistoryList?snm=' . $snm . '&glassProdLineID=' . $glassProdLineID . '&schedate' . $schedate) }}
         </p>
     </div>
 </div>

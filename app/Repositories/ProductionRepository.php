@@ -228,7 +228,7 @@ class ProductionRepository extends BaseRepository
             })
             ->where('allGlassRun.PRDT_SNM', $snm)
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'productionDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $a = $formSchedule->get();
         $testModel = $this->getTable('history');
@@ -239,7 +239,7 @@ class ProductionRepository extends BaseRepository
             ->union($formSchedule)
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('prd_no')
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'productionDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $b = $formTestModel->get();
         return $formTestModel;
@@ -249,11 +249,11 @@ class ProductionRepository extends BaseRepository
     {
         $snm = $request->input('snm');
         $runProdLineID = $request->input('glassProdLineID');
-        $productionDateOp = 'like';
-        $productionDate = '%' . $request->input('productionDate') . '%';
-        if ($productionDate != '%%') {
-            $productionDateOp = '=';
-            $productionDate = date('Y-m-d', strtotime($request->input('productionDate')));
+        $schedateOp = 'like';
+        $schedate = '%' . $request->input('schedate') . '%';
+        if ($schedate != '%%') {
+            $schedateOp = '=';
+            $schedate = date('Y-m-d', strtotime($request->input('schedate')));
         }
         $schedule = $this->getTable('history');
         
@@ -265,9 +265,9 @@ class ProductionRepository extends BaseRepository
             })
             ->where('allGlassRun.PRDT_SNM', 'like', "%$snm%")
             ->where('productionHistory.glassProdLineID', 'like', "%$runProdLineID%")
-            ->where('productionhistory.productionDate', $productionDateOp, $productionDate)
+            ->where('productionhistory.schedate', $schedateOp, $schedate)
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'productionDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
+                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $a = $formSchedule->get();
         $testModel = $this->getTable('history');
@@ -276,11 +276,11 @@ class ProductionRepository extends BaseRepository
             ->where('sampling', 1)
             ->where('UPGWeb.dbo.glass.snm', 'like', "%$snm%")
             ->where('productionHistory.glassProdLineID', 'like', "%$runProdLineID%")
-            ->where('productionHistory.productionDate', $productionDateOp, $productionDate)
+            ->where('productionHistory.schedate', $schedateOp, $schedate)
             ->union($formSchedule)
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('prd_no')
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'productionDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
+                'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $b = $formTestModel->get();
         return $formTestModel;
@@ -298,7 +298,7 @@ class ProductionRepository extends BaseRepository
                     ->on('productionHistory.schedate', 'allGlassRun.schedate');
             })
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'productionDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $a = $formSchedule->get();
         $testModel = $this->getTable('history');
@@ -308,7 +308,7 @@ class ProductionRepository extends BaseRepository
             ->union($formSchedule)
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('prd_no')
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'productionDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $b = $formTestModel->get();
         return $formTestModel;
@@ -410,7 +410,7 @@ class ProductionRepository extends BaseRepository
                             ->on('productionHistory.schedate', 'allGlassRun.schedate');
                     })
                     ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                        'productionDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                        'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
                         'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling', 'allGlassRun.orderQty');
             } else {
                 $data = $data
@@ -422,7 +422,7 @@ class ProductionRepository extends BaseRepository
                     ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'cus_no')
                     ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
                     ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                        'productionDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'cus_no', 
+                        'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'cus_no', 
                         'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName', 'tbmkno.id as tbmknoID', 
                         'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling', 'tbmkno.orderQty');
             }

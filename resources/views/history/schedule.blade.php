@@ -1,7 +1,7 @@
 @extends('layouts.masterpage')
 @section('title', '產個履歷表-生產排程清單')
 @section('content')
-<script src="{{ url('/js/history/schedule.js?v=10') }}"></script>
+<script src="{{ url('/js/history/schedule.js?v=11') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>產品履歷表-生產排程清單</h2>

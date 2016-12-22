@@ -41,7 +41,12 @@ function setHistoryData(data) {
     $('#id').val(data['id']);
     $('#tbmknoID').val(data['tbmknoID']);
     $('#prd_no').val(data['prd_no']);
-    $('#schedate').val(data['schedate']);
+    var date = new Date(data['fillOutDate']);
+    var formatDate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
+    $('#fillOutDate').val(formatDate);
+    var sDate = new Date(data['schedate']);
+    var formatsDate = sDate.getFullYear() + '-' + (sDate.getMonth() + 1) + '-' + sDate.getDate();
+    $('#schedate').val(formatsDate);
     $('#sampling').val(data['sampling']);
     $('#glassProdLineID').val(data['glassProdLineID']);
     $('#searchProd').val(data['snm']);

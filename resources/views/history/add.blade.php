@@ -19,9 +19,9 @@
                         $now = date('Y-m-d', strtotime(\Carbon\Carbon::today()->toDateString()));
                     @endphp
                     <div class="form-group">
-                        <label for="productionDate" class="col-md-3 control-label">填表日期</label>
+                        <label for="fillOutDate" class="col-md-3 control-label">填表日期</label>
                         <div class="col-md-3">
-                            <input type="text" class="form-control date form_datetime" readonly id="productionDate" name="productionDate" value="{{ $now }}">
+                            <input type="text" class="form-control date form_datetime" readonly id="fillOutDate" name="fillOutDate" value="{{ $now }}">
                         </div>
                     </div>
                     <div class="form-group">

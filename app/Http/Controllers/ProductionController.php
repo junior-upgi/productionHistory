@@ -134,7 +134,7 @@ class productionController extends Controller
             ->with('list', $result)
             ->with('snm', $request->input('snm'))
             ->with('glassProdLineID', $request->input('glassProdLineID'))
-            ->with('productionDate', $request->input('productionDate')); 
+            ->with('schedate', $request->input('schedate')); 
     }
 
     public function qcList()
