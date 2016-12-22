@@ -75,7 +75,7 @@
                 </div>
                 <table class="table table-bordered">
                     <tr>
-                        <td style="width: 120px;">線別</td><td>{{ $qc['glassProdLineID'] }}</td>
+                        <td>線別</td><td>{{ $qc['glassProdLineID'] }}</td>
                         <td colspan="2">預定生產日期</td><td>{{ $qc['schedate'] }}</td>
                         <td colspan="2">預定生產數量</td><td>{{ $qc['orderQty'] }}</td>
                         <td>口部</td><td>{{ $qc['finishType'] }}</td>
@@ -134,7 +134,7 @@
                             <table class="table table-bordered">
                                 <!--生產條件資料-->
                                 <tr>
-                                    <td>套筒</td><td>心棒間隔物</td><td>承受螺絲</td><td>接收槽</td><td>直槽</td><td>彎槽</td>
+                                    <td style="width: 120px;">套筒</td><td>心棒間隔物</td><td>承受螺絲</td><td>接收槽</td><td>直槽</td><td>彎槽</td>
                                     <td>出口杯規格</td><td>剪刀規格</td><td>磚棒規格</td><td>口模規</td>
                                     <td>冷卻段</td><td>調溫段</td><td>Gob溫度</td>
                                 </tr>
