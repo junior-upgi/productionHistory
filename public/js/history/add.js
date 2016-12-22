@@ -94,7 +94,7 @@ function save() {
         alert('請選擇正確的產品名稱');
         return;
     }
-    if ($('#cus_no').val() == '') {
+    if ($('#cus_no').val() == '' && $('#sampling').val() == '1') {
         alert('請選擇正確的客戶名稱');
         return;
     }
