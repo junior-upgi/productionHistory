@@ -1,10 +1,10 @@
 @extends('layouts.masterpage')
-@section('title', '生產履歷表-生產排程清單')
+@section('title', '產個履歷表-生產排程清單')
 @section('content')
 <script src="{{ url('/js/history/schedule.js?v=10') }}"></script>
 <div class="row">
     <div class="col-md-12">
-        <h2>生產履歷表-生產排程清單</h2>
+        <h2>產品履歷表-生產排程清單</h2>
         <div class="pull-left col-xs-6 row">
             <a class="btn btn-default" href="{{ url('/History/HistoryList') }}" style="margin-bottom: 10px;">返回履歷表清單</a>
             <button class="btn btn-primary" onclick="testModel()" style="margin-bottom: 10px;">新增試模履歷表</button>

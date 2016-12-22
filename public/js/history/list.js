@@ -76,3 +76,7 @@ function setHistoryData(data) {
     $('#defect').val(data['defect']);
     $('#addModal').modal('show');
 }
+
+function showTask() {
+    $('#taskModal').modal('show');
+}

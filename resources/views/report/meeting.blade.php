@@ -1,7 +1,7 @@
 @extends('layouts.report')
 @section('title', '生產資訊報表')
 @section('content')
-<script src="{{ url('/js/report/meeting.js?v=3') }}"></script>
+<script src="{{ url('/js/report/meeting.js?v=4') }}"></script>
 @if (isset($historyList)) 
     <div class="row" style="padding-top: 10px; height: 100%; overflow: auto;">
         <div class="col-md-3">
@@ -42,7 +42,7 @@
                     <table class="table table-bordered" style="margin-bottom: 0px;">
                         <tbody id="taskDetail">
                             @foreach ($task as $item)
-                                <tr>
+                                <tr id="ta_{{ $item['id'] }}">
                                     <td style="width: 50px;">
                                         <button type="button" class="btn btn-danger btn-sm" onclick="delTask('{{ $item['id'] }}')">刪除</button>
                                     </td>

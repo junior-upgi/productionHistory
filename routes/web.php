@@ -20,6 +20,7 @@ Route::get('nav/{view}', function ($view) {
 });
 
 Route::group(['prefix' => 'Duty'], function() {
+//Route::group(['middleware' => 'sso', 'prefix' => 'Duty'], function() {
     Route::get('ScheduleList', 'ProductionController@dutySchedule');
     Route::get('DutyList', 'ProductionController@dutyList');
     Route::post('GetSchedule', 'ProductionController@getSchedule');
@@ -29,6 +30,7 @@ Route::group(['prefix' => 'Duty'], function() {
 });
 
 Route::group(['prefix' => 'History'], function () {
+//Route::group(['middleware' => 'sso', 'prefix' => 'History'], function () {
     Route::get('GetCustomer', 'ProductionController@getCustomer');
     Route::get('GetGlass', 'ProductionController@getGlass');
     Route::get('ScheduleList', 'ProductionController@historySchedule');
@@ -40,6 +42,7 @@ Route::group(['prefix' => 'History'], function () {
 });
 
 Route::group(['prefix' => 'QC'], function () {
+//Route::group(['middleware' => 'sso', 'prefix' => 'QC'], function () {
     Route::get('GetCustomer', 'ProductionController@getCustomer');
     Route::get('ScheduleList', 'ProductionController@qcSchedule');
     Route::get('QCList', 'ProductionController@qcList');
@@ -50,12 +53,17 @@ Route::group(['prefix' => 'QC'], function () {
 });
 
 Route::group(['prefix' => 'Report'], function () {
+//Route::group(['middleware' => 'sso', 'prefix' => 'Report'], function () {
     Route::get('ProductionMeeting', 'ReportController@productionMeeting');
     Route::post('GetHistory', 'ReportController@getHistory');
     Route::get('QCForm/{id}', 'ReportController@qcForm');
+    Route::get('HistoryForm/{id}', 'ReportController@historyForm');
 });
 
 Route::group(['prefix' => 'Service'], function () {
+//Route::group(['middleware' => 'sso', 'prefix' => 'Service'], function () {
     Route::get('GetPic/{id}', 'ServiceController@getPic');
     Route::get('BlankPic/{id}', 'ServiceController@blankPic');
+    Route::post('DeleteTask', 'ServiceController@deleteTask');
+    Route::post('SaveTask', 'ServiceController@saveTask');
 });

@@ -227,13 +227,16 @@ class productionController extends Controller
     {
         $request = request();
         $input = $request->input();
-        $file = $request->file('draw');
+        $file = $request->file('setDraw');
         if (isset($file)) {
             $fileID = $this->production->saveFile($file);
             if (!isset($fileID)) {
                 return ['success' => false, 'msg' => '檔案上傳失敗'];
             }
             $input['draw'] = $fileID;
+        } else {
+            $input['draw'] = $input['setDraw'];
+            $input = array_except($input, ['setDraw']);
         }
         //$a = implode(',', $input);
         if (isset($input['fullInspection'])) {

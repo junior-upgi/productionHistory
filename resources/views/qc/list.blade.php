@@ -1,7 +1,7 @@
 @extends('layouts.masterpage')
 @section('title', '品管管制表清單')
 @section('content')
-<script src="{{ url('/js/qc/list.js?v=1') }}"></script>
+<script src="{{ url('/js/qc/list.js?v=2') }}"></script>
 @inject('service', 'App\Presenters\ServicePresenter')
 {!! $service->picScript() !!}
 <div class="row">
@@ -9,8 +9,9 @@
         <h2>品管管制表清單</h2>
         <div class="pull-left">
             <a class="btn btn-primary" href="{{ url('/QC/ScheduleList') }}">新增</a>
+            <button class="btn btn-default" onclick="showTask()">新增備註資訊</button>
         </div>
-        <form class="form-inline pull-right" action="{{ url('/QC/qcList') }}" role="form">
+        <form class="form-inline pull-right" action="{{ url('/QC/QCList') }}" role="form">
             <div class="row form-group">
                 <div class="col-md-3">
                     <input type="text" name="snm" class="form-control" placeholder="請輸入瓶號" value="{{ $snm }}">
@@ -104,4 +105,5 @@
 </div>
 @include('qc.add')
 @include('service.picModal')
+@include('service.task')
 @endsection

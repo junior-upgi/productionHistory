@@ -1,12 +1,13 @@
 @extends('layouts.masterpage')
-@section('title', '生產履歷表清單')
+@section('title', '產品履歷表清單')
 @section('content')
-<script src="{{ url('/js/history/list.js?v=8') }}"></script>
+<script src="{{ url('/js/history/list.js?v=9') }}"></script>
 <div class="row">
     <div class="col-md-12">
-        <h2>生產履歷表清單</h2>
+        <h2>產品履歷表清單</h2>
         <div class="pull-left">
             <a class="btn btn-primary" href="{{ url('/History/ScheduleList') }}">新增</a>
+            <button class="btn btn-default" onclick="showTask()">新增備註資訊</button>
         </div>
         <form class="form-inline pull-right" action="{{ url('/History/HistoryList') }}" role="form">
             <div class="row form-group">
@@ -49,6 +50,7 @@
             <thead>
                 <tr>
                     <td style="width: 51px;"></td>
+                    <td style="width: 51px;"></td>
                     <td>圖號</td>
                     <td>日期</td>
                     <td>類型</td>
@@ -71,6 +73,12 @@
                                 data-placement="top" title="編輯" onclick="edit('{{ $item['id'] }}')">
                                 <span class="glyphicon glyphicon-edit"></span>
                             </button>
+                        </td>
+                        <td>
+                            <a class="btn btn-default btn-sm" href="{{ url('/Report/HistoryForm/' . $item['id']) }}" target="_blank"
+                                data-toggle="tooltip" data-placement="top" title="表單列印">
+                                <span class="glyphicon glyphicon-print"></span>
+                            </a>
                         </td>
                         <td>{{ $item['snm'] }}</td>
                         <td>{{ date('Y-m-d', strtotime($item['schedate'])) }}</td>
@@ -97,4 +105,5 @@
     </div>
 </div>
 @include('history.add')
+@include('service.task')
 @endsection

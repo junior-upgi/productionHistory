@@ -47,14 +47,14 @@ class BaseRepository
         return $obj;
     }
 
-    public function update($table, $id, $params, $pk)
+    public function update($table, $id, $params, $pk = 'id')
     {
         $table = $table->where($pk, $id);
         $obj = $this->common->update($table, $params);
         return $obj;
     }
 
-    public function delete($table, $id, $pk)
+    public function delete($table, $id, $pk = 'id')
     {
         $table = $table->where($pk, $id);
         $obj = $this->common->delete($table);

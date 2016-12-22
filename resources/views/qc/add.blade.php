@@ -1,4 +1,4 @@
-<script src="{{ url('/js/qc/add.js?v=3') }}"></script>
+<script src="{{ url('/js/qc/add.js?v=4') }}"></script>
 <div class="modal fade" id="addModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -233,6 +233,7 @@
                     <div class="form-group">
                         <label for="draw" class="col-md-3 control-label">圖示</label>
                         <div class="col-md-9">
+                            <input type="hidden" id="setDraw" name="setDraw">
                             <input type="file" id="draw" name="draw" class="form-control file-loading" data-show-upload="false" data-show-preview="false" accept="image/*">
                         </div>
                     </div>

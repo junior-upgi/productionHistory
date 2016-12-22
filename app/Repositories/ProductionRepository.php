@@ -286,6 +286,34 @@ class ProductionRepository extends BaseRepository
         return $formTestModel;
     }
 
+    public function getFormHisotyList($id)
+    {
+        $schedule = $this->getTable('history')->where('productionHistory.prd_no', $id);
+
+        $formSchedule = $schedule
+            ->where('sampling', 0)
+            ->join('allGlassRun', function ($join) {
+                $join->on('productionHistory.glassProdLineID', 'allGlassRun.glassProdLineID')
+                    ->on('productionHistory.prd_no', 'allGlassRun.prd_no')
+                    ->on('productionHistory.schedate', 'allGlassRun.schedate');
+            })
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
+                'productionDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
+        $a = $formSchedule->get();
+        $testModel = $this->getTable('history');
+        $formTestModel = $testModel
+            ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
+            ->where('sampling', 1)
+            ->union($formSchedule)
+            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('prd_no')
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
+                'productionDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+                'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
+        $b = $formTestModel->get();
+        return $formTestModel;
+    }
+
     public function getQCList($request)
     {
         $snm = $request->input('snm');
@@ -340,7 +368,7 @@ class ProductionRepository extends BaseRepository
             ->leftJoin('isProdData', function ($join) {
                 $join->on('isProdData.schedate', 'productionHistory.schedate')
                     ->on('isProdData.glassProdLineID', 'productionHistory.glassProdLineID')
-                    ->on('isProdData.prodReference', 'productionHistory.prd_no');
+                    ->on('isProdData.prd_no', 'productionHistory.prd_no');
             })
             ->select('productionHistory.id as historyID', 'productionHistory.schedate as hschedate', 'productionHistory.glassProdLineID as hline', 
                 'productionHistory.efficiency', 'productionHistory.gauge', 'productionHistory.formingMethod', 'productionHistory.weight',
@@ -442,6 +470,19 @@ class ProductionRepository extends BaseRepository
     {
         $params['machno'] = $this->getMachno($params['glassProdLineID']);
         $result = $this->save('oldSchedule', $params);
+        return $result;
+    }
+
+    public function saveTask($input)
+    {
+        $result = $this->save('task', $input);
+        return $result;
+    }
+
+    public function deleteTask($id)
+    {
+        $table = $this->getTable('task');
+        $result = $this->delete($table, $id);
         return $result;
     }
 

@@ -68,7 +68,7 @@ function setHistoryData(data) {
     $('#weight').val(data['weight']);
     $('#brimCapueity').val(data['brimCapueity']);
     $('#requirement').val(data['requirement']);
-    //$('#draw').val(data['draw']);
+    $('#setDraw').val(data['draw']);
     $('#customer').val(data['customer']);
     $('#qualityLevel').val(data['qualityLevel']);
     $('#country').val(data['country']);
@@ -90,4 +90,8 @@ function setInspection(list) {
             $('#ch_' + str[i]).prop("checked", true);
         }
     }
+}
+
+function showTask() {
+    $('#taskModal').modal('show');
 }

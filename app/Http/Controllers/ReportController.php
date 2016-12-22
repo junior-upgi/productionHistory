@@ -83,10 +83,24 @@ class ReportController extends Controller
                 ->where('prd_no', $prd_no)
                 ->orderBy('schedate', 'desc')
                 ->first();
-            return view('report.history')
+            return view('report.qc')
                 ->with('qc', $qc)
                 ->with('history', $history);
         }
         return view('report.history');
+    }
+
+    public function historyForm($id)
+    {
+        $history = $this->production->getTable('history')
+            ->where('id', $id)
+            ->join('UPGWeb.dbo.glass', 'productionHistory.prd_no', 'glass.prd_no')
+            ->select('productionHistory.*', 'glass.snm', 'glass.spc')
+            ->first();
+        $historyList = $this->production->getFormHisotyList($id)->get();
+        
+        return view('report.history')
+            ->with('history', $history)
+            ->with('historyList', $historyList);
     }
 }

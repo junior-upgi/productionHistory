@@ -58,7 +58,7 @@ function setQCData(data) {
     $('#weight').val(data['weight']);
     $('#brimCapueity').val(data['brimCapueity']);
     $('#requirement').val(data['requirement']);
-    $('#draw').val(data['draw']);
+    $('#setDraw').val(data['draw']);
     $('#customer').val(data['customer']);
     $('#qualityLevel').val(data['qualityLevel']);
     $('#country').val(data['country']);
