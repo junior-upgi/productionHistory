@@ -5,7 +5,7 @@
         <h3 class="text-center">統義玻璃工業股份有限公司</h3>
         <h4 class="text-center">品質管制產品履歷表</h4>
         @if (isset($history))
-            <table class="table table-bordered"> 
+            <table class="table table-bordered" style="font-size: 12px; margin-bottom: 10px;"> 
                 <tr>
                     <td>圖號</td>
                     <td colspan="2">{{ $history['snm'] }}</td>
