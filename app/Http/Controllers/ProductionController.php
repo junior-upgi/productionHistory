@@ -200,7 +200,8 @@ class productionController extends Controller
     {
         $request = request();
         $input = $request->input();
-        if ($input['sampling'] == '1') {
+        $sampling = $input['sampling'];
+        if ($sampling == '1') {
             $params = [
                 'id' => $input['tbmknoID'],
                 'type' => $input['type'],
@@ -216,7 +217,7 @@ class productionController extends Controller
         }
         $input['schedate'] = date('Y/m/d', strtotime($input['schedate']));
         $result = $this->production->saveHistory($input);
-        if ($result['success'] && $input['sampling'] == '1') {
+        if ($result['success'] && $sampling == '1') {
             $insertOld = $this->production->saveOldSchedule($params);
             if (!$insertOld['success']) {
                 return $insertOld;
