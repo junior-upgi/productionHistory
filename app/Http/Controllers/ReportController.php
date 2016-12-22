@@ -23,7 +23,7 @@ class ReportController extends Controller
         $request = request();
         $input = $request->input();
         $snm = $request->input('snm');
-
+        
         $historyList = $this->production->getReportHistoryList($snm)->get()->toArray();
         if (count($historyList) > 0) {
             $prd_no = $historyList[0]['prd_no'];
@@ -97,10 +97,12 @@ class ReportController extends Controller
             ->join('UPGWeb.dbo.glass', 'productionHistory.prd_no', 'glass.prd_no')
             ->select('productionHistory.*', 'glass.snm', 'glass.spc')
             ->first();
-        $historyList = $this->production->getFormHisotyList($id)->get();
+        $historyList = $this->production->getFormhistoryList($history->prd_no)->take(8)->get()->toArray();
         
+        $customer = $this->production->getFormHistoryCustomer($historyList);
         return view('report.history')
             ->with('history', $history)
-            ->with('historyList', $historyList);
+            ->with('historyList', $historyList)
+            ->with('customer', $customer);
     }
 }

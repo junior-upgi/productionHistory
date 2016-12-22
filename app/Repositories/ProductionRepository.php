@@ -286,32 +286,54 @@ class ProductionRepository extends BaseRepository
         return $formTestModel;
     }
 
-    public function getFormHisotyList($id)
+    public function getFormHistoryList($id)
     {
-        $schedule = $this->getTable('history')->where('productionHistory.prd_no', $id);
-
-        $formSchedule = $schedule
+        $formSchedule = $this->getTable('history')
             ->where('sampling', 0)
+            ->where('productionHistory.prd_no', $id)
             ->join('allGlassRun', function ($join) {
                 $join->on('productionHistory.glassProdLineID', 'allGlassRun.glassProdLineID')
                     ->on('productionHistory.prd_no', 'allGlassRun.prd_no')
                     ->on('productionHistory.schedate', 'allGlassRun.schedate');
             })
-            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
-                'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'cus_no',  
+                'productionHistory.schedate', 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 
+                'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'stressLevel', 
+                'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling');
         $a = $formSchedule->get();
         $testModel = $this->getTable('history');
         $formTestModel = $testModel
-            ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
             ->where('sampling', 1)
+            ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
+            ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'productionHistory.cus_no')
+            ->where('productionHistory.prd_no', $id)
             ->union($formSchedule)
-            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('prd_no')
-            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
-                'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
+            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'vCustomer.sname', 
+                'productionHistory.schedate', 'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 
+                'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'stressLevel', 
+                'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling');
         $b = $formTestModel->get();
         return $formTestModel;
+    }
+
+    public function getFormHistoryCustomer($table)
+    {
+        $customer = [];
+        foreach ($table as $item) {
+            if ($item['sampling'] == 0) {
+                $list = $this->getTable('runDetail')
+                ->where('schedate', $item['schedate'])
+                ->where('glassProdLineID', $item['glassProdLineID'])
+                ->where('prd_no', $item['prd_no'])
+                ->select('CUS_SNM')
+                ->get()->toArray();
+                $set['id'] = $item['id'];
+                $set['cus_snm'] = implode(',', array_collapse($list));
+                array_push($customer, $set);
+            }
+        }
+        return $customer;
     }
 
     public function getQCList($request)
