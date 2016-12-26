@@ -122,7 +122,7 @@ class productionController extends Controller
     {
         $request = request();
         $page = $request->input('page', 1);
-        $paginate = 5;
+        $paginate = 20;
 
         $list = $this->production->getHistoryList($request)->get()->toArray();
 
