@@ -29,9 +29,10 @@ function setHistoryData(data) {
     $('#modalTitle').html('新增產品履歷表');
     $('#btnSave').html('新增');
     $('#type').val('add');
+    $('#id').val(data['id']);
     $('#prd_no').val(data['prd_no']);
     $('#schedate').val(data['schedate']);
-    $('#sampling').val(0);
+    $('#sampling').val('--');
     $('.orderQty').hide();
     //$("#glassProdLineID").attr("disabled", true);
     $('#glassProdLineID').val(data['glassProdLineID']);
@@ -40,6 +41,37 @@ function setHistoryData(data) {
     $('searchCustomer').removeAttr("required");
     $('searchCustomer').val('');
     $('cus_no').val('');
+    $('#gauge').val('');
+    $('#formingMethod').val('');
+    $('#other').val('');
+    $('#weight').val('');
+    $('#actualWeight').val('');
+    $('#stressLevel').val('');
+    $('#thermalShock').val('');
+    $('#speed').val('');
+    $('#efficiency').val('');
+    $('#defect').val('');
+    $('#addModal').modal('show');
+}
+
+function massProduction() {
+    $('#modalTitle').html('新增量產履歷表');
+    $('#btnSave').html('新增');
+    $('#type').val('add');
+    $('#prd_no').val('');
+    $('#searchProd').val('');
+    $('#schedate').val('');
+    $('#sampling').val(0);
+    $('#allscheqty').val('');
+    $('#cus_no').val('');
+    $('#orderQty').val('');
+    $('.orderQty').show();
+    $('.cus').show();
+    $('.prd').show();
+    $('#searchCustomer').attr("required", true);
+    $('#searchCustomer').val('');
+    //$("#glassProdLineID").attr("disabled", false);
+    $('#glassProdLineID').val('L1-1');
     $('#gauge').val('');
     $('#formingMethod').val('');
     $('#other').val('');

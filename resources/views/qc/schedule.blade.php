@@ -69,7 +69,7 @@
             </tbody>
         </table>
         <p>
-            {{ $list->setPath('/QC/ScheduleList?snm=' . $snm . '&glassProdLineID=' . $glassProdLineID . '&schedate=' . $schedate) }}
+            {{ $list->setPath(url('/QC/ScheduleList?snm=' . $snm . '&glassProdLineID=' . $glassProdLineID . '&schedate=' . $schedate)) }}
         </p>
     </div>
 </div>

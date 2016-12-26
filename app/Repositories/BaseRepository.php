@@ -18,14 +18,14 @@ class BaseRepository
         return $obj;
     }
 
-    public function save($table, $input, $addIgnore = [], $pk = 'id')
+    public function save($table, $input, $addIgnore = [], $pk = 'id', $saveID = false)
     {   
         $table = $this->getTable($table);
         $id = $input['id'];
         $type = $input['type'];
         switch ($type) {
             case 'add':
-                $params = $this->common->params($input, $addIgnore);
+                $params = $this->common->params($input, $addIgnore, $saveID);
                 $tran = $this->insert($table, $params);
                 break;
             case 'edit':

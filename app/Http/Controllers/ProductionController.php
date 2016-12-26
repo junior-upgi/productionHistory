@@ -122,7 +122,7 @@ class productionController extends Controller
     {
         $request = request();
         $page = $request->input('page', 1);
-        $paginate = 20;
+        $paginate = 5;
 
         $list = $this->production->getHistoryList($request)->get()->toArray();
 
@@ -201,9 +201,12 @@ class productionController extends Controller
         $request = request();
         $input = $request->input();
         $sampling = $input['sampling'];
-        if ($sampling == '1') {
+        if ($input['id'] == '') {
+            $input['id'] = $this->production->common->getNewGUID();
+        }
+        if ($sampling != '--') {
             $params = [
-                'id' => $input['tbmknoID'],
+                'id' => $input['id'],
                 'type' => $input['type'],
                 'sampling' => $input['sampling'],
                 'glassProdLineID' => $input['glassProdLineID'],
@@ -211,13 +214,13 @@ class productionController extends Controller
                 'prd_no' => $input['prd_no'],
                 'orderQty' => $input['orderQty'],
             ];
-            $input = array_except($input, ['sampling', 'orderQty', 'tbmknoID']);
+            $input = array_except($input, ['sampling', 'orderQty']);
         } else {
-            $input = array_except($input, ['cus_no', 'sampling', 'orderQty', 'tbmknoID']);
+            $input = array_except($input, ['cus_no', 'sampling', 'orderQty']);
         }
         $input['schedate'] = date('Y/m/d', strtotime($input['schedate']));
         $result = $this->production->saveHistory($input);
-        if ($result['success'] && $sampling == '1') {
+        if ($result['success'] && $sampling != '--') {
             $insertOld = $this->production->saveOldSchedule($params);
             if (!$insertOld['success']) {
                 return $insertOld;

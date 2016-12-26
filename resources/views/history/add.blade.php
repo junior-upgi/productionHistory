@@ -11,7 +11,7 @@
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
                     <input type="hidden" id="type" name="type" value="">
                     <input type="hidden" id="id" name="id" value="">
-                    <input type="hidden" id="tbmknoID" name="tbmknoID" value="">
+                    <!--<input type="hidden" id="tbmknoID" name="tbmknoID" value="">-->
                     <input type="hidden" id="sampling" name="sampling" value="">
                     <!--<input type="hidden" id="prd_no" name="prd_no" value="">-->
                     <!--<input type="hidden" id="schedate" name="schedate" value="">-->

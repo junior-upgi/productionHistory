@@ -1,12 +1,13 @@
 @extends('layouts.masterpage')
 @section('title', '產個履歷表-生產排程清單')
 @section('content')
-<script src="{{ url('/js/history/schedule.js?v=11') }}"></script>
+<script src="{{ url('/js/history/schedule.js?v=13') }}"></script>
 <div class="row">
     <div class="col-md-12">
         <h2>產品履歷表-生產排程清單</h2>
         <div class="pull-left col-xs-6 row">
             <a class="btn btn-default" href="{{ url('/History/HistoryList') }}" style="margin-bottom: 10px;">返回履歷表清單</a>
+            <button class="btn btn-primary" onclick="massProduction()" style="margin-bottom: 10px;">新增量產履歷表</button>
             <button class="btn btn-primary" onclick="testModel()" style="margin-bottom: 10px;">新增試模履歷表</button>
         </div>
         <form class="form-inline pull-right" action="{{ url('/History/ScheduleList') }}" role="form" style="margin-bottom: 10px;">
@@ -78,7 +79,7 @@
             </tbody>
         </table>
         <p>
-            {{ $list->setPath('/History/ScheduleList?snm=' . $snm . '&glassProdLineID=' . $glassProdLineID . '&schedate=' . $schedate) }}
+            {{ $list->setPath(url('/History/ScheduleList?snm=' . $snm . '&glassProdLineID=' . $glassProdLineID . '&schedate=' . $schedate)) }}
         </p>
     </div>
 </div>

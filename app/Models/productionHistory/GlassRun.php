@@ -7,4 +7,5 @@ class GlassRun extends Model
 {   
     protected $connection = 'productionHistory';
     protected $table = "glassRun";
+    public $keyType = 'string';
 }

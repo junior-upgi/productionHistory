@@ -28,9 +28,13 @@ class Common
     }
 
 
-    public function params($input, $addIgnore)
+    public function params($input, $addIgnore, $saveID = false)
     {
-        $ignore = array_merge(['_token', 'type', 'id'], $addIgnore);
+        if ($saveID) {
+            $ignore = array_merge(['_token', 'type'], $addIgnore);
+        } else {
+            $ignore = array_merge(['_token', 'type', 'id'], $addIgnore);
+        }
         $input = array_except($input, $ignore);
         $params = array();
         $countInput = count($input);

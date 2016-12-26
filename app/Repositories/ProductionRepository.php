@@ -83,11 +83,19 @@ class ProductionRepository extends BaseRepository
         $runProdLineID = $request->input('glassProdLineID');
         $schedate = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
-        $data = $this->getTable($view)
+        if ($view == 'run') {
+            $data = $this->getTable($view)
+            ->where('prd_no', $prd_no)
+            ->where('glassProdLineID', $runProdLineID)
+            ->where('schedate', $schedate)
+            ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
+        } else {
+            $data = $this->getTable($view)
             ->where('prd_no', $prd_no)
             ->where('glassProdLineID', $runProdLineID)
             ->where('schedate', $schedate)
             ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
+        }
         if (isset($data)) {
             return ['success' => true, 'data' => $data];
         }
@@ -257,33 +265,35 @@ class ProductionRepository extends BaseRepository
         }
         $schedule = $this->getTable('history');
         
-        $formSchedule = $schedule
+        $fromSchedule = $schedule
             ->join('allGlassRun', function ($join) {
                 $join->on('productionHistory.glassProdLineID', 'allGlassRun.glassProdLineID')
                     ->on('productionHistory.prd_no', 'allGlassRun.prd_no')
                     ->on('productionHistory.schedate', 'allGlassRun.schedate');
             })
+            ->where('allGlassrun.id', null)
             ->where('allGlassRun.PRDT_SNM', 'like', "%$snm%")
             ->where('productionHistory.glassProdLineID', 'like', "%$runProdLineID%")
             ->where('productionhistory.schedate', $schedateOp, $schedate)
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
                 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $a = $formSchedule->get();
-        $testModel = $this->getTable('history');
-        $formTestModel = $testModel
-            ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
-            ->where('sampling', 1)
-            ->where('UPGWeb.dbo.glass.snm', 'like', "%$snm%")
+        $a = $fromSchedule->get();
+        $oldSchedule = $this->getTable('history');
+        $fromOldSchedule = $oldSchedule
+            ->join('allGlassRun', function ($join) {
+                $join->on('productionHistory.id', 'allGlassRun.id');
+            })
+            ->where('allGlassRun.PRDT_SNM', 'like', "%$snm%")
             ->where('productionHistory.glassProdLineID', 'like', "%$runProdLineID%")
-            ->where('productionHistory.schedate', $schedateOp, $schedate)
-            ->union($formSchedule)
+            ->where('productionhistory.schedate', $schedateOp, $schedate)
+            ->union($fromSchedule)
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('prd_no')
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
+                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $b = $formTestModel->get();
-        return $formTestModel;
+        $b = $fromOldSchedule->get();
+        return $fromOldSchedule;
     }
 
     public function getFormHistoryList($id)
@@ -473,7 +483,7 @@ class ProductionRepository extends BaseRepository
 
     public function saveHistory($input)
     {
-        $result = $this->save('history', $input);
+        $result = $this->save('history', $input, [], 'id', true);
         return $result;
     }
 
@@ -491,7 +501,7 @@ class ProductionRepository extends BaseRepository
     public function saveOldSchedule($params)
     {
         $params['machno'] = $this->getMachno($params['glassProdLineID']);
-        $result = $this->save('oldSchedule', $params);
+        $result = $this->save('oldSchedule', $params, [], 'id', true);
         return $result;
     }
 
