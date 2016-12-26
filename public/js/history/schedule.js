@@ -58,6 +58,7 @@ function massProduction() {
     $('#modalTitle').html('新增量產履歷表');
     $('#btnSave').html('新增');
     $('#type').val('add');
+    $('#id').val('');
     $('#prd_no').val('');
     $('#searchProd').val('');
     $('#schedate').val('');
@@ -89,6 +90,7 @@ function testModel() {
     $('#modalTitle').html('新增試模履歷表');
     $('#btnSave').html('新增');
     $('#type').val('add');
+    $('#id').val('');
     $('#prd_no').val('');
     $('#searchProd').val('');
     $('#schedate').val('');
