@@ -66,7 +66,7 @@
 				<ul class="nav navbar-nav">
 					<li><a href="{{ url('/Duty/DutyList') }}">生產職班表</a></li>
 					<li><a href="{{ url('/History/HistoryList') }}">產品履歷表</a></li>
-					<li><a href="{{ url('/nav/isProdDataForm') }}">生產條件記錄表</a></li>
+					<li><a href="http://upgi.ddns.net:9004/productionHistory/isProdDataForm/index.html?formReference=isProdData" target="_blank">生產條件記錄表</a></li>
 					<li><a href="{{ url('/QC/QCList') }}">品管管制表</a></li>
 					<li><a href="{{ url('/Report/ProductionMeeting') }}" target="_blank">生產資訊報表</a></li>
 				</ul>
