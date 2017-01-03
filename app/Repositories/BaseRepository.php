@@ -17,7 +17,7 @@ use App\Models\productionHistory\QualityControl;
 use App\Models\productionHistory\IsProdData;
 use App\Models\productionHistory\OldSchedule;
 use App\Models\productionHistory\DefectItem;
-use App\Models\productionHistory\Defecttemplate;
+use App\Models\productionHistory\DefectTemplate;
 use App\Models\UPGWeb\Glass;
 use App\Models\taskTracking\TaskList;
 use App\Models\taskTracking\TaskListDetail;
