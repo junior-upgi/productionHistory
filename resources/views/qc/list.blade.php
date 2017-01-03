@@ -61,6 +61,7 @@
                     <td>客戶</td>
                     <td>級別</td>
                     <td>國別</td>
+                    <td style="width: 51px;"></td>
                 </tr>
             </thead>
             <tbody>
@@ -94,6 +95,12 @@
                         <td>{{ $item['customer'] }}</td>
                         <td>{{ $item['qualityLevel'] }}</td>
                         <td>{{ $item['country'] }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm"
+                                data-toggle="tooltip" data-placement="top" title="刪除" onclick="doDel('{{ $item['id'] }}')">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

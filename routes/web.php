@@ -39,6 +39,7 @@ Route::group(['prefix' => 'History'], function () {
     Route::post('GetHistory', 'ProductionController@getHistory');
     Route::get('GetStaff', 'ProductionController@getStaff');
     Route::post('SaveHistory', 'ProductionController@saveHistory');
+    Route::delete('DeleteHistory', 'ProductionController@deleteData');
 });
 
 Route::group(['prefix' => 'QC'], function () {
@@ -50,6 +51,7 @@ Route::group(['prefix' => 'QC'], function () {
     Route::post('GetQC', 'ProductionController@getQC');
     Route::get('GetStaff', 'ProductionController@getStaff');
     Route::post('SaveQC', 'ProductionController@saveQC');
+    Route::delete('DeleteQC', 'ProductionController@deleteData');
 });
 
 Route::group(['prefix' => 'Report'], function () {
@@ -66,4 +68,11 @@ Route::group(['prefix' => 'Service'], function () {
     Route::get('BlankPic/{id}', 'ServiceController@blankPic');
     Route::post('DeleteTask', 'ServiceController@deleteTask');
     Route::post('SaveTask', 'ServiceController@saveTask');
+});
+
+Route::group(['prefix' => 'defect'], function() {
+    Route::get('getTemplate', 'DefectCheckController@getTemplate');
+    Route::get('getItem', 'DefectCheckController@getItem');
+    Route::post('saveItem', 'DefectCheckController@saveItem');
+    Route::delete('deleteItem', 'DefectCheckController@deleteItem');
 });

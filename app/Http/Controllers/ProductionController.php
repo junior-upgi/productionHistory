@@ -251,4 +251,14 @@ class productionController extends Controller
         $result = $this->production->saveQC($input);
         return $result;
     }
+
+    public function deleteData()
+    {
+        $input = request()->input();
+        $table = $input['table'];
+        $id = $input['id'];
+
+        $result = $this->production->deleteData($table, $id);
+        return $result;        
+    }
 }

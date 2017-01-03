@@ -2,79 +2,11 @@
 namespace App\Repositories;
 
 use App\Repositories\BaseRepository;
-use DB;
-
-use App\Models\productionHistory\ProductionDuty;
-use App\Models\productionHistory\ProductionHistory;
-use App\Models\UPGWeb\Customer;
-use App\Models\Z_DB_U105\Schedule;
-use App\Models\UPGWeb\Staff;
-use App\Models\productionHistory\GlassRun;
-use App\Models\productionHistory\GlassRunDetail;
-use App\Models\productionHistory\GlassRunPlan;
-use App\Models\productionHistory\GlassRunPlanDetail;
-use App\Models\productionHistory\AllGlassRun;
-use App\Models\productionHistory\QualityControl;
-use App\Models\productionHistory\IsProdData;
-use App\Models\productionHistory\OldSchedule;
-use App\Models\UPGWeb\Glass;
-use App\Models\taskTracking\TaskList;
-use App\Models\taskTracking\TaskListDetail;
 
 class ProductionRepository extends BaseRepository
 {
-    public $duty;
-    public $histosy;
-    public $customer;
-    public $schedule;
-    public $staff;
-    public $run;
-    public $runDetail;
-    public $plan;
-    public $planDetail;
-    public $allGlass;
-    public $qc;
-    public $prod;
-    public $glass;
-    public $task;
-    public $taskDetail;
-    public $oldSchedule;
-
-    public function __construct(
-        ProductionDuty $duty,
-        Schedule $schedule,
-        Staff $staff,
-        ProductionHistory $history,
-        Customer $customer,
-        GlassRun $run,
-        GlassRunDetail $runDetail,
-        GlassRunPlan $plan,
-        GlassRunPlanDetail $planDetail,
-        AllGlassRun $allGlass,
-        QualityControl $qc,
-        IsProdData $prod,
-        Glass $glass,
-        TaskList $task,
-        TaskListDetail $taskDetail,
-        OldSchedule $oldSchedule
-    ) {
+    public function __construct() {
         parent::__construct();
-        $this->duty = $duty;
-        $this->schedule = $schedule;
-        $this->staff = $staff;
-        $this->history = $history;
-        $this->customer = $customer;
-        $this->run = $run;
-        $this->runDetail = $runDetail;
-        $this->plan = $plan;
-        $this->planDetail = $planDetail;
-        $this->allGlass = $allGlass;
-        $this->qc = $qc;
-        $this->prod = $prod;
-        $this->glass = $glass;
-        $this->task = $task;
-        $this->taskDetail = $taskDetail;
-        $this->oldSchedule = $oldSchedule;
     }
 
     public function getSchedule($request)
@@ -518,6 +450,13 @@ class ProductionRepository extends BaseRepository
         return $result;
     }
 
+    public function deleteData($table, $id)
+    {
+        $table = $this->getTable($table);
+        $result = $this->delete($table, $id);
+        return $result;
+    }
+
     private function getMachno($str)
     {
         switch ($str) {
@@ -547,78 +486,6 @@ class ProductionRepository extends BaseRepository
                 break;
             default:
                 return null;
-        }
-    }
-
-    public function getTable($table)
-    {
-        switch ($table) {
-            case 'duty':
-                return $this->duty;
-                break;
-
-            case 'history':
-                return $this->history;
-                break;
-
-            case 'schedule':
-                return $this->schedule;
-                break;
-
-            case 'staff':
-                return $this->staff;
-                break;
-
-            case 'customer':
-                return $this->customer;
-                break;
-
-            case 'run':
-                return $this->run;
-                break;
-
-            case 'runDetail':
-                return $this->runDetail;
-                break;
-
-            case 'plan':
-                return $this->plan;
-                break;
-
-            case 'planDetail':
-                return $this->planDetail;
-                break;
-
-            case 'allGlass':
-                return $this->allGlass;
-                break;
-
-            case 'qc':
-                return $this->qc;
-                break;
-            
-            case 'prod':
-                return $this->prod;
-                break;
-            
-            case 'glass':
-                return $this->glass;
-                break;
-
-            case 'task':
-                return $this->task;
-                break;
-            
-            case 'taskDetail':
-                return $this->taskDetail;
-                break;
-            
-            case 'oldSchedule':
-                return $this->oldSchedule;
-                break;
-
-            default:
-                throw new Exception('No model exception');
         }
     }
 }

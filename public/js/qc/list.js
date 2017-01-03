@@ -95,3 +95,55 @@ function setInspection(list) {
 function showTask() {
     $('#taskModal').modal('show');
 }
+
+function doDel(id) {
+    swal({
+            title: "刪除資料?",
+            text: "此動作將會刪除資料!",
+            type: "warning",
+            showCancelButton: true,
+            cancelButtonText: '取消',
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "刪除",
+            closeOnConfirm: false
+        },
+        function(){
+            del(id);
+        });
+}
+
+function del(id) {
+    var data = {
+        'table': 'qc',
+        'id': id
+    };
+    $.ajax({
+        url: url + '/QC/DeleteQC',
+        type: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        data: data,
+        error: function(xhr) {
+            swal("刪除資料失敗!", xhr.statusText, "error");
+        },
+        success: function(result) {
+            if (result.success) {
+                swal({
+                    title: "刪除資料成功!",
+                    text: result.msg,
+                    type: "success",
+                    showCancelButton: false,
+                    confirmButtonClass: "btn-success",
+                    confirmButtonText: "OK",
+                    closeOnConfirm: false
+                },
+                function () {
+                    document.location.href = url + '/QC/QCList';
+                });
+            } else {
+                swal("刪除資料失敗!", '找不到資料', "error");
+            }
+        }
+    });
+}

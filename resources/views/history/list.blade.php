@@ -62,7 +62,7 @@
                     <td>熱震</td>
                     <td>機速</td>
                     <td>檢瓶率/繳庫率</td>
-                    
+                    <td style="width: 51px;"></td>
                 </tr>
             </thead>
             <tbody>
@@ -95,6 +95,12 @@
                         <td>{{ $item['thermalShock'] }}</td>
                         <td>{{ $item['speed'] }}</td>
                         <td>{{ $item['efficiency'] }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm"
+                                data-toggle="tooltip" data-placement="top" title="刪除" onclick="doDel('{{ $item['id'] }}')">
+                                <span class="glyphicon glyphicon-trash"></span>
+                            </button>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

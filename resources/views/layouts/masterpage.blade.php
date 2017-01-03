@@ -47,6 +47,7 @@
 	<script src="{{ url('/script/fileupload/locales/zh-TW.js?x=1') }}"></script>
 	<script src="{{ url('/script/bootstrap-suggest.min.js') }}"></script>
 	<script src="{{ url('/script/master.js?x=1') }}"></script>
+	<script src="{{ url('/script/vue.js') }}"></script>
 	<script>
 		var url = "{{ url('/') }}";
 		$(function () {
