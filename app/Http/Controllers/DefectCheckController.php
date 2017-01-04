@@ -19,11 +19,38 @@ class DefectCheckController extends BaseController
 
     public function getTemplate()
     {
-        if (count($list) == 0) {
-            return $this->setStatusCode(400)->makeResponse('查詢不到[' . $search . ']生產資料');
+        $input = request()->input();
+        if (isset($input['id']) > 0) {
+            $data = $this->defect->getTemplate($input['id'])->first()->toArray();
+            return $data;
+        } else if (isset($input['name'])) {
+            $name = iconv('utf8', 'big5', $input['name']);
+            $list = $this->defect->getTemplateList()->where('name', 'like', '%' . $name . '%')->get()->toArray();
+            return $list;
+        } else  {
+            $list = $this->defect->getTemplateList()->get()->toArray();
+            return $list;
         }
+    }
 
-        return $this->setStatusCode(200)->makeResponse('查詢成功', $list);
+    public function getTemplateItem()
+    {
+        $input = request()->input();
+        if (isset($input['id'])) {
+            $id = $input['id'];
+            $template = $this->defect->getTemplate($id)->first()->toArray();
+            $itemList = $this->defect->getNonSelectItem($id)->get()->toArray();
+            $selectList = $this->defect->getSelectedItem($id)->get()->toArray();
+        } else {
+            $template = [];
+            $itemList = $this->defect->getItemList()->get()->toArray();
+            $selectList = [];
+        }
+        return [
+            'template' => $template,
+            'itemList' => $itemList,
+            'selectList' => $selectList,
+        ];
     }
 
     public function getItem()
@@ -54,6 +81,29 @@ class DefectCheckController extends BaseController
         $input = request()->input();
         $id = $input['id'];
         $result = $this->defect->deleteData('item', $id);
+        return $result;
+    }
+
+    public function saveTemplate()
+    {
+        $input = request()->input();
+        $main = $input['mainData'];
+        $detail = $input['detailData'];
+        if ($main['type'] == 'add') {
+            $result = $this->defect->insertTemplate($main, $detail);
+        } else if ($main['type'] == 'edit') {
+            $result = $this->defect->updateTemplate($main, $detail);
+        } else {
+            return ['success' => false, 'msg' => '參數錯誤!'];
+        }
+        return $result;
+    }
+
+    public function deleteTemplate()
+    {
+        $input = request()->input();
+        $id = $input['id'];
+        $result = $this->defect->deleteData('template', $id);
         return $result;
     }
 }

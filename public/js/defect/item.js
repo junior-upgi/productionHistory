@@ -52,7 +52,7 @@ var item = new Vue({
                 type: 'add',
                 id: null,
             };
-            $('#addModal').modal('show');
+            $('#addModal').modal({backdrop: 'static'}, 'show');
         },
 
         edit: function (id) {
@@ -69,9 +69,9 @@ var item = new Vue({
                 success: function(results){
                     item.dataSet = results;
                     item.dataSet.type = 'edit';
-                    $('#addModal').modal('show');
+                    $('#addModal').modal({backdrop: 'static'}, 'show');
                 },
-                error: function(results){
+                error: function(e){
                     var response = jQuery.parseJSON(e.responseText);
                     console.log(response.message);
                 }
@@ -79,6 +79,7 @@ var item = new Vue({
         },
 
         save: function (data) {
+            var action = item.formSet.btn;
             $.ajax({
                 type: 'POST',
                 url: url + "/defect/saveItem",
@@ -88,7 +89,7 @@ var item = new Vue({
                 data: data,
                 error: function(e) {
                     var response = jQuery.parseJSON(e.responseText);	
-                    swal(item.dataSet.btn + "資料失敗!", response.message, "error");	
+                    swal(action + "資料失敗!", response.message, "error");	
                     item.setInit();	    
                     return false;
                 },
@@ -98,7 +99,7 @@ var item = new Vue({
                         item.setInit();
                         item.getItem();
                         swal({
-                            title: item.dataSet.btn + "資料成功!",
+                            title: action + "資料成功!",
                             type: "success",
                             showCancelButton: false,
                             confirmButtonClass: "btn-success",

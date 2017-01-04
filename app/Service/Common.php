@@ -87,7 +87,7 @@ class Common
             $table->getConnection()->rollback();
             return array(
                 'success' => false,
-                'msg' => $e->errorInfo[2],
+                'msg' => $e->getMessage(),
             );
         }
     }
@@ -113,7 +113,7 @@ class Common
             $table->getConnection()->rollback();
             return array(
                 'success' => false,
-                'msg' => $e['errorInfo'][2],
+                'msg' => $e->getMessage(),
             );
         }
     }
@@ -138,7 +138,7 @@ class Common
             $table->getConnection()->rollback();
             return array(
                 'success' => false,
-                'msg' => $e['errorInfo'][2],
+                'msg' => $e->getMessage(),
             );
         }
     }
