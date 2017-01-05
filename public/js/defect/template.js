@@ -1,3 +1,19 @@
+$(function () {
+    //表格托拽設定
+    $("#selectSort").sortable({
+        helper: fixWidthHelper,
+        update: function(event, ui) {
+            
+        }
+    }).disableSelection();
+    //防止表格托拽後縮小修正程序
+    function fixWidthHelper(e, ui) {
+        ui.children().each(function () {
+            $(this).width($(this).width());
+        });
+        return ui;
+    };
+});
 var template = new Vue({
     el: '#template',
     data: {
@@ -96,6 +112,7 @@ var template = new Vue({
         },
 
         add: function () {
+            this.setInit();
             template.formSet = {
                 title: '新增缺點樣板',
                 btn: '新增',
@@ -120,6 +137,7 @@ var template = new Vue({
         },
 
         edit: function (id) {
+            this.setInit();
             template.formSet = {
                 title: '編輯缺點樣板',
                 btn: '更新',
@@ -235,6 +253,10 @@ var template = new Vue({
         setInit: function () {
             template.formSet = {};
             template.dataSet = {};
+            template.itemList = [];
+            template.selectList = [];
+            template.setItem = {};
+            template.setSelect = {};
         }
     }
 });   

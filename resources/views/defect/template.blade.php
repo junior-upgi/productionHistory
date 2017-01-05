@@ -5,6 +5,7 @@
     <p></p>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
+            <h2>缺點樣板管理</h2>
             <div class="pull-left">
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" 
                     data-placement="top" title="新增" @click="add()" @mouseenter="tooltip($event)">
@@ -59,5 +60,5 @@
     </div>
     @include('defect.addTemplate')
 </div>
-<script src="{{ url('js/defect/template.js?v=4') }}"></script>
+<script src="{{ url('js/defect/template.js?v=5') }}"></script>
 @endsection

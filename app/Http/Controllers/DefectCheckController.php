@@ -25,10 +25,13 @@ class DefectCheckController extends BaseController
             return $data;
         } else if (isset($input['name'])) {
             $name = iconv('utf8', 'big5', $input['name']);
-            $list = $this->defect->getTemplateList()->where('name', 'like', '%' . $name . '%')->get()->toArray();
+            $list = $this->defect->getTemplateList()
+                ->where('name', 'like', '%' . $name . '%')
+                ->orderBy('name')->get()->toArray();
             return $list;
         } else  {
-            $list = $this->defect->getTemplateList()->get()->toArray();
+            $list = $this->defect->getTemplateList()
+                ->orderBy('name')->get()->toArray();
             return $list;
         }
     }
@@ -43,7 +46,7 @@ class DefectCheckController extends BaseController
             $selectList = $this->defect->getSelectedItem($id)->get()->toArray();
         } else {
             $template = [];
-            $itemList = $this->defect->getItemList()->get()->toArray();
+            $itemList = $this->defect->getItemList()->orderBy('name')->get()->toArray();
             $selectList = [];
         }
         return [
@@ -61,10 +64,12 @@ class DefectCheckController extends BaseController
             return $data;
         } else if (isset($input['name'])) {
             $name = iconv('utf8', 'big5', $input['name']);
-            $list = $this->defect->getItemList()->where('name', 'like', '%' . $name . '%')->get()->toArray();
+            $list = $this->defect->getItemList()->where('name', 'like', '%' . $name . '%')
+                ->orderBy('name')->get()->toArray();
             return $list;
         } else  {
-            $list = $this->defect->getItemList()->get()->toArray();
+            $list = $this->defect->getItemList()
+                ->orderBy('name')->get()->toArray();
             return $list;
         }
     }

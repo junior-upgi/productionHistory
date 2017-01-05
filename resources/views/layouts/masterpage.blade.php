@@ -70,6 +70,17 @@
 					<li><a href="http://upgi.ddns.net:9004/productionHistory/isProdDataForm/index.html?formReference=isProdData" target="_blank">生產條件記錄表</a></li>
 					<li><a href="{{ url('/QC/QCList') }}">品管管制表</a></li>
 					<li><a href="{{ url('/Report/ProductionMeeting') }}" target="_blank">生產資訊報表</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+							生產缺點記錄<span class="caret"></span>
+						</a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="{{ url('/nav/defect.template') }}">生產缺點記錄單</a></li>
+							<li class="divider"></li>
+							<li><a href="{{ url('/nav/defect.template') }}">缺點樣板管理</a></li>
+							<li><a href="{{ url('/nav/defect.item') }}">缺點項目管理</a></li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 			<div class="collapse navbar-collapse navbar-right">

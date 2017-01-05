@@ -9,6 +9,41 @@ class ProductionRepository extends BaseRepository
         parent::__construct();
     }
 
+    public function checkExists($input)
+    {
+        if ($input['id'] == '') {
+            return false;
+        } else {
+            $data = $this->getTable('history')->where('id', $input['id']);
+            if ($data->exists()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function checkSchedule($input)
+    {
+        $schedate = $input['schedate'];
+        $prd_no = $input['prd_no'];
+        $glassProdLineID = $input['glassProdLineID'];
+        $sampling = $input['sampling'];
+        if ($sampling == '--') {
+            return ['result' => false];
+        }
+        $data = $this->getTable('allGlass')
+            ->where('prd_no', $prd_no)
+            ->where('glassProdLineID', $glassProdLineID)
+            ->where('schedate', $schedate);
+        if ($data->exists()) {
+            return [
+                'result' => true,
+                'id' => $data->first()->id,
+            ];
+        }
+        return ['result' => false];
+    }
+
     public function getSchedule($request)
     {
         $prd_no = $request->input('prd_no');

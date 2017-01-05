@@ -201,7 +201,21 @@ class productionController extends Controller
         $request = request();
         $input = $request->input();
         $sampling = $input['sampling'];
-        if ($input['id'] == '') {
+        $exists = $this->production->checkExists($input);
+        if ($exists) {
+            return [
+                'success' => false,
+                'msg' => '此次生產履歷資料已存在!',
+            ];
+        }
+
+        $checkSchedule = $this->production->checkSchedule($input);
+        if ($checkSchedule['result']) {
+            $sampling = '--';
+            $input['id'] == $checkSchedule['id'];
+        }
+
+        if ($input['id'] == '' || $input['id'] == null) {
             $input['id'] = $this->production->common->getNewGUID();
         }
         if ($sampling != '--') {
@@ -221,6 +235,11 @@ class productionController extends Controller
         $input['schedate'] = date('Y/m/d', strtotime($input['schedate']));
         $result = $this->production->saveHistory($input);
         if ($result['success'] && $sampling != '--') {
+            if ($input['type'] == 'add') {
+                $params['created'] = \Carbon\Carbon::now();
+            } else {
+                $params['modified'] = \Carbon\Carbon::now();
+            }
             $insertOld = $this->production->saveOldSchedule($params);
             if (!$insertOld['success']) {
                 return $insertOld;

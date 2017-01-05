@@ -30,6 +30,7 @@ class DefectRepository extends BaseRepository
                     ->whereRaw('defectItem.id = templateItem.itemID COLLATE database_default')
                     ->whereRaw("templateItem.templateID = '$id'");
             })
+            ->orderBy('name')
             ->select('defectItem.*');
         return $list;
     }
@@ -41,6 +42,7 @@ class DefectRepository extends BaseRepository
             ->join('defectItem', function ($join) {
                 $join->whereRaw('templateItem.itemID = defectItem.id COLLATE database_default');
             })
+            ->orderBy('sequence')
             ->select('defectItem.*');
         return $list;
     }

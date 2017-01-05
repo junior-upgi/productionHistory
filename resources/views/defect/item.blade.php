@@ -5,6 +5,7 @@
     <p></p>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
+            <h2>缺點項目管理</h2>
             <div class="pull-left">
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" 
                     data-placement="top" title="新增" @click="add()" @mouseenter="tooltip($event)">
