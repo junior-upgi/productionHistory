@@ -47,9 +47,9 @@
                         <ul class="list-group" id="selectSort">
                             <li class="list-group-item" v-for="(ss, index) in setSelect">
                                 <label class="">
-                                    <input type="checkbox" v-bind:id="ss.id" v-bind:value="ss.id" v-model="selectList">
+                                    <input class="sort" type="checkbox" v-bind:id="ss.id" v-bind:value="ss.id" v-model="selectList">
                                     <span>@{{ index }} .</span>
-                                    <span>@{{ ss.name }}</span>
+                                    <span class="aa">@{{ ss.name }}</span>
                                 </label>
                             </li>
                         </ul>

@@ -202,7 +202,7 @@ class productionController extends Controller
         $input = $request->input();
         $sampling = $input['sampling'];
         $exists = $this->production->checkExists($input);
-        if ($exists) {
+        if ($exists && $input['type'] == 'add') {
             return [
                 'success' => false,
                 'msg' => '此次生產履歷資料已存在!',

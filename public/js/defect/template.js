@@ -3,7 +3,19 @@ $(function () {
     $("#selectSort").sortable({
         helper: fixWidthHelper,
         update: function(event, ui) {
-            
+            var selected = template.setSelect;
+            var set = [];
+            $("#selectSort .sort").each(function(e) {
+                console.log($(this).val())
+                /*
+                for (var i = 0; i < selected.length; i++) {
+                    if (selected[i]['id'] == $(this).val()) {
+                        set.push(selected[i]);
+                    }
+                }
+                */
+            });
+            template.setSelect = set;
         }
     }).disableSelection();
     //防止表格托拽後縮小修正程序
