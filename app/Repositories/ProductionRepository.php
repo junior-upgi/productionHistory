@@ -16,7 +16,7 @@ class ProductionRepository extends BaseRepository
         } else {
             $data = $this->getTable('history')
                 ->where('prd_no', $input['prd_no'])
-                ->where('schedate', $input['schedate'])
+                ->where('schedate', date('Y/m/d', strtotime($input['schedate'])))
                 ->where('glassProdLineID', $input['glassProdLineID']);
             if ($data->exists()) {
                 return true;
