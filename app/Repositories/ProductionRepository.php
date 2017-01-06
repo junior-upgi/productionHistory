@@ -14,7 +14,10 @@ class ProductionRepository extends BaseRepository
         if ($input['id'] == '') {
             return false;
         } else {
-            $data = $this->getTable('history')->where('id', $input['id']);
+            $data = $this->getTable('history')
+                ->where('prd_no', $input['prd_no'])
+                ->where('schedate', $input['schedate'])
+                ->where('glassProdLineID', $input['glassProdLineID']);
             if ($data->exists()) {
                 return true;
             }
