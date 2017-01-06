@@ -11,7 +11,7 @@ class ProductionRepository extends BaseRepository
 
     public function checkExists($input)
     {
-        if ($input['id'] == '') {
+        if ($input['id'] != '') {
             return false;
         } else {
             $data = $this->getTable('history')
