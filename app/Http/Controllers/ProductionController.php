@@ -228,9 +228,9 @@ class productionController extends Controller
                 'prd_no' => $input['prd_no'],
                 'orderQty' => $input['orderQty'],
             ];
-            $input = array_except($input, ['sampling', 'orderQty']);
+            $input = array_except($input, ['orderQty']);
         } else {
-            $input = array_except($input, ['cus_no', 'sampling', 'orderQty']);
+            $input = array_except($input, ['cus_no', 'orderQty']);
         }
         $input['schedate'] = date('Y/m/d', strtotime($input['schedate']));
         $result = $this->production->saveHistory($input);

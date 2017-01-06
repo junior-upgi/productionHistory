@@ -82,7 +82,7 @@
                         </td>
                         <td>{{ $item['snm'] }}</td>
                         <td>{{ date('Y-m-d', strtotime($item['schedate'])) }}</td>
-                         @if($item['sampling'] == 0)
+                        @if($item['sampling'] == 0)
                             <td>量產</td>
                         @else
                             <td>試模</td>
