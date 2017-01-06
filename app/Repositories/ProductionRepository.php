@@ -15,7 +15,8 @@ class ProductionRepository extends BaseRepository
             $data = $this->getTable('history')
                 ->where('prd_no', $input['prd_no'])
                 ->where('schedate', date('Y/m/d', strtotime($input['schedate'])))
-                ->where('glassProdLineID', $input['glassProdLineID']);
+                ->where('glassProdLineID', $input['glassProdLineID'])
+                ->where('sampling', $input['sampling']);
             if ($data->exists()) {
                 return true;
             }
