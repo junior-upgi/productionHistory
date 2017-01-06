@@ -11,9 +11,7 @@ class ProductionRepository extends BaseRepository
 
     public function checkExists($input)
     {
-        if ($input['id'] != '') {
-            return false;
-        } else {
+        if ($input['type'] == 'add') {
             $data = $this->getTable('history')
                 ->where('prd_no', $input['prd_no'])
                 ->where('schedate', date('Y/m/d', strtotime($input['schedate'])))
