@@ -4,10 +4,26 @@ var item = new Vue({
         items: {},
         formSet: {},
         dataSet: {},
+        defectList: {},
+        selectList: {},
+        setDefect: {},
+        setSelect: {},
     },
 
     mounted: function () {
         this.getItem();
+        Sortable.create(document.getElementById('selectSort'), {
+            onEnd: function(e) {
+                var clonedItems = item.setSelect.filter(function(r){
+                    return r;
+                });
+                clonedItems.splice(e.newIndex, 0, clonedItems.splice(e.oldIndex, 1)[0]);
+                item.setSelect = [];
+                item.$nextTick(function(){
+                    item.setSelect = clonedItems;
+                });
+            }
+        });
     },
 
     methods: {
@@ -43,32 +59,93 @@ var item = new Vue({
             $('[data-toggle="tooltip"]').tooltip();
         },
 
+        selectDefect: function () {
+            var selected = item.defectList;
+            var leftList = item.setDefect;
+            var set = [];
+            var push = false;
+            var rightList = item.setSelect;
+            for (var i = 0; i < leftList.length; i++) {
+                for (var s = 0; s < selected.length; s++) {
+                    if (leftList[i]['id'] == selected[s]) {
+                        rightList.push(leftList[i]);
+                        push = true;
+                    }
+                }
+                if (push == false) {
+                    set.push(leftList[i]);
+                }
+                push = false;
+            }
+            item.setDefect = set;
+            item.setSelect = rightList;
+        },
+
+        removeDefect: function () {
+            var selected = item.selectList;
+            var rightList = item.setSelect;
+            var set = [];
+            var push = false;
+            var leftList = item.setDefect;
+            for (var i = 0; i < rightList.length; i++) {
+                for (var s = 0; s < selected.length; s++) {
+                    if (rightList[i]['id'] == selected[s]) {
+                        leftList.push(rightList[i]);
+                        push = true;
+                    }
+                }
+                if (push == false) {
+                    set.push(rightList[i]);
+                }
+                push = false;
+            }
+            item.setDefect = leftList;
+            item.setSelect = set;
+        },
+
         add: function () {
+            this.setInit();
             item.formSet = {
-                title: '新增缺點項目',
+                title: '新增缺點上層項目',
                 btn: '新增',
             };
             item.dataSet = {
                 type: 'add',
                 id: null,
             };
-            $('#addModal').modal({backdrop: 'static'}, 'show');
+            $.ajax({
+                type: "GET",
+                url: url + "/defect/getDefectGroup",
+                success: function(results){
+                    item.setDefect = results.defectGroup;
+                    item.setSelect = results.selected;
+                    $('#addModal').modal({backdrop: 'static'}, 'show');
+                },
+                error: function(e){
+                    var response = jQuery.parseJSON(e.responseText);
+                    console.log(response.message);
+                }
+            });
         },
 
         edit: function (id) {
+            this.setInit();
             item.formSet = {
-                title: '編輯缺點項目',
+                title: '編輯缺點上層項目',
                 btn: '更新',
             };
-
             data = {id: id};
             $.ajax({
                 type: "GET",
-                url: url + "/defect/getItem",
+                url: url + "/defect/getDefectGroup",
                 data: data,
                 success: function(results){
-                    item.dataSet = results;
+                    item.dataSet = results.item;
                     item.dataSet.type = 'edit';
+                    item.setDefect = results.defectGroup;
+                    item.setSelect = results.selected;
+                    console.log(item.setDefect);
+                    console.log(item.setSelect);
                     $('#addModal').modal({backdrop: 'static'}, 'show');
                 },
                 error: function(e){
@@ -80,6 +157,16 @@ var item = new Vue({
 
         save: function (data) {
             var action = item.formSet.btn;
+            var mainData = item.dataSet;
+            var detailData = item.setSelect;
+            if (detailData == undefined || mainData == undefined) {
+                return false;
+            }
+            data = {
+                mainData: mainData,
+                detailData: detailData,
+            };
+
             $.ajax({
                 type: 'POST',
                 url: url + "/defect/saveItem",
@@ -106,6 +193,12 @@ var item = new Vue({
                             confirmButtonText: "OK",
                             closeOnConfirm: true
                         });
+                        formSet = {};
+                        dataSet = {};
+                        defectList = {};
+                        selectList = {};
+                        setDefect = {};
+                        setSelect = {};
                         $('#addModal').modal('hide');
                     }
                 }
@@ -160,6 +253,21 @@ var item = new Vue({
         setInit: function () {
             item.formSet = {};
             item.dataSet = {};
+            item.defectList = [];
+            item.selectList = [];
+            item.setDefect = {};
+            item.setSelect = {};
         }
     }
 });   
+
+Array.prototype.remove = function () {
+    var what, a = arguments, L = a.length, ax;
+    while (L && this.length) {
+        what = a[--L];
+        while ((ax = this.indexOf(what)) !== -1) {
+            this.splice(ax, 1);
+        }
+    }
+    return this;
+};

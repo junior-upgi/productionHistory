@@ -10,6 +10,7 @@
 namespace App\Service;
 
 use App\Models\upgiSystem\File;
+use Auth;
 
 /**
  * Class ProductRepository
@@ -30,11 +31,9 @@ class Common
 
     public function params($input, $addIgnore, $saveID = false)
     {
-        if ($saveID) {
-            $ignore = array_merge(['_token', 'type'], $addIgnore);
-        } else {
-            $ignore = array_merge(['_token', 'type', 'id'], $addIgnore);
-        }
+        $ignore = array_merge(['_token', 'type'], $addIgnore);
+        ($saveID == false) ? $ignore = array_merge(['_token', 'type', 'id'], $addIgnore) : true;
+        
         $input = array_except($input, $ignore);
         $params = array();
         $countInput = count($input);
@@ -66,6 +65,16 @@ class Common
         return $obj;
     }
 
+    public function timestamps($params, $type)
+    {
+        $params[$type.'_at'] = \Carbon\Carbon::now();
+        if (isset(Auth::user()->erpid)) {
+            $user_id = Auth::user()->erpid;
+            $params[$type.'_by'] = $user_id;
+        }
+        return $params;
+    }
+
     /**
      * 新增Module
      * 
@@ -76,6 +85,9 @@ class Common
     public function insert($table, $params)
     {
         try {
+            if ($table->timestamps != false) {
+                $params = $this->timestamps($params, 'created');
+            }
             $table->getConnection()->beginTransaction();
             $table->insert($params);
             $table->getConnection()->commit();
@@ -99,9 +111,12 @@ class Common
      * @param array $params 傳入更新資料
      * @return array 回傳結果
      */
-    public function update($table, $params)
+    public function update($table, $params, $timestamps = false)
     {
         try {
+            if ($timestamps) {
+                $params = $this->timestamps($params, 'updated');
+            }
             $table->getConnection()->beginTransaction();
             $table->update($params);
             $table->getConnection()->commit();
@@ -129,7 +144,12 @@ class Common
         try {
             $table->getConnection()->beginTransaction();
             $table->delete();
+            if (isset(Auth::user()->erpid)) {
+                $user_id = Auth::user()->erpid;
+                $table->update(['deleted_by' => $user_id]);
+            }
             $table->getConnection()->commit();
+            
             return array(
                 'success' => true,
                 'msg' => 'success!',

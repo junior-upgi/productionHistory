@@ -48,6 +48,7 @@
 	<script src="{{ url('/script/bootstrap-suggest.min.js') }}"></script>
 	<script src="{{ url('/script/master.js?x=1') }}"></script>
 	<script src="{{ url('/script/vue.js') }}"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js"></script>
 	<script>
 		var url = "{{ url('/') }}";
 		$(function () {
@@ -78,7 +79,8 @@
 							<li><a href="{{ url('/nav/defect.template') }}">生產缺點記錄單</a></li>
 							<li class="divider"></li>
 							<li><a href="{{ url('/nav/defect.template') }}">缺點樣板管理</a></li>
-							<li><a href="{{ url('/nav/defect.item') }}">缺點項目管理</a></li>
+							<li><a href="{{ url('/nav/defect.item') }}">缺點上層項目管理</a></li>
+							<li><a href="{{ url('/nav/defect.defect') }}">缺點項目管理</a></li>
 						</ul>
 					</li>
 				</ul>

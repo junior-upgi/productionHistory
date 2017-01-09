@@ -65,11 +65,49 @@ class DefectCheckController extends BaseController
         } else if (isset($input['name'])) {
             $name = iconv('utf8', 'big5', $input['name']);
             $list = $this->defect->getItemList()->where('name', 'like', '%' . $name . '%')
-                ->orderBy('name')->get()->toArray();
+                ->orderBy('created_at')->get()->toArray();
             return $list;
         } else  {
             $list = $this->defect->getItemList()
-                ->orderBy('name')->get()->toArray();
+                ->orderBy('created_at')->get()->toArray();
+            return $list;
+        }
+    }
+
+    public function getDefectGroup()
+    {
+        $input = request()->input();
+        if (isset($input['id'])) {
+            $id = $input['id'];
+            $item = $this->defect->getItem($id)->first()->toArray();
+            $defectGroup = $this->defect->getNonSelectDefect($id)->get()->toArray();
+            $selected = $this->defect->getSelectedDefect($id)->get()->toArray();
+        } else {
+            $item = [];
+            $defectGroup = $this->defect->getDefectList()->orderBy('name')->get()->toArray();
+            $selected = [];
+        }
+        return [
+            'item' => $item,
+            'defectGroup' => $defectGroup,
+            'selected' => $selected,
+        ];
+    }
+    
+    public function getDefect()
+    {
+        $input = request()->input();
+        if (isset($input['id']) > 0) {
+            $data = $this->defect->getDefect($input['id'])->first()->toArray();
+            return $data;
+        } else if (isset($input['name'])) {
+            $name = iconv('utf8', 'big5', $input['name']);
+            $list = $this->defect->getDefectList()->where('name', 'like', '%' . $name . '%')
+                ->orderBy('created_at')->get()->toArray();
+            return $list;
+        } else  {
+            $list = $this->defect->getDefectList()
+                ->orderBy('created_at')->get()->toArray();
             return $list;
         }
     }
@@ -77,7 +115,15 @@ class DefectCheckController extends BaseController
     public function saveItem()
     {
         $input = request()->input();
-        $result = $this->defect->saveData('item', $input);
+        $main = $input['mainData'];
+        $detail = $input['detailData'];
+        if ($main['type'] == 'add') {
+            $result = $this->defect->insertItem($main, $detail);
+        } else if ($main['type'] == 'edit') {
+            $result = $this->defect->updateItem($main, $detail);
+        } else {
+            return ['success' => false, 'msg' => '參數錯誤!'];
+        }
         return $result;
     }
 
@@ -109,6 +155,21 @@ class DefectCheckController extends BaseController
         $input = request()->input();
         $id = $input['id'];
         $result = $this->defect->deleteData('template', $id);
+        return $result;
+    }
+
+    public function saveDefect()
+    {
+        $input = request()->input();
+        $result = $this->defect->saveData('defect', $input);
+        return $result;
+    }
+
+    public function deleteDefect()
+    {
+        $input = request()->input();
+        $id = $input['id'];
+        $result = $this->defect->deleteData('defect', $id);
         return $result;
     }
 }

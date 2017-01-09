@@ -71,7 +71,12 @@ Route::group(['prefix' => 'Service'], function () {
 });
 
 Route::group(['prefix' => 'defect'], function() {
+    Route::get('getDefect', 'DefectCheckController@getDefect');
+    Route::post('saveDefect', 'DefectCheckController@saveDefect');
+    Route::delete('deleteDefect', 'DefectCheckController@deleteDefect');
+
     Route::get('getItem', 'DefectCheckController@getItem');
+    Route::get('getDefectGroup', 'DefectCheckController@getDefectGroup');
     Route::post('saveItem', 'DefectCheckController@saveItem');
     Route::delete('deleteItem', 'DefectCheckController@deleteItem');
 

@@ -19,6 +19,8 @@ use App\Models\productionHistory\OldSchedule;
 use App\Models\productionHistory\DefectItem;
 use App\Models\productionHistory\DefectTemplate;
 use App\Models\productionHistory\TemplateItem;
+use App\Models\productionHistory\Defect;
+use App\Models\productionHistory\DefectGroup;
 use App\Models\UPGWeb\Glass;
 use App\Models\taskTracking\TaskList;
 use App\Models\taskTracking\TaskListDetail;
@@ -44,6 +46,8 @@ class BaseRepository
     public $item;
     public $template;
     public $templateItem;
+    public $defect;
+    public $defectGroup;
     
     public function __construct() {
         $this->common = new Common();
@@ -66,6 +70,8 @@ class BaseRepository
         $this->item = new DefectItem();
         $this->template = new DefectTemplate();
         $this->templateItem = new TemplateItem();
+        $this->defect = new Defect();
+        $this->defectGroup = new DefectGroup();
     }
     
     public function getCollection($table, $where = null)
@@ -106,8 +112,9 @@ class BaseRepository
 
     public function update($table, $id, $params, $pk = 'id')
     {
+        $timestamps = $table->timestamps;
         $table = $table->where($pk, $id);
-        $obj = $this->common->update($table, $params);
+        $obj = $this->common->update($table, $params, $timestamps);
         return $obj;
     }
 
@@ -195,6 +202,14 @@ class BaseRepository
 
             case 'templateItem':
                 return $this->templateItem;
+                break;
+
+            case 'defect':
+                return $this->defect;
+                break;
+
+            case 'defectGroup':
+                return $this->defectGroup;
                 break;
 
             default:

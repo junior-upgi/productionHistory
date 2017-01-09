@@ -4,12 +4,12 @@ namespace App\Models\productionHistory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class DefectItem extends Model
+class DefectGroup extends Model
 {   
     use SoftDeletes;
 
     protected $connection = 'productionHistory';
-    protected $table = "defectItem";
+    protected $table = "defectGroup";
     public $keyType = 'string';
     protected $dateFormat = 'Y-m-d H:i:s';
     protected $hidden = [

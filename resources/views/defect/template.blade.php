@@ -1,11 +1,11 @@
 @extends('layouts.masterpage')
-@section('title', '缺點樣板管理')
+@section('title', '缺點套板管理')
 @section('content')
 <div id="template">
     <p></p>
     <div class="row">
         <div class="col-md-6 col-md-offset-3">
-            <h2>缺點樣板管理</h2>
+            <h2>缺點套板管理</h2>
             <div class="pull-left">
                 <button type="button" class="btn btn-primary btn-sm" data-toggle="tooltip" 
                     data-placement="top" title="新增" @click="add()" @mouseenter="tooltip($event)">
@@ -15,7 +15,7 @@
             <div class="row">
                 <div class="pull-right col-md-5">
                     <div class="input-group">
-                        <input type="text" id="search_name" class="form-control input-sm" placeholder="缺點樣板名稱" value="">
+                        <input type="text" id="search_name" class="form-control input-sm" placeholder="缺點套板名稱" value="">
                         <span class="input-group-btn">
                             <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" 
                                 data-placement="top" title="搜尋" @click="search()" @mouseenter="tooltip($event)">
@@ -34,7 +34,7 @@
                 <thead>
                     <tr>
                         <td></td>
-                        <td>缺點樣板名稱</td>
+                        <td>缺點套板名稱</td>
                         <td></td>
                     </tr>
                 </thead>
@@ -60,5 +60,5 @@
     </div>
     @include('defect.addTemplate')
 </div>
-<script src="{{ url('js/defect/template.js?v=5') }}"></script>
+<script src="{{ url('js/defect/template.js?v=8') }}"></script>
 @endsection

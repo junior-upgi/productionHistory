@@ -1,45 +1,29 @@
-$(function () {
-    //表格托拽設定
-    $("#selectSort").sortable({
-        helper: fixWidthHelper,
-        update: function(event, ui) {
-            var selected = template.setSelect;
-            var set = [];
-            $("#selectSort .sort").each(function(e) {
-                console.log($(this).val())
-                /*
-                for (var i = 0; i < selected.length; i++) {
-                    if (selected[i]['id'] == $(this).val()) {
-                        set.push(selected[i]);
-                    }
-                }
-                */
-            });
-            template.setSelect = set;
-        }
-    }).disableSelection();
-    //防止表格托拽後縮小修正程序
-    function fixWidthHelper(e, ui) {
-        ui.children().each(function () {
-            $(this).width($(this).width());
-        });
-        return ui;
-    };
-});
 var template = new Vue({
     el: '#template',
     data: {
         templates: {},
         formSet: {},
         dataSet: {},
-        itemList: [],
-        selectList: [],
+        itemList: {},
+        selectList: {},
         setItem: {},
         setSelect: {},
     },
 
     mounted: function () {
         this.getTemplate();
+        Sortable.create(document.getElementById('selectSort'), {
+            onEnd: function(e) {
+                var clonedItems = template.setSelect.filter(function(r){
+                    return r;
+                });
+                clonedItems.splice(e.newIndex, 0, clonedItems.splice(e.oldIndex, 1)[0]);
+                template.setSelect = [];
+                template.$nextTick(function(){
+                    template.setSelect = clonedItems;
+                });
+            }
+        });
     },
 
     computed: {
@@ -47,6 +31,10 @@ var template = new Vue({
     },
 
     methods: {
+        onUpdate: function (event) {
+            this.list.splice(event.newIndex, 0, this.list.splice(event.oldIndex, 1)[0])
+        },
+        
         getTemplate: function (data = null) {
             $.ajax({
                 type: "GET",
@@ -126,7 +114,7 @@ var template = new Vue({
         add: function () {
             this.setInit();
             template.formSet = {
-                title: '新增缺點樣板',
+                title: '新增缺點套板',
                 btn: '新增',
             };
             template.dataSet = {
@@ -151,7 +139,7 @@ var template = new Vue({
         edit: function (id) {
             this.setInit();
             template.formSet = {
-                title: '編輯缺點樣板',
+                title: '編輯缺點套板',
                 btn: '更新',
             };
             data = {id: id};
@@ -175,9 +163,14 @@ var template = new Vue({
 
         save: function () {
             var action = template.formSet.btn;
+            var mainData = template.dataSet;
+            var detailData = template.setSelect;
+            if (detailData == undefined || mainData == undefined) {
+                return false;
+            }
             data = {
-                mainData: template.dataSet,
-                detailData: template.setSelect,
+                mainData: mainData,
+                detailData: detailData,
             };
             $.ajax({
                 type: 'POST',

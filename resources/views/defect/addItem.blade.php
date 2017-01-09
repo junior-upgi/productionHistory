@@ -1,5 +1,5 @@
 <div class="modal fade" id="addModal">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">
@@ -12,11 +12,47 @@
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
                     <input type="hidden" name="type" v-model="dataSet.type">
                     <input type="hidden" name="id" v-model="dataSet.id">
-                    <div class="form-group">
-                        <label for="name" class="col-md-3 control-label">缺點項目名稱</label>
+                    <form class="form-inline" role="form">
+                        <label for="name" class="col-md-3 control-label">缺點上層項目名稱</label>
                         <div class="col-md-5">
                             <input type="text" class="form-control" name="name" v-model="dataSet.name" required>
                         </div>
+                    </form>
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                    <div class="col-md-5" style="height: 400px;overflow: auto;">
+                        <label class="control-label">所有缺點項目</label>
+                        <ul class="list-group">
+                            <li class="list-group-item" v-for="si in setDefect">
+                                <label class="">
+                                    <input type="checkbox" v-bind:id="si.id" v-bind:value="si.id" v-model="defectList">
+                                    <span>@{{ si.name }}</span>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-1 text-center">
+                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" 
+                            style="margin-top: 100px;margin-left: 4px;"
+                            data-placement="top" title="加入" @click="selectDefect()" @mouseenter="tooltip($event)">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip" style="margin-top: 50px;"
+                            data-placement="top" title="移除" @click="removeDefect()" @mouseenter="tooltip($event)">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                        </button>
+                    </div>
+                    <div class="col-md-6" style="height: 400px;overflow: auto;">
+                        <label class="control-label">選擇的缺點項目</label>
+                        <ul class="list-group" id="selectSort" >
+                            <li class="list-group-item" v-for="(ss, index) in setSelect" >
+                                <label class="">
+                                    <input class="sort" type="checkbox" v-bind:id="ss.id" v-bind:value="ss.id" v-model="selectList">
+                                    <span>@{{ index + 1 }} .</span>
+                                    <span class="aa">@{{ ss.name }}</span>
+                                </label>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
