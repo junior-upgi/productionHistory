@@ -76,14 +76,12 @@ class BaseRepository
     
     public function getCollection($table, $where = null)
     {
-        $table = $this->getTable($table);
         $obj = $this->common->where($table, $where);
         return $obj;
     }
 
     public function save($table, $input, $addIgnore = [], $pk = 'id', $saveID = false)
     {   
-        $table = $this->getTable($table);
         $id = $input['id'];
         $type = $input['type'];
         switch ($type) {
@@ -124,96 +122,14 @@ class BaseRepository
         $obj = $this->common->delete($table);
         return $obj;
     }
-
-    protected function getTable($table)
+    
+    public function forceDelete($table, $id, $pk = 'id')
     {
-        switch ($table) {
-            case 'duty':
-                return $this->duty;
-                break;
-
-            case 'history':
-                return $this->history;
-                break;
-
-            case 'schedule':
-                return $this->schedule;
-                break;
-
-            case 'staff':
-                return $this->staff;
-                break;
-
-            case 'customer':
-                return $this->customer;
-                break;
-
-            case 'run':
-                return $this->run;
-                break;
-
-            case 'runDetail':
-                return $this->runDetail;
-                break;
-
-            case 'plan':
-                return $this->plan;
-                break;
-
-            case 'planDetail':
-                return $this->planDetail;
-                break;
-
-            case 'allGlass':
-                return $this->allGlass;
-                break;
-
-            case 'qc':
-                return $this->qc;
-                break;
-            
-            case 'prod':
-                return $this->prod;
-                break;
-            
-            case 'glass':
-                return $this->glass;
-                break;
-
-            case 'task':
-                return $this->task;
-                break;
-            
-            case 'taskDetail':
-                return $this->taskDetail;
-                break;
-            
-            case 'oldSchedule':
-                return $this->oldSchedule;
-                break;
-
-            case 'item':
-                return $this->item;
-                break;
-
-            case 'template':
-                return $this->template;
-                break;
-
-            case 'templateItem':
-                return $this->templateItem;
-                break;
-
-            case 'defect':
-                return $this->defect;
-                break;
-
-            case 'defectGroup':
-                return $this->defectGroup;
-                break;
-
-            default:
-                throw new Exception('No model exception');
-        }
+        $table = $table->where($pk, $id);
+        $obj = $table->forceDelete();
+        return [
+            'success' => true,
+            'msg' => 'success'
+        ];
     }
 }

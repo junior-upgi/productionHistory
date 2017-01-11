@@ -12,7 +12,7 @@ class ProductionRepository extends BaseRepository
     public function checkExists($input)
     {
         if ($input['type'] == 'add') {
-            $data = $this->getTable('history')
+            $data = $this->history
                 ->where('prd_no', $input['prd_no'])
                 ->where('schedate', date('Y/m/d', strtotime($input['schedate'])))
                 ->where('glassProdLineID', $input['glassProdLineID'])
@@ -33,7 +33,7 @@ class ProductionRepository extends BaseRepository
         if ($sampling == '--') {
             return ['result' => false];
         }
-        $data = $this->getTable('allGlass')
+        $data = $this->allGlass
             ->where('prd_no', $prd_no)
             ->where('glassProdLineID', $glassProdLineID)
             ->where('schedate', $schedate);
@@ -52,18 +52,30 @@ class ProductionRepository extends BaseRepository
         $runProdLineID = $request->input('glassProdLineID');
         $schedate = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
-        if ($view == 'run') {
-            $data = $this->getTable($view)
-            ->where('prd_no', $prd_no)
-            ->where('glassProdLineID', $runProdLineID)
-            ->where('schedate', $schedate)
-            ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-        } else {
-            $data = $this->getTable($view)
-            ->where('prd_no', $prd_no)
-            ->where('glassProdLineID', $runProdLineID)
-            ->where('schedate', $schedate)
-            ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
+        switch ($view) {
+            case 'run':
+                $data = $this->run
+                    ->where('prd_no', $prd_no)
+                    ->where('glassProdLineID', $runProdLineID)
+                    ->where('schedate', $schedate)
+                    ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
+                break;
+            
+            case 'plan':
+                $data = $this->plan
+                    ->where('prd_no', $prd_no)
+                    ->where('glassProdLineID', $runProdLineID)
+                    ->where('schedate', $schedate)
+                    ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
+                break;
+            
+            case 'allGlass':
+                $data = $this->allGlass
+                    ->where('prd_no', $prd_no)
+                    ->where('glassProdLineID', $runProdLineID)
+                    ->where('schedate', $schedate)
+                    ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
+                break;
         }
         if (isset($data)) {
             return ['success' => true, 'data' => $data];
@@ -77,7 +89,17 @@ class ProductionRepository extends BaseRepository
         $runProdLineID = $request->input('glassProdLineID');
         $schedate = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
-        $data = $this->getTable($view . 'Detail')
+        switch ($view) {
+            case 'plan':
+                $table = $this->planDetail;
+                break;
+            case 'run':
+                $table = $this->runDetail;
+                break;
+            default:
+                return '';
+        } 
+        $data = $table
             ->where('prd_no', $prd_no)
             ->where('glassProdLineID', $runProdLineID)
             ->where('schedate', $schedate)
@@ -89,14 +111,14 @@ class ProductionRepository extends BaseRepository
 
     public function getQCDefect($prd_no)
     {
-        $table = $this->getTable('history');
+        $table = $this->history;
         $defect = $table->where('prd_no', $prd_no)->orderBy('schedate', 'desc')->select('defect')->first();
         return $defect['defect'];
     }
 
     public function getQCPackRate($prd_no)
     {
-        $table = $this->getTable('history');
+        $table = $this->history;
         $packRate = $table->where('prd_no', $prd_no)->orderBy('schedate', 'desc')->select('efficiency')->first();
         return $packRate['efficiency'];
     }
@@ -107,7 +129,17 @@ class ProductionRepository extends BaseRepository
         $runProdLineID = $request->input('glassProdLineID');
         $schedate = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
-        $data = $this->getTable($view . 'Detail')
+        switch ($view) {
+            case 'plan':
+                $table = $this->planDetail;
+                break;
+            case 'run':
+                $table = $this->runDetail;
+                break;
+            default:
+                return '';
+        } 
+        $data = $table
             ->where('prd_no', $prd_no)
             ->where('glassProdLineID', $runProdLineID)
             ->where('schedate', $schedate)
@@ -129,7 +161,17 @@ class ProductionRepository extends BaseRepository
         $runProdLineID = $request->input('glassProdLineID');
         $schedate = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
-        $data = $this->getTable($view . 'Detail')
+        switch ($view) {
+            case 'plan':
+                $table = $this->planDetail;
+                break;
+            case 'run':
+                $table = $this->runDetail;
+                break;
+            default:
+                return '';
+        } 
+        $data = $table
             ->where('prd_no', $prd_no)
             ->where('glassProdLineID', $runProdLineID)
             ->where('schedate', $schedate)
@@ -151,7 +193,19 @@ class ProductionRepository extends BaseRepository
             $schedateOp = '=';
             $schedate = date('Y-m-d', strtotime($request->input('schedate')));
         }
-        $table = $this->getTable($view);
+        switch ($view) {
+            case 'plan':
+                $table = $this->planDetail;
+                break;
+            case 'run':
+                $table = $this->runDetail;
+                break;
+            case 'allGlass':
+                $table = $this->allGlass;
+                break;
+            default:
+                return null;
+        }
         $list = $table
             ->where('PRDT_SNM', 'like', "%$snm%")
             ->where('glassProdLineID', 'like', "%$runProdLineID%")
@@ -174,7 +228,7 @@ class ProductionRepository extends BaseRepository
             $dutyDateOp = '=';
             $dutyDate = date('Y-m-d', strtotime($request->input('dutyDate')));
         }
-        $schedule = $this->getTable('duty');
+        $schedule = $this->duty;
         $scheduleList = $schedule
             ->join('allGlassRun', function ($join) {
                 $join->on('productionDuty.glassProdLineID', 'allGlassRun.glassProdLineID')
@@ -195,7 +249,7 @@ class ProductionRepository extends BaseRepository
 
     public function getReportHistoryList($snm)
     {
-        $schedule = $this->getTable('history');
+        $schedule = $this->history;
         $formSchedule = $schedule
             ->where('sampling', 0)
             ->join('allGlassRun', function ($join) {
@@ -208,7 +262,7 @@ class ProductionRepository extends BaseRepository
                 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $a = $formSchedule->get();
-        $testModel = $this->getTable('history');
+        $testModel = $this->history;
         $formTestModel = $testModel
             ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
             ->where('sampling', 1)
@@ -232,7 +286,7 @@ class ProductionRepository extends BaseRepository
             $schedateOp = '=';
             $schedate = date('Y-m-d', strtotime($request->input('schedate')));
         }
-        $schedule = $this->getTable('history');
+        $schedule = $this->history;
         
         $fromSchedule = $schedule
             ->join('allGlassRun', function ($join) {
@@ -248,7 +302,7 @@ class ProductionRepository extends BaseRepository
                 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
         $a = $fromSchedule->get();
-        $oldSchedule = $this->getTable('history');
+        $oldSchedule = $this->history;
         $fromOldSchedule = $oldSchedule
             ->join('allGlassRun', function ($join) {
                 $join->on('productionHistory.id', 'allGlassRun.id');
@@ -267,7 +321,7 @@ class ProductionRepository extends BaseRepository
 
     public function getFormHistoryList($id)
     {
-        $formSchedule = $this->getTable('history')
+        $formSchedule = $this->history
             ->where('sampling', 0)
             ->where('productionHistory.prd_no', $id)
             ->join('allGlassRun', function ($join) {
@@ -280,7 +334,7 @@ class ProductionRepository extends BaseRepository
                 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'stressLevel', 
                 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling');
         $a = $formSchedule->get();
-        $testModel = $this->getTable('history');
+        $testModel = $this->history;
         $formTestModel = $testModel
             ->where('sampling', 1)
             ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
@@ -301,7 +355,7 @@ class ProductionRepository extends BaseRepository
         $customer = [];
         foreach ($table as $item) {
             if ($item['sampling'] == 0) {
-                $list = $this->getTable('runDetail')
+                $list = $this->runDetail
                 ->where('schedate', $item['schedate'])
                 ->where('glassProdLineID', $item['glassProdLineID'])
                 ->where('prd_no', $item['prd_no'])
@@ -325,7 +379,7 @@ class ProductionRepository extends BaseRepository
             $schedateOp = '=';
             $schedate = date('Y-m-d', strtotime($request->input('schedate')));
         }
-        $schedule = $this->getTable('qc');
+        $schedule = $this->qc;
         $scheduleList = $schedule
             //->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'qualityControl.cus_no')
             ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no')
@@ -364,7 +418,7 @@ class ProductionRepository extends BaseRepository
 
     public function getProdData($prd_no)
     {
-        $list = $this->getTable('history')
+        $list = $this->history
             ->where('productionHistory.prd_no', $prd_no)
             ->leftJoin('isProdData', function ($join) {
                 $join->on('isProdData.schedate', 'productionHistory.schedate')
@@ -380,7 +434,7 @@ class ProductionRepository extends BaseRepository
 
     public function getDuty($id)
     {
-        $data = $this->getTable('duty')->where('productionDuty.id', $id);
+        $data = $this->duty->where('productionDuty.id', $id);
         if ($data->exists()) {
             $data = $data
                 ->join('allGlassRun', function ($join) {
@@ -401,7 +455,7 @@ class ProductionRepository extends BaseRepository
 
     public function getHistory($id)
     {
-        $data = $this->getTable('history')->where('productionHistory.id', $id);
+        $data = $this->history->where('productionHistory.id', $id);
         if ($data->exists()) {
             if ($data->first()->sampling == 0) {
                 $data = $data
@@ -434,7 +488,7 @@ class ProductionRepository extends BaseRepository
 
     public function getQC($id)
     {
-        $data = $this->getTable('qc')->where('qualityControl.id', $id);
+        $data = $this->qc->where('qualityControl.id', $id);
         if ($data->exists()) {
             $data = $data
                 ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no')
@@ -446,19 +500,22 @@ class ProductionRepository extends BaseRepository
 
     public function saveDuty($input)
     {
-        $result = $this->save('duty', $input);
+        $table = $this->duty;
+        $result = $this->save($table, $input);
         return $result;
     }
 
     public function saveHistory($input)
     {
-        $result = $this->save('history', $input, [], 'id', true);
+        $table = $this->history;
+        $result = $this->save($table, $input, [], 'id', true);
         return $result;
     }
 
     public function saveQC($input)
     {
-        $result = $this->save('qc', $input);
+        $table = $this->qc;
+        $result = $this->save($table, $input);
         return $result;
     }
 
@@ -469,28 +526,37 @@ class ProductionRepository extends BaseRepository
 
     public function saveOldSchedule($params)
     {
+        $table = $this->oldSchedule;
         $params['machno'] = $this->getMachno($params['glassProdLineID']);
-        $result = $this->save('oldSchedule', $params, [], 'id', true);
+        $result = $this->save($table, $params, [], 'id', true);
         return $result;
     }
 
     public function saveTask($input)
     {
-        $result = $this->save('task', $input);
+        $table = $this->task;
+        $result = $this->save($table, $input);
         return $result;
     }
 
     public function deleteTask($id)
     {
-        $table = $this->getTable('task');
+        $table = $this->task;
         $result = $this->delete($table, $id);
         return $result;
     }
 
-    public function deleteData($table, $id)
+    public function deleteHistory($id)
     {
-        $table = $this->getTable($table);
-        $result = $this->delete($table, $id);
+        $table = $this->history;
+        $result = $this->delfete($table, $id);
+        return $result;
+    }
+
+    public function deleteQC($id)
+    {
+        $table = $this->qc;
+        $result = $this->delfete($table, $id);
         return $result;
     }
 

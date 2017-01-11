@@ -131,7 +131,7 @@ class DefectCheckController extends BaseController
     {
         $input = request()->input();
         $id = $input['id'];
-        $result = $this->defect->deleteData('item', $id);
+        $result = $this->defect->deleteItem($id);
         return $result;
     }
 
@@ -154,7 +154,7 @@ class DefectCheckController extends BaseController
     {
         $input = request()->input();
         $id = $input['id'];
-        $result = $this->defect->deleteData('template', $id);
+        $result = $this->defect->deleteTemplate($id);
         return $result;
     }
 
@@ -169,7 +169,7 @@ class DefectCheckController extends BaseController
     {
         $input = request()->input();
         $id = $input['id'];
-        $result = $this->defect->deleteData('defect', $id);
+        $result = $this->defect->deleteDefect($id);
         return $result;
     }
 }

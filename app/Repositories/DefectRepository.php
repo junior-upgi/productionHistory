@@ -106,8 +106,8 @@ class DefectRepository extends BaseRepository
     public function insertTemplate($main, $detail)
     {
         $id = $this->common->getNewGUID();
-        $template = $this->getTable('template');
-        $templateItem = $this->getTable('templateItem');
+        $template = $this->template;
+        $templateItem = $this->templateItem;
         $main = array_except($main, ['type']);
         $main['id'] = $id;
 
@@ -145,8 +145,8 @@ class DefectRepository extends BaseRepository
     public function updateTemplate($main, $detail)
     {
         $id = $main['id'];
-        $template = $this->getTable('template')->where('id', $id);
-        $templateItem = $this->getTable('templateItem');
+        $template = $this->template->where('id', $id);
+        $templateItem = $this->templateItem;
         $main = array_except($main, ['type', 'id']);
 
         try {
@@ -234,12 +234,12 @@ class DefectRepository extends BaseRepository
             $main = $this->common->timestamps($main, 'updated');
             $item->update($main);
 
-            $defectGroup->where('templateID', $id)->forceDelete();
+            $defectGroup->where('itemID', $id)->forceDelete();
 
             for ($i = 0; $i < count($detail); $i++) {
                 $params = [
-                    'templateID' => $id,
-                    'itemID' => $detail[$i]['id'],
+                    'itemID' => $id,
+                    'defectID' => $detail[$i]['id'],
                     'sequence' => $i + 1,
                 ];
                 $params = $this->common->timestamps($params, 'created');
@@ -261,38 +261,28 @@ class DefectRepository extends BaseRepository
         }
     }
 
-    public function deleteData($tableName, $id)
+    public function deleteTemplate($id)
     {
-        $table = $this->getTable($tableName)->where('id', $id);
-        $result = $this->delete($table ,$id);
-        $result = $this->deleteSubTable($tableName, $id, $result);
+        $template = $this->template;
+        $templateResult = $this->delete($template, $id);
+
+        $templateItem = $this->templateItem;
+        $templateItemResult = $this->forceDelete($table, $id);
+
+        return $templateResult;
+    }
+
+    public function deleteItem($id)
+    {
+        $table = $this->item;
+        $result = $this->delete($table, $id);
         return $result;
     }
 
-    public function deleteSubTable($tableName, $id, $result)
+    public function deleteDefect($id)
     {
-        if ($result['success']) {
-            switch ($tableName) {
-                case 'template':
-                    $table = $this->templateItem;
-                    $table->where('templateID', $id)->forceDelete();
-                    $result = [
-                        'success' => true,
-                        'msg' => 'success',
-                    ];
-                    break;
-
-                case 'item':
-                    $table = $this->defectGroup;
-                    $table->where('itemID', $id)->forceDelete();
-                    $result = [
-                        'success' => true,
-                        'msg' => 'success',
-                    ];
-                default:
-                    return $result;
-            }
-        }
+        $table = $this->defect;
+        $result = $this->delete($table, $id);
         return $result;
     }
 

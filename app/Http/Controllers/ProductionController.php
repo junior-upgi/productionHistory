@@ -271,13 +271,19 @@ class productionController extends Controller
         return $result;
     }
 
-    public function deleteData()
+    public function deleteHistory()
     {
         $input = request()->input();
-        $table = $input['table'];
         $id = $input['id'];
+        $result = $this->production->deleteHistory($id);
+        return $result;        
+    }
 
-        $result = $this->production->deleteData($table, $id);
+    public function deleteQC()
+    {
+        $input = request()->input();
+        $id = $input['id'];
+        $result = $this->production->deleteQC($id);
         return $result;        
     }
 }

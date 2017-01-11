@@ -39,7 +39,7 @@ Route::group(['prefix' => 'History'], function () {
     Route::post('GetHistory', 'ProductionController@getHistory');
     Route::get('GetStaff', 'ProductionController@getStaff');
     Route::post('SaveHistory', 'ProductionController@saveHistory');
-    Route::delete('DeleteHistory', 'ProductionController@deleteData');
+    Route::delete('DeleteHistory', 'ProductionController@deleteHistory');
 });
 
 Route::group(['prefix' => 'QC'], function () {
@@ -51,7 +51,7 @@ Route::group(['prefix' => 'QC'], function () {
     Route::post('GetQC', 'ProductionController@getQC');
     Route::get('GetStaff', 'ProductionController@getStaff');
     Route::post('SaveQC', 'ProductionController@saveQC');
-    Route::delete('DeleteQC', 'ProductionController@deleteData');
+    Route::delete('DeleteQC', 'ProductionController@deleteQC');
 });
 
 Route::group(['prefix' => 'Report'], function () {
