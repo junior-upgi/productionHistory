@@ -1,23 +1,21 @@
 <?php
+/**
+ * 前端視圖元件
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/01/19
+ * @since 1.0.0 spark: 於此版本開始編寫註解
+ */
 namespace App\Presenters;
 
-//
+/**
+ * Class ServicePresenter
+ *
+ * @package App\Repositories
+ */
 class ServicePresenter
-{
-    /*
-    public function formGroupInput($title, $id, $name, $require = false, $label=3, $control=9)
-    {
-        $require ? $req = 'required' : $req = '';
-        $str = "<div class=\"form-group\">
-                    <label for=\"$id\" class=\"col-md-$label control-label\">$title</label>
-                    <div class=\"col-md-$control\">
-                        <input type=\"text\" class=\"form-control\" id=\"$id\" name=\"$name\" value=\"\" $req>
-                    </div>
-                </div>";
-        return $str;
-    }
-    */
-    
+{    
     //
     public function picIcon($id)
     {

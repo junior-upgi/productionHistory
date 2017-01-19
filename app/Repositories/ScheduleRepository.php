@@ -2,7 +2,6 @@
 namespace App\Repositories;
 
 use DB;
-use App\Repositories\BaseRepository;
 
 use App\Service\Common;
 use App\Models\productionHistory\GlassRun;
@@ -14,6 +13,13 @@ use App\Models\productionHistory\AllGlassRun;
 //
 class ScheduleRepository extends BaseRepository
 {
+    public $common;
+    public $run;
+    public $runDetail;
+    public $plan;
+    public $planDetail;
+    public $allGlass;
+
     public function __construct(
         Common $common,
         GlassRun $run,

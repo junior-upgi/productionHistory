@@ -24,7 +24,7 @@ class ItemController extends BaseController
     /** 
      * construct
      *
-     * @param ItemService $defect
+     * @param ItemService $service
      */
     public function __construct(ItemService $service)
     {
@@ -34,7 +34,7 @@ class ItemController extends BaseController
     /**
      * 以id取得上層項目資料
      *
-     * @return Array
+     * @return array
      */
     public function getItem()
     {
@@ -44,7 +44,7 @@ class ItemController extends BaseController
     /**
      * 以name搜尋所有上層項目清單
      *
-     * @return Array
+     * @return array
      */
     public function searchItemList()
     {
@@ -56,17 +56,17 @@ class ItemController extends BaseController
     /**
      * 取得所有上層項目清單
      *
-     * @return Array
+     * @return array
      */
     public function getItemList()
     {
-        return $this->item->getItemList()->orderBy('created_at')->get()->toArray();
+        return $this->service->item->getItemList()->orderBy('created_at')->get()->toArray();
     }
 
     /**
      * 取得上層項目之資料、可選缺點清單以及已選缺點清單
      *
-     * @return Array
+     * @return array
      */
     public function getDefectGroup()
     {
@@ -80,7 +80,7 @@ class ItemController extends BaseController
     /**
      * 新增上層項目資料
      *
-     * @return Array
+     * @return array
      */
     public function insertItem()
     {
@@ -90,7 +90,7 @@ class ItemController extends BaseController
     /**
      * 更新上層項目資料
      *
-     * @return Array
+     * @return array
      */
     public function updateItem()
     {
@@ -100,7 +100,7 @@ class ItemController extends BaseController
     /**
      * 刪除上層項目資料
      *
-     * @return Array
+     * @return array
      */
     public function deleteItem()
     {

@@ -6,13 +6,17 @@ use App\Repositories\BaseRepository;
 
 use App\Service\Common;
 use App\Models\productionHistory\ProductionHistory;
-use App\Repositories\ScheduleRepository;
 use App\Models\productionHistory\QualityControl;
-use App\Repositories\BaseDataRepository;
 
 //
 class QCRepository extends BaseRepository
 {
+    public $common;
+    public $history;
+    public $schedule;
+    public $qc;
+    public $base;
+
     //
     public function __construct(
         Common $common,
@@ -24,9 +28,7 @@ class QCRepository extends BaseRepository
         $this->common = $common;
         $this->schedule = $schedule;
         $this->history = $history;
-        $this->staff = $staff;
         $this->qc = $qc;
-        $this->customer = $customer;
         $this->base = $base;
     }
 

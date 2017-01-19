@@ -2,42 +2,42 @@
 namespace App\Repositories;
 
 use DB;
-use App\Repositories\BaseRepository;
 
 use App\Service\Common;
 use App\Models\productionHistory\ProductionHistory;
-use App\Models\UPGWeb\Customer;
-use App\Models\UPGWeb\Staff;
 use App\Models\productionHistory\GlassRun;
 use App\Models\productionHistory\GlassRunPlan;
 use App\Models\productionHistory\AllGlassRun;
 use App\Models\productionHistory\OldSchedule;
-use App\Models\UPGWeb\Glass;
 
 //
 class HistoryRepository extends BaseRepository
 {
+    public $common;
+    public $history;
+    public $run;
+    public $plan;
+    public $allGlass;
+    public $oldSchedule;
+    public $base;
+
     //
     public function __construct(
         Common $common,
         ProductionHistory $history,
-        Customer $customer,
-        Staff $staff,
         GlassRun $run,
         GlassRunPlan $plan,
         AllGlassRun $allGlass,
         OldSchedule $oldSchedule,
-        Glass $glass
+        BaseDataRepository $base
     ) {
         $this->common = $common;
         $this->history = $history;
-        $this->glass = $glass;
         $this->run = $run;
         $this->plan = $plan;
         $this->allGlass = $allGlass;
-        $this->staff = $staff;
-        $this->customer = $customer;
         $this->oldSchedule = $oldSchedule;
+        $this->base = $base;
     }
 
     //*******
@@ -178,7 +178,6 @@ class HistoryRepository extends BaseRepository
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
                 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $a = $fromSchedule->get();
         $oldSchedule = $this->history;
         $fromOldSchedule = $oldSchedule
             ->join('allGlassRun', function ($join) {
@@ -192,29 +191,25 @@ class HistoryRepository extends BaseRepository
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
                 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $b = $fromOldSchedule->get();
         return $fromOldSchedule;
     }
 
     //*******
     public function getStaff()
     {
-        $list = $this->staff->where('serving', 1);
-        return $list;
+        return $this->base->getStaff();
     }
 
     //*******
     public function getCustomer()
     {
-        $list = $this->customer->orderby('name');
-        return $list;
+        return $this->base->getCustomer();
     }
 
     //*****
     public function getGlass()
     {
-        $list = $this->glass->orderBy('snm');
-        return $list;
+        return $this->base->getGlass();
     }
 
     //******

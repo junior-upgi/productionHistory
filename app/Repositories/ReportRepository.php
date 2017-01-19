@@ -31,7 +31,7 @@ class ReportRepository extends BaseRepository
     ) {
         $this->common = $common;
         $this->history = $history;
-        $this->rundetail = $runDetail;
+        $this->runDetail = $runDetail;
         $this->qc = $qc;
         $this->glass = $glass;
         $this->taskDetail = $taskDetail;
@@ -52,7 +52,6 @@ class ReportRepository extends BaseRepository
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
                 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $a = $formSchedule->get();
         $testModel = $this->history;
         $formTestModel = $testModel
             ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
@@ -63,7 +62,6 @@ class ReportRepository extends BaseRepository
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
                 'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $b = $formTestModel->get();
         return $formTestModel;
     }
 
@@ -93,7 +91,6 @@ class ReportRepository extends BaseRepository
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
                 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $a = $fromSchedule->get();
         $oldSchedule = $this->history;
         $fromOldSchedule = $oldSchedule
             ->join('allGlassRun', function ($join) {
@@ -107,7 +104,6 @@ class ReportRepository extends BaseRepository
             ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
                 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $b = $fromOldSchedule->get();
         return $fromOldSchedule;
     }
 
@@ -126,7 +122,6 @@ class ReportRepository extends BaseRepository
                 'productionHistory.schedate', 'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 
                 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'stressLevel', 
                 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling');
-        $a = $formSchedule->get();
         $testModel = $this->history;
         $formTestModel = $testModel
             ->where('sampling', 1)
@@ -139,7 +134,6 @@ class ReportRepository extends BaseRepository
                 'productionHistory.schedate', 'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 
                 'other', 'productionHistory.efficiency', 'productionHistory.weight', 'actualWeight', 'stressLevel', 
                 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling');
-        $b = $formTestModel->get();
         return $formTestModel;
     }
 
@@ -183,7 +177,6 @@ class ReportRepository extends BaseRepository
             ->where('qualityControl.schedate', $schedateOp, $schedate)
             ->orderBy('schedate', 'desc')->orderBy('DB_U105.dbo.PRDT.SNM')->orderBy('glassProdLineID')
             ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm');
-        $a = $scheduleList->get();
         return $scheduleList;
     }
 

@@ -1,24 +1,60 @@
 <?php
 namespace App\Repositories;
 
-use App\Repositories\BaseRepository;
+use App\Models\productionHistory\DefectItem;
+use App\Models\productionHistory\DefectTemplate;
+use App\Models\productionHistory\TemplateItem;
+use App\Service\Common;
 
-//
+/**
+ * Template資料處理類別庫
+ *
+ * Class TemplateRepository
+ * @package App\Repositories
+ */
 class TemplateRepository extends BaseRepository
 {
-    //
-    public function __construct() {
-        parent::__construct();
+    public $item;
+    public $template;
+    public $templateItem;
+    public $common;
+
+    /**
+     * TemplateRepository constructor.
+     *
+     * @param DefectItem $item
+     * @param DefectTemplate $template
+     * @param TemplateItem $templateItem
+     * @param Common $common
+     */
+    public function __construct(
+        DefectItem $item,
+        DefectTemplate $template,
+        TemplateItem $templateItem,
+        Common $common
+    ) {
+        $this->common = $common;
+        $this->item = $item;
+        $this->template = $template;
+        $this->templateItem = $templateItem;
     }
 
-    //
+    /**
+     *
+     *
+     * @param $id
+     * @return mixed
+     */
     public function getTemplateItem($id)
     {
         $list = $this->templateItem->where('templateID', $id);
         return $list;
     }
 
-    //
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getNonSelectItem($id)
     {
         $list = $this->item
@@ -33,7 +69,10 @@ class TemplateRepository extends BaseRepository
         return $list;
     }
 
-    //
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getSelectedItem($id)
     {
         $list = $this->templateItem
@@ -46,14 +85,22 @@ class TemplateRepository extends BaseRepository
         return $list;
     }
 
-    //
+    /**
+     * @param $table
+     * @param $input
+     * @return mixed
+     */
     public function saveData($table, $input)
     {
         $result = $this->save($table, $input);
         return $result;
     }
 
-    //
+    /**
+     * @param $main
+     * @param $detail
+     * @return array
+     */
     public function insertTemplate($main, $detail)
     {
         $id = $this->common->getNewGUID();
@@ -93,7 +140,11 @@ class TemplateRepository extends BaseRepository
         }
     }
 
-    //
+    /**
+     * @param $main
+     * @param $detail
+     * @return array
+     */
     public function updateTemplate($main, $detail)
     {
         $id = $main['id'];
@@ -133,15 +184,18 @@ class TemplateRepository extends BaseRepository
             ];
         }
     }
-    
-    //
+
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function deleteTemplate($id)
     {
         $template = $this->template;
         $templateResult = $this->delete($template, $id);
 
         $templateItem = $this->templateItem;
-        $templateItemResult = $this->forceDelete($templateItem, $id);
+        $this->forceDelete($templateItem, $id);
 
         return $templateResult;
     }

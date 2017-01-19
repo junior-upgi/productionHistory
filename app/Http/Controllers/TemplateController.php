@@ -1,28 +1,40 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Repositories\TemplateRepository;
 use App\Repositories\ItemRepository;
 
-//
+/**
+ * Class TemplateController
+ * @package App\Http\Controllers
+ */
 class TemplateController extends BaseController
 {
-    //
+    /**
+     * @var TemplateRepository
+     */
     public $template;
 
-    //
+    /**
+     * @var ItemRepository
+     */
     public $item;
 
-    //
+    /**
+     * TemplateController constructor.
+     * @param TemplateRepository $template
+     * @param ItemRepository $item
+     */
     public function __construct(TemplateRepository $template, ItemRepository $item)
     {
         $this->template = $template;
         $this->item = $item;
     }
 
-    //
+    /**
+     * @return mixed
+     */
     public function getTemplate()
     {
         $input = request()->input();
@@ -42,7 +54,9 @@ class TemplateController extends BaseController
         }
     }
 
-    //
+    /**
+     * @return array
+     */
     public function getTemplateItem()
     {
         $input = request()->input();
@@ -63,7 +77,9 @@ class TemplateController extends BaseController
         ];
     }
 
-    //
+    /**
+     * @return array
+     */
     public function saveTemplate()
     {
         $input = request()->input();
@@ -79,7 +95,9 @@ class TemplateController extends BaseController
         return $result;
     }
 
-    //
+    /**
+     * @return mixed
+     */
     public function deleteTemplate()
     {
         $input = request()->input();

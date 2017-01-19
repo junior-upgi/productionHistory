@@ -10,6 +10,8 @@
 namespace App\Service;
 
 use App\Repositories\ItemRepository;
+use Auth;
+use App\Service\User;
 
 /**
  * Class ItemService
@@ -18,15 +20,17 @@ use App\Repositories\ItemRepository;
  */
 class ItemService
 {
-    /** Itemrepository $item */
+    use User;
+
+    /** ItemRepository $item */
     public $item;
 
     /** 
      * construct
      *
-     * @param ItemRepository $defect
+     * @param ItemRepository $item
      */
-    public function __conscruct(ItemRepository $item)
+    public function __construct(ItemRepository $item)
     {
         $this->item = $item;
     }
@@ -36,12 +40,12 @@ class ItemService
      *
      * @param Request->input() $input
      *
-     * @return Array
+     * @return array
      */
     public function insertItem($input)
     {
-        $mainParams = $this->setInsertMainParams($input['main']);
-        $detailParams = $this->setInsertDetailParams($input['detail'], $mainParams['id']);
+        $mainParams = $this->setInsertMainParams($input['mainData']);
+        $detailParams = $this->setInsertDetailParams($input['detailData'], $mainParams['id']);
         return $this->item->insertItem($mainParams, $detailParams);
     }
 
@@ -50,21 +54,21 @@ class ItemService
      *
      * @param Request->input() $input
      * 
-     * @return Array
+     * @return array
      */
     public function updateItem($input)
     {
-        $mainParams = $this->setUpdateMainParams($input['main']);
-        $detailParams = $this->setUpdateDetailParams($input['detail'], $mainParams['id']);
+        $mainParams = $this->setUpdateMainParams($input['mainData']);
+        $detailParams = $this->setUpdateDetailParams($input['detailData'], $mainParams['id']);
         return $this->item->updateItem($mainParams, $detailParams);
     }
 
     /**
      * 設定新增上層項目主表參數
      *
-     * @param Array $main
+     * @param array $main
      *
-     * @return Array
+     * @return array
      */
     private function setInsertMainParams($main)
     {
@@ -79,23 +83,22 @@ class ItemService
     /**
      * 設定新增上層項目已選缺點參數
      *
-     * @param Array $detail
+     * @param array $detail
      * @param string $id
      *
-     * @return Array
+     * @return array
      */
     private function setInsertDetailParams($detail, $id)
     {
         $params = [];
         $now = \Carbon\Carbon::now();
-        $user = \Auth::user()->erpID;
         for ($i = 0; $i < count($detail); $i++) {
             $param['itemID'] = $id;
             $param['defectID'] = $detail[$i]['id'];
             $param['sequence'] = $i;
             $param['vauleType'] = $detail[$i]['valueType'];
             $param['created_at'] = $now;
-            $param['created_by'] = $user;
+            $param['created_by'] = $this->getErpID();
             array_push($params, $param);
         }
         return $params;
@@ -104,39 +107,37 @@ class ItemService
     /**
      * 設定更新上層項目主表參數
      *
-     * @param Array $main
+     * @param array $main
      *
-     * @return Array
+     * @return array
      */
     private function setUpdateMainParams($main)
     {
         $main = array_except($main, ['type']);
         $main['name'] = iconv('utf8', 'big5', $main['name']);
         $main['updated_at'] = \Carbon\Carbon::now();
-        $main['updated_by'] = \Auth::user()->erpID;
+        $main['updated_by'] = $this->getErpID();
         return $main;
     }
 
     /**
      * 設定更新上層項目已選缺點參數
      *
-     * @param Array $detail
+     * @param array $detail
      * @param string $id
      *
-     * @return Array
+     * @return array
      */
     private function setUpdateDetailParams($detail, $id)
     {
         $params = [];
         $now = \Carbon\Carbon::now();
-        $user = \Auth::user()->erpID;
         for ($i = 0; $i < count($detail); $i++) {
             $param['itemID'] = $id;
             $param['defectID'] = $detail[$i]['id'];
             $param['sequence'] = $i;
-            $param['vauleType'] = $detail[$i]['valueType'];
             $param['updated_at'] = $now;
-            $param['updated_by'] = $user;
+            $param['updated_by'] = $this->getErpID();
             array_push($params, $param);
         }
         return $params;

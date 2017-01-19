@@ -115,7 +115,7 @@ var defect = new Vue({
                     return false;
                 },
 
-                success: function(result){			  		  	
+                success: function(result){
                     if (result.success == true){	 
                         defect.setInit();
                         defect.getDefectList();
@@ -128,7 +128,11 @@ var defect = new Vue({
                             closeOnConfirm: true
                         });
                         $('#addModal').modal('hide');
+                    } else {
+                        swal(action + "資料失敗!", result.msg, "error");
+                        return false;
                     }
+
                 }
             }); 
         },

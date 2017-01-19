@@ -1,8 +1,21 @@
 <?php
+/**
+ * 履歷表資料處理類別
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/01/19
+ * @since 1.0.0 spark: 於此版本開始編寫註解
+ */
 namespace App\Service;
 
 use App\Repositories\HistoryRepository;
 
+/**
+ * Class ProductRepository
+ *
+ * @package App\Repositories
+ */
 class HistoryService
 {
     public $history;

@@ -3,11 +3,19 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Response;
 
-//
+/**
+ * Class BaseController
+ * @package App\Http\Controllers
+ */
 class BaseController extends Controller {
 	private $statusCode = 200;
 
-    // Set the status code
+    /**
+     * Set the status code
+     *
+     * @param $statusCode
+     * @return $this
+     */
 	public function setStatusCode($statusCode)
 	{
 		$this->statusCode = $statusCode;

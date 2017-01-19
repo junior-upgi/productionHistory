@@ -1,20 +1,38 @@
 <?php
+/**
+ * 基本資料存取庫
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/01/19
+ * @since 1.0.0 spark: 於此版本開始編寫註解
+ */
 namespace App\Repositories;
 
 use DB;
-use App\Repositories\BaseRepository;
 
 use App\Models\UPGWeb\Customer;
 use App\Models\UPGWeb\Staff;
 use App\Models\UPGWeb\Glass;
 
-//
+/**
+ * Class BaseDataRepository
+ *
+ * @package App\Repositories
+ */
 class BaseDataRepository extends BaseRepository
 {
     public $staff;
     public $customer;
     public $glass;
-    //
+
+    /**
+     * construct
+     *
+     * @param Staff $staff
+     * @param Customer $customer
+     * @param Glass $glass
+     */
     public function __construct(
         Staff $staff,
         Customer $customer,
@@ -25,17 +43,33 @@ class BaseDataRepository extends BaseRepository
         $this->glass = $glass;
     }
 
-    //******
+    /**
+     * 取得員工
+     * 
+     * @return Staff 回傳結果
+     */
     public function getStaff()
     {
-        $list = $this->staff->where('serving', 1);
-        return $list;
+        return $this->staff->where('serving', 1);
     }
 
-    //*******
+    /**
+     * 取得客戶資料
+     * 
+     * @return Customer 回傳結果
+     */
     public function getCustomer()
     {
-        $list = $this->customer->orderby('name');
-        return $list;
+        return $this->customer->orderby('name');
+    }
+
+    /**
+     * 取得瓶號資料
+     * 
+     * @return Glass 回傳結果
+     */
+    public function getGlass()
+    {
+        return $this->glass->orderBy('snm');
     }
 }

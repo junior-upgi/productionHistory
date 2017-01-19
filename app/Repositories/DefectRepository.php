@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories;
 
-use App\Repositories\BaseRepository;
 use App\Models\productionHistory\Defect;
 use App\Service\Common;
 

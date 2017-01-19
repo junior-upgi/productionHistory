@@ -1,7 +1,6 @@
 <?php
 namespace App\Repositories;
 
-use App\Repositories\BaseRepository;
 use App\Models\productionHistory\Defect;
 use App\Models\productionHistory\DefectItem;
 use App\Models\productionHistory\DefectGroup;
@@ -85,7 +84,7 @@ class ItemRepository extends BaseRepository
     {
         try {
             $this->item->getConnection()->beginTransaction();
-            $this->item->insert($maiin);
+            $this->item->insert($main);
             $this->defectGroup->insert($detail);
             $this->item->getConnection()->commit();
             return ['success' => true, 'msg' => 'success'];
@@ -100,8 +99,8 @@ class ItemRepository extends BaseRepository
     {
         try {
             $this->item->getConnection()->beginTransaction();
-            $this->item->where('id', $main['id'])->update($maiin);
-            $defectGroup->where('itemID', $main['id'])->forceDelete();
+            $this->item->where('id', $main['id'])->update($main);
+            $this->defectGroup->where('itemID', $main['id'])->forceDelete();
             $this->defectGroup->where('itemID', $main['id'])->insert($detail);
             $this->item->getConnection()->commit();
             return ['success' => true, 'msg' => 'success'];
@@ -125,8 +124,8 @@ class ItemRepository extends BaseRepository
         $params = [];
         for ($i = 0; $i < count($array); $i++) {
             $param = [
-                'itemID' => $id,
-                'defectID' => $detail[$i]['id'],
+                'itemID' => $array[$i]['id'],
+                'defectID' => $array[$i]['id'],
                 'sequence' => $i + 1,
                 $type . '_at' => \Carbon\Carbon::now(),
                 $type . '_by' => \Auth::user()->erpID,

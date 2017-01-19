@@ -5,7 +5,7 @@
  * @version 1.0.0
  * @author spark it@upgi.com.tw
  * @date 16/11/09
- * @since 1.0.0 spark: 於此版本開始編寫註解，完成單一登入功能
+ * @since 1.0.0 spark: 於此版本開始編寫註解
  */
 namespace App\Service;
 
@@ -19,6 +19,8 @@ use Auth;
  */
 class Common
 {
+    use User;
+
     /**
      * Common 建構式
      *
@@ -28,7 +30,14 @@ class Common
         //
     }
 
-    //
+    /**
+     * 寫入參數處理 
+     * 
+     * @param Input $input 傳入Input
+     * @param array $addIgnore 額外的忽略參數
+     * @param bool $saveID 是否保留id
+     * @return array 回傳結果
+     */
     public function params($input, $addIgnore, $saveID = false)
     {
         $input = array_except($input, $this->ignoreParams($addIgnore, $saveID));
@@ -40,16 +49,28 @@ class Common
         return $params;
     }
 
-    //
+    /**
+     * 設定忽略參數
+     * 
+     * @param array $addIgnore 額外的忽略參數
+     * @param bool $saveID 是否保留id
+     * @return array 回傳結果
+     */
     private function ignoreParams($addIgnore, $saveID)
     {
         if ($saveID) {
-            return array_merge(['_token', 'type', 'id'], $addIgnore);
+            return array_merge(['_token', 'type'], $addIgnore);
         }
-        return array_merge(['_token', 'type'], $addIgnore);  
+        return array_merge(['_token', 'type', 'id'], $addIgnore);
     }
     
-    //
+    /**
+     * 解析並回傳查詢後之Module
+     * 
+     * @param Module $table 傳入Module
+     * @param array $where 查詢條件 
+     * @return Module 回傳結果
+     */
     public function where($table, $where = null)
     {
         $obj = $table->where(function ($q) use ($where) {
@@ -68,13 +89,20 @@ class Common
         return $obj;
     }
     
-    //
+    /**
+     * 加入時間戳記
+     * 
+     * @param Module $table 傳入Module
+     * @param array $params 傳入參數
+     * @param string $type 動作狀態
+     * @return array 回傳結果
+     */
     public function timestamps($table, $params, $type)
     {
         try {
             if ($table->timestamps != false) {
                 $params[$type.'_at'] = \Carbon\Carbon::now();
-                $params = $this->setUserID($params, $type);
+                $params[$type.'_by'] = $this->getErpID();
             }
             return $params;
         } catch(\Exception $e) {
@@ -83,7 +111,13 @@ class Common
         
     }
 
-    //
+    /**
+     * 加入UserID
+     * 
+     * @param array $params 傳入參數
+     * @param string $type 動作狀態
+     * @return array 回傳結果
+     */
     public function setUserID($params, $type)
     {
         $user_id = Auth::user()->erpid;
@@ -154,7 +188,7 @@ class Common
         try {
             $table->getConnection()->beginTransaction();
             $table->delete();
-            $table->update($this->setUserID([], 'deleted'));
+            $table->update(['deleted_by' => $this->getErpID()]);
             $table->getConnection()->commit();
             
             return array(
