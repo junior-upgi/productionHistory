@@ -60,5 +60,5 @@
     </div>
     @include('defect.addItem')
 </div>
-<script src="{{ url('js/defect/item.js?v=4') }}"></script>
+<script src="{{ url('js/defect/item.js?v=6') }}"></script>
 @endsection

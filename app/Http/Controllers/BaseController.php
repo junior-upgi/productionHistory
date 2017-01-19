@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Response;
 
+//
 class BaseController extends Controller {
 	private $statusCode = 200;
 

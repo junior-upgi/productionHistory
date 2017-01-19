@@ -3,12 +3,14 @@ namespace App\Models\Z_DB_U105;
 
 use Illuminate\Database\Eloquent\Model;
 
+//
 class Schedule extends Model
 {   
     protected $connection = 'Z_DB_U105';
     protected $table = "tbmkno";
     public $keyType = 'string';
 
+    //
     public function scheduleList()
     {
         $list = $this

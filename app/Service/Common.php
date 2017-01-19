@@ -28,50 +28,66 @@ class Common
         //
     }
 
-
+    //
     public function params($input, $addIgnore, $saveID = false)
     {
-        $ignore = array_merge(['_token', 'type'], $addIgnore);
-        ($saveID == false) ? $ignore = array_merge(['_token', 'type', 'id'], $addIgnore) : true;
-        
-        $input = array_except($input, $ignore);
-        $params = array();
-        $countInput = count($input);
+        $input = array_except($input, $this->ignoreParams($addIgnore, $saveID));
+        $params = [];
         list($key, $value) = array_divide($input);
-        for ($i = 0; $i < $countInput; $i++) {
-            $big5 = iconv('utf8', 'big5', $value[$i]);
-            $params[$key[$i]] = $big5;
+        for ($i = 0; $i < count($input); $i++) {
+            $params[$key[$i]] = mb_convert_encoding($value[$i], "big5", "utf-8");
         }
         return $params;
     }
+
+    //
+    private function ignoreParams($addIgnore, $saveID)
+    {
+        if ($saveID) {
+            return array_merge(['_token', 'type', 'id'], $addIgnore);
+        }
+        return array_merge(['_token', 'type'], $addIgnore);  
+    }
     
+    //
     public function where($table, $where = null)
     {
         $obj = $table->where(function ($q) use ($where) {
-            if (isset($where)) {
-                foreach ($where as $w) {
-                    $key = $w['key'];
-                    $op = (!isset($w['op'])) ? '=' : $w['op'];
-                    $value = $w['value'];
-                    $or = (!isset($w['or'])) ? false : $w['or'];
-                    if ($or) {
-                        $q->orWhere($key, $op, $value);
-                    } else {
-                        $q->where($key, $op, $value);
-                    }
+            foreach ($where as $w) {
+                $key = $w['key'];
+                $op = (!isset($w['op'])) ? '=' : $w['op'];
+                $value = $w['value'];
+                $or = (!isset($w['or'])) ? false : $w['or'];
+                if ($or) {
+                    $q->orWhere($key, $op, $value);
+                } else {
+                    $q->where($key, $op, $value);
                 }
             }
         });
         return $obj;
     }
-
-    public function timestamps($params, $type)
+    
+    //
+    public function timestamps($table, $params, $type)
     {
-        $params[$type.'_at'] = \Carbon\Carbon::now();
-        if (isset(Auth::user()->erpid)) {
-            $user_id = Auth::user()->erpid;
-            $params[$type.'_by'] = $user_id;
+        try {
+            if ($table->timestamps != false) {
+                $params[$type.'_at'] = \Carbon\Carbon::now();
+                $params = $this->setUserID($params, $type);
+            }
+            return $params;
+        } catch(\Exception $e) {
+            return $params;
         }
+        
+    }
+
+    //
+    public function setUserID($params, $type)
+    {
+        $user_id = Auth::user()->erpid;
+        $params[$type.'_by'] = $user_id;
         return $params;
     }
 
@@ -85,11 +101,8 @@ class Common
     public function insert($table, $params)
     {
         try {
-            if ($table->timestamps != false) {
-                $params = $this->timestamps($params, 'created');
-            }
             $table->getConnection()->beginTransaction();
-            $table->insert($params);
+            $table->insert($this->timestamps($table, $params, 'created'));
             $table->getConnection()->commit();
             return array(
                 'success' => true,
@@ -111,14 +124,11 @@ class Common
      * @param array $params 傳入更新資料
      * @return array 回傳結果
      */
-    public function update($table, $params, $timestamps = false)
+    public function update($table, $params)
     {
         try {
-            if ($timestamps) {
-                $params = $this->timestamps($params, 'updated');
-            }
             $table->getConnection()->beginTransaction();
-            $table->update($params);
+            $table->update($this->timestamps($table, $params, 'updated'));
             $table->getConnection()->commit();
             return array(
                 'success' => true,
@@ -144,10 +154,7 @@ class Common
         try {
             $table->getConnection()->beginTransaction();
             $table->delete();
-            if (isset(Auth::user()->erpid)) {
-                $user_id = Auth::user()->erpid;
-                $table->update(['deleted_by' => $user_id]);
-            }
+            $table->update($this->setUserID([], 'deleted'));
             $table->getConnection()->commit();
             
             return array(
@@ -169,9 +176,8 @@ class Common
      * @param string $id 檔案id
      * @return string base64編碼
      */
-    public function getFile($id)
+    public function getFile(File $file, $id)
     {
-        $file = new File();
         return $file->getFileCode($id);
     }
 
@@ -181,9 +187,8 @@ class Common
      * @param string $id 檔案id
      * @return File Module
      */
-    public function getFileInfo($id)
+    public function getFileInfo(File $file, $id)
     {
-        $file = new File();
         return $file->getFile($id);
     }
     
@@ -203,9 +208,8 @@ class Common
         $result = $file->saveFile($data, $type, $name, $fe, $id);
         if ($result) {
             return $id;
-        } else {
-            return null;
         }
+        return null;
     }
 
     /**

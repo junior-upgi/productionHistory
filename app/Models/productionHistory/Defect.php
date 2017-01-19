@@ -3,11 +3,13 @@ namespace App\Models\productionHistory;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-
+//
 class Defect extends Model
 {   
+    //
     use SoftDeletes;
 
+    //
     protected $connection = 'productionHistory';
     protected $table = "defect";
     public $keyType = 'string';

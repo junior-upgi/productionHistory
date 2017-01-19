@@ -1,8 +1,10 @@
 <?php
 namespace App\Presenters;
 
+//
 class ServicePresenter
 {
+    /*
     public function formGroupInput($title, $id, $name, $require = false, $label=3, $control=9)
     {
         $require ? $req = 'required' : $req = '';
@@ -14,7 +16,9 @@ class ServicePresenter
                 </div>";
         return $str;
     }
-
+    */
+    
+    //
     public function picIcon($id)
     {
         $html = '';
@@ -25,6 +29,8 @@ class ServicePresenter
         }
         return $html;
     }
+    
+    //
     public function picScript()
     {
         $script = "

@@ -3,6 +3,7 @@ namespace App\Models\productionHistory;
 
 use Illuminate\Database\Eloquent\Model;
 
+//
 class QualityControl extends Model
 {   
     protected $connection = 'productionHistory';

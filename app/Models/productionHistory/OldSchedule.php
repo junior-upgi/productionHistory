@@ -3,6 +3,7 @@ namespace App\Models\productionHistory;
 
 use Illuminate\Database\Eloquent\Model;
 
+//
 class OldSchedule extends Model
 {   
     protected $connection = 'productionHistory';

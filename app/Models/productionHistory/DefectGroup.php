@@ -4,10 +4,13 @@ namespace App\Models\productionHistory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+//
 class DefectGroup extends Model
 {   
+    //
     use SoftDeletes;
 
+    //
     protected $connection = 'productionHistory';
     protected $table = "defectGroup";
     public $keyType = 'string';

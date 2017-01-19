@@ -7,15 +7,29 @@ var defect = new Vue({
     },
 
     mounted: function () {
-        this.getDefect();
+        this.getDefectList();
     },
 
     methods: {
-        getDefect: function (data = null) {
+        getDefectList: function () {
+            $.ajax({
+                type: "GET",
+                url: url + "/defect/getDefectList",
+                success: function(results){
+                    defect.defects = results;
+                },
+                error: function(e){
+                    var response = jQuery.parseJSON(e.responseText);
+                    console.log(response.message);
+                }
+            });
+        },
+
+        searchDefect: function (data) {
             $.ajax({
                 type: "GET",
                 data: data,
-                url: url + "/defect/getDefect",
+                url: url + "/defect/searchDefect",
                 success: function(results){
                     defect.defects = results;
                 },
@@ -28,14 +42,10 @@ var defect = new Vue({
 
         search: function () {
             var name = $('#search_name').val();
-            if (name.trim() == '')
-            {
-                defect.getDefect(data);
-            }
             var data = {
                 name: name
             };
-            defect.getDefect(data);
+            defect.searchDefect(data);
         },
         
         tooltip: function (event) {
@@ -80,9 +90,20 @@ var defect = new Vue({
 
         save: function (data) {
             var action = defect.formSet.btn;
+            var goUrl = '';
+            var type = '';
+            if ($('#type').val() == 'add') {
+                goUrl = url + "/defect/insertDefect";
+                type = 'POST';  
+            } 
+
+            if ($('#type').val() == 'edit') {
+                goUrl = url + "/defect/updateDefect";
+                type = 'PUT'
+            }
             $.ajax({
-                type: 'POST',
-                url: url + "/defect/saveDefect",
+                type: type,
+                url: goUrl,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -97,7 +118,7 @@ var defect = new Vue({
                 success: function(result){			  		  	
                     if (result.success == true){	 
                         defect.setInit();
-                        defect.getDefect();
+                        defect.getDefectList();
                         swal({
                             title: action + "資料成功!",
                             type: "success",

@@ -11,7 +11,7 @@ var item = new Vue({
     },
 
     mounted: function () {
-        this.getItem();
+        this.getItemList();
         Sortable.create(document.getElementById('selectSort'), {
             onEnd: function(e) {
                 var clonedItems = item.setSelect.filter(function(r){
@@ -27,11 +27,11 @@ var item = new Vue({
     },
 
     methods: {
-        getItem: function (data = null) {
+        getItemList: function (data = null) {
             $.ajax({
                 type: "GET",
                 data: data,
-                url: url + "/defect/getItem",
+                url: url + "/defect/getItemList",
                 success: function(results){
                     item.items = results;
                 },
@@ -159,6 +159,9 @@ var item = new Vue({
             var action = item.formSet.btn;
             var mainData = item.dataSet;
             var detailData = item.setSelect;
+            var goUrl = '';
+            var type = '';
+
             if (detailData == undefined || mainData == undefined) {
                 return false;
             }
@@ -166,10 +169,20 @@ var item = new Vue({
                 mainData: mainData,
                 detailData: detailData,
             };
+            
+            if ($('#type').val() == 'add') {
+                goUrl = url + "/defect/insertItem";
+                type = 'POST';  
+            } 
+
+            if ($('#type').val() == 'edit') {
+                goUrl = url + "/defect/updateItem";
+                type = 'PUT'
+            }
 
             $.ajax({
-                type: 'POST',
-                url: url + "/defect/saveItem",
+                type: type,
+                url: goUrl,
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
@@ -184,7 +197,7 @@ var item = new Vue({
                 success: function(result){			  		  	
                     if (result.success == true){	 
                         item.setInit();
-                        item.getItem();
+                        item.getItemList();
                         swal({
                             title: action + "資料成功!",
                             type: "success",

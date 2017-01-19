@@ -21,37 +21,37 @@ Route::get('nav/{view}', function ($view) {
 
 Route::group(['prefix' => 'Duty'], function() {
 //Route::group(['middleware' => 'sso', 'prefix' => 'Duty'], function() {
-    Route::get('ScheduleList', 'ProductionController@dutySchedule');
-    Route::get('DutyList', 'ProductionController@dutyList');
-    Route::post('GetSchedule', 'ProductionController@getSchedule');
-    Route::post('GetDuty', 'ProductionController@getDuty');
-    Route::get('GetStaff', 'ProductionController@getStaff');
-    Route::post('SaveDuty', 'ProductionController@saveDuty');
+    Route::get('ScheduleList', 'DutyController@dutySchedule');
+    Route::get('DutyList', 'DutyController@dutyList');
+    Route::post('GetSchedule', 'DutyController@getSchedule');
+    Route::post('GetDuty', 'DutyController@getDuty');
+    Route::get('GetStaff', 'DutyController@getStaff');
+    Route::post('SaveDuty', 'DutyController@saveDuty');
 });
 
 Route::group(['prefix' => 'History'], function () {
 //Route::group(['middleware' => 'sso', 'prefix' => 'History'], function () {
-    Route::get('GetCustomer', 'ProductionController@getCustomer');
-    Route::get('GetGlass', 'ProductionController@getGlass');
-    Route::get('ScheduleList', 'ProductionController@historySchedule');
-    Route::get('HistoryList', 'ProductionController@historyList');
-    Route::post('GetSchedule', 'ProductionController@getSchedule');
-    Route::post('GetHistory', 'ProductionController@getHistory');
-    Route::get('GetStaff', 'ProductionController@getStaff');
-    Route::post('SaveHistory', 'ProductionController@saveHistory');
-    Route::delete('DeleteHistory', 'ProductionController@deleteHistory');
+    Route::get('GetCustomer', 'HistoryController@getCustomer');
+    Route::get('GetGlass', 'HistoryController@getGlass');
+    Route::get('ScheduleList', 'HistoryController@historySchedule');
+    Route::get('HistoryList', 'HistoryController@historyList');
+    Route::post('GetSchedule', 'HistoryController@getSchedule');
+    Route::post('GetHistory', 'HistoryController@getHistory');
+    Route::get('GetStaff', 'HistoryController@getStaff');
+    Route::post('SaveHistory', 'HistoryController@saveHistory');
+    Route::delete('DeleteHistory', 'HistoryController@deleteHistory');
 });
 
 Route::group(['prefix' => 'QC'], function () {
 //Route::group(['middleware' => 'sso', 'prefix' => 'QC'], function () {
-    Route::get('GetCustomer', 'ProductionController@getCustomer');
-    Route::get('ScheduleList', 'ProductionController@qcSchedule');
-    Route::get('QCList', 'ProductionController@qcList');
-    Route::post('GetSchedule', 'ProductionController@getQCSchedule');
-    Route::post('GetQC', 'ProductionController@getQC');
-    Route::get('GetStaff', 'ProductionController@getStaff');
-    Route::post('SaveQC', 'ProductionController@saveQC');
-    Route::delete('DeleteQC', 'ProductionController@deleteQC');
+    Route::get('GetCustomer', 'QCController@getCustomer');
+    Route::get('ScheduleList', 'QCController@qcSchedule');
+    Route::get('QCList', 'QCController@qcList');
+    Route::post('GetSchedule', 'QCController@getQCSchedule');
+    Route::post('GetQC', 'QCController@getQC');
+    Route::get('GetStaff', 'QCController@getStaff');
+    Route::post('SaveQC', 'QCController@saveQC');
+    Route::delete('DeleteQC', 'QCController@deleteQC');
 });
 
 Route::group(['prefix' => 'Report'], function () {
@@ -71,17 +71,23 @@ Route::group(['prefix' => 'Service'], function () {
 });
 
 Route::group(['prefix' => 'defect'], function() {
-    Route::get('getDefect', 'DefectCheckController@getDefect');
-    Route::post('saveDefect', 'DefectCheckController@saveDefect');
-    Route::delete('deleteDefect', 'DefectCheckController@deleteDefect');
+    Route::get('getDefect', 'DefectController@getDefect');
+    Route::get('searchDefect', 'DefectController@searchDefect');
+    Route::get('getDefectList', 'DefectController@getDefectList');
+    Route::post('insertDefect', 'DefectController@insertDefect');
+    Route::put('updateDefect', 'DefectController@updateDefect');
+    Route::delete('deleteDefect', 'DefectController@deleteDefect');
 
-    Route::get('getItem', 'DefectCheckController@getItem');
-    Route::get('getDefectGroup', 'DefectCheckController@getDefectGroup');
-    Route::post('saveItem', 'DefectCheckController@saveItem');
-    Route::delete('deleteItem', 'DefectCheckController@deleteItem');
+    Route::get('getItem', 'ItemController@getItem');
+    Route::get('getItemList', 'ItemController@getItemList');
+    Route::get('searchItem', 'ItemController@searchItem');
+    Route::get('getDefectGroup', 'ItemController@getDefectGroup');
+    Route::post('insertItem', 'ItemController@insertItem');
+    Route::put('updateItem', 'ItemController@updateItem');
+    Route::delete('deleteItem', 'ItemController@deleteItem');
 
-    Route::get('getTemplate', 'DefectCheckController@getTemplate');
-    Route::get('getTemplateItem', 'DefectCheckController@getTemplateItem');
-    Route::post('saveTemplate', 'DefectCheckController@saveTemplate');
-    Route::delete('deleteTemplate', 'DefectCheckController@deleteTemplate');
+    Route::get('getTemplate', 'TemplateController@getTemplate');
+    Route::get('getTemplateItem', 'TemplateController@getTemplateItem');
+    Route::post('saveTemplate', 'TemplateController@saveTemplate');
+    Route::delete('deleteTemplate', 'TemplateController@deleteTemplate');
 });

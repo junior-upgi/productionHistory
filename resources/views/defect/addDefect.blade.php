@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <div class="row">
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
-                    <input type="hidden" name="type" v-model="dataSet.type">
+                    <input type="hidden" id="type" name="type" v-model="dataSet.type">
                     <input type="hidden" name="id" v-model="dataSet.id">
                     <div class="form-group">
                         <label for="name" class="col-md-3 control-label">缺點項目名稱</label>
