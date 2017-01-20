@@ -64,12 +64,23 @@ class BaseDataRepository extends BaseRepository
     }
 
     /**
-     * 取得瓶號資料
+     * 取得所有瓶號資料
      * 
      * @return Glass 回傳結果
      */
     public function getGlass()
     {
         return $this->glass->orderBy('snm');
+    }
+
+    /**
+     * 以產品名稱回傳產品資訊
+     *
+     * @param $snm
+     * @return mixed
+     */
+    public function getGlassBySnm($snm)
+    {
+        return $this->glass->where('snm', 'like', "%$snm%");
     }
 }

@@ -19,21 +19,12 @@ use Auth;
  */
 class Common
 {
-    use User;
-
-    /**
-     * Common 建構式
-     *
-     * @return void
-     */
-    public function __construct() {
-        //
-    }
+    use UserService;
 
     /**
      * 寫入參數處理 
      * 
-     * @param Input $input 傳入Input
+     * @param array $input 傳入Input
      * @param array $addIgnore 額外的忽略參數
      * @param bool $saveID 是否保留id
      * @return array 回傳結果
@@ -67,9 +58,9 @@ class Common
     /**
      * 解析並回傳查詢後之Module
      * 
-     * @param Module $table 傳入Module
+     * @param mixed $table 傳入Module
      * @param array $where 查詢條件 
-     * @return Module 回傳結果
+     * @return mixed 回傳結果
      */
     public function where($table, $where = null)
     {
@@ -92,7 +83,7 @@ class Common
     /**
      * 加入時間戳記
      * 
-     * @param Module $table 傳入Module
+     * @param mixed $table 傳入Module
      * @param array $params 傳入參數
      * @param string $type 動作狀態
      * @return array 回傳結果
@@ -128,7 +119,7 @@ class Common
     /**
      * 新增Module
      * 
-     * @param Module $table 傳入Module
+     * @param mixed $table 傳入Module
      * @param array $params 傳入新增資料
      * @return array 回傳結果
      */
@@ -154,7 +145,7 @@ class Common
     /**
      * 更新Module
      * 
-     * @param Module $table 傳入Module
+     * @param mixed$table 傳入Module
      * @param array $params 傳入更新資料
      * @return array 回傳結果
      */
@@ -180,7 +171,7 @@ class Common
     /**
      * 刪除module
      * 
-     * @param Module $table 傳入Module
+     * @param mixed $table 傳入Module
      * @return array 回傳結果
      */
     public function delete($table)
@@ -219,7 +210,7 @@ class Common
      * 取得檔案資訊
      * 
      * @param string $id 檔案id
-     * @return File Module
+     * @return string
      */
     public function getFileInfo(File $file, $id)
     {

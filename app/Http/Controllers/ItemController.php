@@ -18,7 +18,7 @@ use App\Service\ItemService;
  */
 class ItemController extends BaseController
 {
-    /** ItemService $service */
+    /** ItemService $services */
     private $service;
 
     /** 

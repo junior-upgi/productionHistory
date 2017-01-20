@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
  * Class User
  * @package App\Service
  */
-trait User
+trait UserService
 {
     /**
      * @return null

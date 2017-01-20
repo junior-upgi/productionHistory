@@ -6,23 +6,30 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 use App\Repositories\DutyRepository;
 
-//
+/**
+ * Class DutyController
+ * @package App\Http\Controllers
+ */
 class DutyController extends Controller
 {
-    //
+    /**
+     * @var DutyRepository
+     */
     public $duty;
-    
+
     /**
      * construct
-     * 
-     * @param DutyRepostiry $duty
+     *
+     * @param DutyRepository $duty
      */
     public function __construct(DutyRepository $duty) 
     {
         $this->duty= $duty;
     }
 
-    //****
+    /**
+     * @return array
+     */
     public function getStaff()
     {
         $staff = $this->duty->getStaff()->get()->toArray();
@@ -32,7 +39,9 @@ class DutyController extends Controller
         return $json;
     }
 
-    //****
+    /**
+     * @return array
+     */
     public function getSchedule()
     {
         $request = request();
@@ -40,7 +49,9 @@ class DutyController extends Controller
         return $data;
     }
 
-    //**
+    /**
+     * @return \Illuminate\View\View
+     */
     public function dutySchedule()
     {
         $request = request();
@@ -53,7 +64,9 @@ class DutyController extends Controller
             ->with('schedate', $request->input('schedate'));       
     }
 
-    //***
+    /**
+     * @return \Illuminate\View\View
+     */
     public function dutyList()
     {
         $request = request();
@@ -65,7 +78,9 @@ class DutyController extends Controller
             ->with('dutyDate', $request->input('dutyDate'));  
     }
 
-    //****
+    /**
+     * @return array
+     */
     public function getDuty()
     {
         $id = request()->input('id');
@@ -86,7 +101,9 @@ class DutyController extends Controller
         return ['success' => false];
     }
 
-    //****
+    /**
+     * @return mixed
+     */
     public function saveDuty()
     {
         $request = request();

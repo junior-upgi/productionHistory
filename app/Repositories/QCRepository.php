@@ -8,16 +8,41 @@ use App\Service\Common;
 use App\Models\productionHistory\ProductionHistory;
 use App\Models\productionHistory\QualityControl;
 
-//
+/**
+ * Class QCRepository
+ * @package App\Repositories
+ */
 class QCRepository extends BaseRepository
 {
+    /**
+     * @var Common
+     */
     public $common;
+    /**
+     * @var ProductionHistory
+     */
     public $history;
+    /**
+     * @var ScheduleRepository
+     */
     public $schedule;
+    /**
+     * @var QualityControl
+     */
     public $qc;
+    /**
+     * @var BaseDataRepository
+     */
     public $base;
 
-    //
+    /**
+     * QCRepository constructor.
+     * @param Common $common
+     * @param ProductionHistory $history
+     * @param ScheduleRepository $schedule
+     * @param QualityControl $qc
+     * @param BaseDataRepository $base
+     */
     public function __construct(
         Common $common,
         ProductionHistory $history,
@@ -32,19 +57,28 @@ class QCRepository extends BaseRepository
         $this->base = $base;
     }
 
-    //********
+    /**
+     * @param $request
+     * @return array
+     */
     public function getSchedule($request)
     {
         return $this->schedule->getSchedule($request);
     }
 
-    //********
+    /**
+     * @param $request
+     * @return string
+     */
     public function getScheduleCustomer($request)
     {
         return $this->schedule->getScheduleCustomer($request);
     }
 
-    //******
+    /**
+     * @param $prd_no
+     * @return mixed
+     */
     public function getQCDefect($prd_no)
     {
         $table = $this->history;
@@ -52,7 +86,10 @@ class QCRepository extends BaseRepository
         return $defect['defect'];
     }
 
-    //******
+    /**
+     * @param $prd_no
+     * @return mixed
+     */
     public function getQCPackRate($prd_no)
     {
         $table = $this->history;
@@ -60,7 +97,10 @@ class QCRepository extends BaseRepository
         return $packRate['efficiency'];
     }
 
-    //******
+    /**
+     * @param $request
+     * @return string
+     */
     public function getQCNote($request)
     {
         $prd_no = $request->input('prd_no');
@@ -93,7 +133,10 @@ class QCRepository extends BaseRepository
         return $str;
     }
 
-    //*******
+    /**
+     * @param $request
+     * @return string
+     */
     public function getQCDecoration($request)
     {
         $prd_no = $request->input('prd_no');
@@ -121,8 +164,12 @@ class QCRepository extends BaseRepository
         $str = implode(',', $data);
         return $str;
     }
-    
-    //*******
+
+    /**
+     * @param $view
+     * @param $request
+     * @return null
+     */
     public function getScheduleList($view, $request)
     {
         $snm = $request->input('snm');
@@ -158,7 +205,10 @@ class QCRepository extends BaseRepository
         return $list;
     }
 
-    //********
+    /**
+     * @param $request
+     * @return mixed
+     */
     public function getQCList($request)
     {
         $snm = $request->input('snm');
@@ -182,19 +232,26 @@ class QCRepository extends BaseRepository
         return $scheduleList;
     }
 
-    //******
+    /**
+     * @return \App\Models\UPGWeb\Staff
+     */
     public function getStaff()
     {
         return $this->base->getStaff();
     }
 
-    //*******
+    /**
+     * @return \App\Models\UPGWeb\Customer
+     */
     public function getCustomer()
     {
         return $this->base->getCustomer();
     }
 
-    //*****
+    /**
+     * @param $id
+     * @return null
+     */
     public function getQC($id)
     {
         $data = $this->qc->where('qualityControl.id', $id);
@@ -207,7 +264,10 @@ class QCRepository extends BaseRepository
         return null;
     }
 
-    //*****
+    /**
+     * @param $input
+     * @return mixed
+     */
     public function saveQC($input)
     {
         $table = $this->qc;
@@ -215,13 +275,19 @@ class QCRepository extends BaseRepository
         return $result;
     }
 
-    //******
+    /**
+     * @param $file
+     * @return string
+     */
     public function saveFile($file)
     {
         return $this->common->saveFile($file);
     }
 
-    //******
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function deleteQC($id)
     {
         $table = $this->qc;

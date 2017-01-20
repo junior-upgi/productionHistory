@@ -7,23 +7,32 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 use App\Repositories\ReportRepository;
 
-//
+/**
+ * Class ReportController
+ * @package App\Http\Controllers
+ */
 class ReportController extends Controller
 {
-    //
+    /**
+     * @var ReportRepository
+     */
     public $report;
-    
-    //
+
+    /**
+     * ReportController constructor.
+     * @param ReportRepository $report
+     */
     public function __construct(ReportRepository $report) 
     {
         $this->report = $report;
     }
 
-    //
+    /**
+     * @return \Illuminate\View\View
+     */
     public function productionMeeting()
     {
         $request = request();
-        $input = $request->input();
         $snm = $request->input('snm');
         
         $historyList = $this->report->getReportHistoryList($snm)->get()->toArray();
@@ -46,7 +55,9 @@ class ReportController extends Controller
         return view('report.meeting')->with('snm', $snm);
     }
 
-    //
+    /**
+     * @return array
+     */
     public function getHistory()
     {
         $request = request();
@@ -72,7 +83,10 @@ class ReportController extends Controller
         }
     }
 
-    //
+    /**
+     * @param $id
+     * @return \Illuminate\View\View
+     */
     public function qcForm($id)
     {
         $qc = $this->report->getQC($id)
@@ -94,7 +108,10 @@ class ReportController extends Controller
         return view('report.history');
     }
 
-    //
+    /**
+     * @param $id
+     * @return \Illuminate\View\View
+     */
     public function historyForm($id)
     {
         $history = $this->report->getTable('history')

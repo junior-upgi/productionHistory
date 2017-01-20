@@ -11,17 +11,46 @@ use App\Models\productionHistory\GlassRun;
 use App\Models\productionHistory\GlassRunPlan;
 use App\Models\productionHistory\AllGlassRun;
 
-//
+/**
+ * Class DutyRepository
+ * @package App\Repositories
+ */
 class DutyRepository extends BaseRepository
 {
+    /**
+     * @var Common
+     */
     public $common;
+    /**
+     * @var GlassRun
+     */
     public $run;
+    /**
+     * @var GlassRunPlan
+     */
     public $plan;
+    /**
+     * @var AllGlassRun
+     */
     public $allGlass;
+    /**
+     * @var ProductionDuty
+     */
     public $duty;
+    /**
+     * @var Staff
+     */
     public $staff;
 
-    //
+    /**
+     * DutyRepository constructor.
+     * @param Common $common
+     * @param ProductionDuty $duty
+     * @param Staff $staff
+     * @param GlassRun $run
+     * @param GlassRunPlan $plan
+     * @param AllGlassRun $allGlass
+     */
     public function __construct(
         Common $common,
         ProductionDuty $duty,
@@ -38,7 +67,10 @@ class DutyRepository extends BaseRepository
         $this->staff = $staff;
     }
 
-    //*****
+    /**
+     * @param $request
+     * @return array
+     */
     public function getSchedule($request)
     {
         $prd_no = $request->input('prd_no');
@@ -76,7 +108,11 @@ class DutyRepository extends BaseRepository
         return ['success' => false];
     }
 
-    //
+    /**
+     * @param $view
+     * @param $request
+     * @return null
+     */
     public function getScheduleList($view, $request)
     {
         $snm = $request->input('snm');
@@ -112,7 +148,10 @@ class DutyRepository extends BaseRepository
         return $list;
     }
 
-    //*******
+    /**
+     * @param $request
+     * @return mixed
+     */
     public function getDutyList($request)
     {
         $snm = $request->input('snm');
@@ -142,14 +181,19 @@ class DutyRepository extends BaseRepository
         return $scheduleList;
     }
 
-    //****
+    /**
+     * @return mixed
+     */
     public function getStaff()
     {
         $list = $this->staff->where('serving', 1);
         return $list;
     }
 
-    //*******
+    /**
+     * @param $id
+     * @return null
+     */
     public function getDuty($id)
     {
         $data = $this->duty->where('productionDuty.id', $id);
@@ -171,7 +215,10 @@ class DutyRepository extends BaseRepository
         return null;
     }
 
-    //*********
+    /**
+     * @param $input
+     * @return mixed
+     */
     public function saveDuty($input)
     {
         $table = $this->duty;

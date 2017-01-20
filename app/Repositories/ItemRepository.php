@@ -6,42 +6,69 @@ use App\Models\productionHistory\DefectItem;
 use App\Models\productionHistory\DefectGroup;
 use App\Service\Common;
 
-//
+/**
+ * Class ItemRepository
+ * @package App\Repositories
+ */
 class ItemRepository extends BaseRepository
 {
-    //
+    /**
+     * @var Defect
+     */
     public $defect;
+    /**
+     * @var DefectItem
+     */
     public $item;
+    /**
+     * @var DefectGroup
+     */
     public $defectGroup;
+    /**
+     * @var Common
+     */
     public $common;
 
-    //
+    /**
+     * ItemRepository constructor.
+     * @param Defect $defect
+     * @param DefectItem $item
+     * @param DefectGroup $defectGroup
+     * @param Common $common
+     */
     public function __construct(
         Defect $defect,
         DefectItem $item,
         DefectGroup $defectGroup,
         Common $common
     ) {
-        //parent::__construct();
         $this->defect = $defect;
         $this->item = $item;
         $this->defectGroup = $defectGroup;
         $this->common = $common;
     }
 
-    //
+    /**
+     * @return DefectItem
+     */
     public function getItemList()
     {
         return $this->item;
     }
 
-    //
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getDefectGroup($id)
     {
         return $this->defectGroup->where('itemID', $id);
     }
 
-    //
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getNonSelectDefect($id)
     {
         return $this->defect
@@ -55,7 +82,10 @@ class ItemRepository extends BaseRepository
             ->select('defect.*');
     }
 
-    //
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getSelectedDefect($id)
     {
         return $this->defectGroup
@@ -67,19 +97,30 @@ class ItemRepository extends BaseRepository
             ->select('defect.*');
     }
 
-    //
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getItem($id)
     {
         return $this->item->where('id', $id);
     }
 
-    //
+    /**
+     * @param $table
+     * @param $input
+     * @return mixed
+     */
     public function saveData($table, $input)
     {
         return $this->save($table, $input);
     }
 
-    //
+    /**
+     * @param $main
+     * @param $detail
+     * @return array
+     */
     public function insertItem($main, $detail)
     {
         try {
@@ -94,7 +135,11 @@ class ItemRepository extends BaseRepository
         }
     }
 
-    //
+    /**
+     * @param $main
+     * @param $detail
+     * @return array
+     */
     public function updateItem($main, $detail)
     {
         try {
@@ -110,28 +155,14 @@ class ItemRepository extends BaseRepository
         }
     }
 
-    //
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function deleteItem($id)
     {
         $result = $this->delete($this->item, $id);
-        $defectGroupResult = $this->forceDelete($this->defectGroup, $id);
+        $this->forceDelete($this->defectGroup, $id);
         return $result;
-    }
-
-    //
-    private function setItemParams($array, $type)
-    {
-        $params = [];
-        for ($i = 0; $i < count($array); $i++) {
-            $param = [
-                'itemID' => $array[$i]['id'],
-                'defectID' => $array[$i]['id'],
-                'sequence' => $i + 1,
-                $type . '_at' => \Carbon\Carbon::now(),
-                $type . '_by' => \Auth::user()->erpID,
-            ];
-            array_push($params, $param);
-        }
-        return $params;
     }
 }

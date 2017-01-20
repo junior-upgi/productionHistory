@@ -10,18 +10,51 @@ use App\Models\productionHistory\GlassRunPlan;
 use App\Models\productionHistory\AllGlassRun;
 use App\Models\productionHistory\OldSchedule;
 
-//
+/**
+ * Class HistoryRepository
+ * @package App\Repositories
+ */
 class HistoryRepository extends BaseRepository
 {
+    /**
+     * @var Common
+     */
     public $common;
+    /**
+     * @var ProductionHistory
+     */
     public $history;
+    /**
+     * @var GlassRun
+     */
     public $run;
+    /**
+     * @var GlassRunPlan
+     */
     public $plan;
+    /**
+     * @var AllGlassRun
+     */
     public $allGlass;
+    /**
+     * @var OldSchedule
+     */
     public $oldSchedule;
+    /**
+     * @var BaseDataRepository
+     */
     public $base;
 
-    //
+    /**
+     * HistoryRepository constructor.
+     * @param Common $common
+     * @param ProductionHistory $history
+     * @param GlassRun $run
+     * @param GlassRunPlan $plan
+     * @param AllGlassRun $allGlass
+     * @param OldSchedule $oldSchedule
+     * @param BaseDataRepository $base
+     */
     public function __construct(
         Common $common,
         ProductionHistory $history,
@@ -40,7 +73,10 @@ class HistoryRepository extends BaseRepository
         $this->base = $base;
     }
 
-    //*******
+    /**
+     * @param $input
+     * @return bool
+     */
     public function checkExists($input)
     {
         if ($input['type'] == 'add') {
@@ -55,7 +91,10 @@ class HistoryRepository extends BaseRepository
         return false;
     }
 
-    //*******
+    /**
+     * @param $input
+     * @return array
+     */
     public function checkSchedule($input)
     {
         $schedate = $input['schedate'];
@@ -78,7 +117,10 @@ class HistoryRepository extends BaseRepository
         return ['result' => false];
     }
 
-    //******
+    /**
+     * @param $request
+     * @return array
+     */
     public function getSchedule($request)
     {
         $prd_no = $request->input('prd_no');
@@ -115,8 +157,12 @@ class HistoryRepository extends BaseRepository
         }
         return ['success' => false];
     }
-    
-    //********
+
+    /**
+     * @param $view
+     * @param $request
+     * @return null
+     */
     public function getScheduleList($view, $request)
     {
         $snm = $request->input('snm');
@@ -152,7 +198,10 @@ class HistoryRepository extends BaseRepository
         return $list;
     }
 
-    //***********
+    /**
+     * @param $request
+     * @return mixed
+     */
     public function getHistoryList($request)
     {
         $snm = $request->input('snm');
@@ -194,25 +243,34 @@ class HistoryRepository extends BaseRepository
         return $fromOldSchedule;
     }
 
-    //*******
+    /**
+     * @return \App\Models\UPGWeb\Staff
+     */
     public function getStaff()
     {
         return $this->base->getStaff();
     }
 
-    //*******
+    /**
+     * @return \App\Models\UPGWeb\Customer
+     */
     public function getCustomer()
     {
         return $this->base->getCustomer();
     }
 
-    //*****
+    /**
+     * @return \App\Models\UPGWeb\Glass
+     */
     public function getGlass()
     {
         return $this->base->getGlass();
     }
 
-    //******
+    /**
+     * @param $id
+     * @return null
+     */
     public function getHistory($id)
     {
         $data = $this->history->where('productionHistory.id', $id);
@@ -246,7 +304,10 @@ class HistoryRepository extends BaseRepository
         return null;
     }
 
-    //*********
+    /**
+     * @param $params
+     * @return mixed
+     */
     public function saveOldSchedule($params)
     {
         $table = $this->oldSchedule;
@@ -255,6 +316,10 @@ class HistoryRepository extends BaseRepository
         return $result;
     }
 
+    /**
+     * @param $input
+     * @return mixed
+     */
     public function saveHistory($input)
     {
         $table = $this->history;
@@ -262,15 +327,21 @@ class HistoryRepository extends BaseRepository
         return $result;
     }
 
-    //*************
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function deleteHistory($id)
     {
         $table = $this->history;
         $result = $this->delfete($table, $id);
         return $result;
-    } 
+    }
 
-    //*****
+    /**
+     * @param $key
+     * @return mixed
+     */
     private function getMachno($key)
     {
         $keys = [

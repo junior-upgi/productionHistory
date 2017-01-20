@@ -10,16 +10,46 @@ use App\Models\productionHistory\GlassRunPlan;
 use App\Models\productionHistory\GlassRunPlanDetail;
 use App\Models\productionHistory\AllGlassRun;
 
-//
+/**
+ * Class ScheduleRepository
+ * @package App\Repositories
+ */
 class ScheduleRepository extends BaseRepository
 {
+    /**
+     * @var Common
+     */
     public $common;
+    /**
+     * @var GlassRun
+     */
     public $run;
+    /**
+     * @var GlassRunDetail
+     */
     public $runDetail;
+    /**
+     * @var GlassRunPlan
+     */
     public $plan;
+    /**
+     * @var GlassRunPlanDetail
+     */
     public $planDetail;
+    /**
+     * @var AllGlassRun
+     */
     public $allGlass;
 
+    /**
+     * ScheduleRepository constructor.
+     * @param Common $common
+     * @param GlassRun $run
+     * @param GlassRunDetail $runDetail
+     * @param GlassRunPlan $plan
+     * @param GlassRunPlanDetail $planDetail
+     * @param AllGlassRun $allGlass
+     */
     public function __construct(
         Common $common,
         GlassRun $run,
@@ -36,6 +66,10 @@ class ScheduleRepository extends BaseRepository
         $this->planDetail = $planDetail;
     }
 
+    /**
+     * @param $request
+     * @return array
+     */
     public function getSchedule($request)
     {
         $prd_no = $request->input('prd_no');
@@ -73,7 +107,10 @@ class ScheduleRepository extends BaseRepository
         return ['success' => false];
     }
 
-    //********
+    /**
+     * @param $request
+     * @return string
+     */
     public function getScheduleCustomer($request)
     {
         $prd_no = $request->input('prd_no');
@@ -100,7 +137,11 @@ class ScheduleRepository extends BaseRepository
         return $str;
     }
 
-    //*******
+    /**
+     * @param $view
+     * @param $request
+     * @return null
+     */
     public function getScheduleList($view, $request)
     {
         $snm = $request->input('snm');

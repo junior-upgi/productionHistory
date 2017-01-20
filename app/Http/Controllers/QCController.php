@@ -6,23 +6,30 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 use App\Repositories\QCRepository;
 
-//
+/**
+ * Class QCController
+ * @package App\Http\Controllers
+ */
 class QCController extends Controller
 {
-    //
+    /**
+     * @var QCRepostiry|QCRepository
+     */
     public $qc;
-    
+
     /**
      * 建構式
-     * 
-     * @param QCRepostiry $qc 注入QCRepository
+     *
+     * @param QCRepository $qc 注入QCRepository
      */
     public function __construct(QCRepository $qc) 
     {
         $this->qc = $qc;
     }
 
-    //*****
+    /**
+     * @return array
+     */
     public function getStaff()
     {
         $staff = $this->qc->getStaff()->get()->toArray();
@@ -32,7 +39,9 @@ class QCController extends Controller
         return $json;
     }
 
-    //*****
+    /**
+     * @return array
+     */
     public function getCustomer()
     {
         $staff = $this->qc->getCustomer()->get()->toArray();
@@ -42,7 +51,9 @@ class QCController extends Controller
         return $json;
     }
 
-    //*****
+    /**
+     * @return array
+     */
     public function getQCSchedule()
     {
         $request = request();
@@ -59,7 +70,9 @@ class QCController extends Controller
         return $result;
     }
 
-    //******
+    /**
+     * @return \Illuminate\View\View
+     */
     public function qcSchedule()
     {
         $request = request();
@@ -72,7 +85,9 @@ class QCController extends Controller
             ->with('schedate', $request->input('schedate'));    
     }
 
-    //*****
+    /**
+     * @return \Illuminate\View\View
+     */
     public function qcList()
     {
         $request = request();
@@ -84,7 +99,9 @@ class QCController extends Controller
             ->with('schedate', $request->input('schedate'));  
     }
 
-    //****
+    /**
+     * @return array
+     */
     public function getQC()
     {
         $id = request()->input('id');
@@ -95,8 +112,9 @@ class QCController extends Controller
         return ['success' => false];
     }
 
-    
-    //*****
+    /**
+     * @return array|mixed
+     */
     public function saveQC()
     {
         $request = request();
@@ -120,7 +138,9 @@ class QCController extends Controller
         return $result;
     }
 
-    //******
+    /**
+     * @return mixed
+     */
     public function deleteQC()
     {
         $input = request()->input();

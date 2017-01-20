@@ -7,7 +7,10 @@ use Auth;
 use App\Repositories\HistoryRepository;
 use App\Service\HistoryService;
 
-//
+/**
+ * Class HistoryController
+ * @package App\Http\Controllers
+ */
 class HistoryController extends Controller
 {
     //
@@ -25,7 +28,9 @@ class HistoryController extends Controller
         $this->service = $service;
     }
 
-    //******
+    /**
+     * @return array
+     */
     public function getStaff()
     {
         $staff = $this->history->getStaff()->get()->toArray();
@@ -35,7 +40,9 @@ class HistoryController extends Controller
         return $json;
     }
 
-    //****
+    /**
+     * @return array
+     */
     public function getCustomer()
     {
         $staff = $this->history->getCustomer()->get()->toArray();
@@ -45,7 +52,9 @@ class HistoryController extends Controller
         return $json;
     }
 
-    //*****
+    /**
+     * @return array
+     */
     public function getGlass()
     {
         $glass = $this->history->getGlass()->get()->toArray();
@@ -55,7 +64,9 @@ class HistoryController extends Controller
         return $json;
     }
 
-    //******
+    /**
+     * @return array
+     */
     public function getSchedule()
     {
         $request = request();
@@ -63,7 +74,9 @@ class HistoryController extends Controller
         return $data;
     }
 
-    //*******
+    /**
+     * @return \Illuminate\View\View
+     */
     public function historySchedule()
     {
         $request = request();
@@ -76,7 +89,9 @@ class HistoryController extends Controller
             ->with('schedate', $request->input('schedate'));            
     }
 
-    //*****
+    /**
+     * @return \Illuminate\View\View
+     */
     public function historyList()
     {
         $request = request();
@@ -96,7 +111,9 @@ class HistoryController extends Controller
             ->with('schedate', $request->input('schedate')); 
     }
 
-    //******
+    /**
+     * @return array
+     */
     public function getHistory()
     {
         $id = request()->input('id');
@@ -107,7 +124,9 @@ class HistoryController extends Controller
         return ['success' => false];
     }
 
-    //*******
+    /**
+     * @return array|mixed
+     */
     public function saveHistory()
     {
         $request = request();
@@ -117,25 +136,7 @@ class HistoryController extends Controller
         if (isset($history_params['success'])) {
             return $history_params;
         }
-        /*
-        $exists = $this->history->checkExists($input);
-        if ($exists && $input['type'] == 'add') {
-            return [
-                'success' => false,
-                'msg' => '此次生產履歷資料已存在!',
-            ];
-        }
 
-        $checkSchedule = $this->history->checkSchedule($input);
-        if ($checkSchedule['result']) {
-            $sampling = '--';
-            $input['id'] == $checkSchedule['id'];
-        }
-
-        if ($input['id'] == '' || $input['id'] == null) {
-            $input['id'] = $this->history->common->getNewGUID();
-        }
-        */
         if ($history_params['sampling'] == '--') {
             $history_params = array_except($history_params, ['cus_no', 'orderQty', 'sampling']);
             $result = $this->history->saveHistory($history_params);
@@ -151,39 +152,12 @@ class HistoryController extends Controller
                 }
             }
         }
-        /*
-        $schedule_params = $this->service->getScheduleParams($history_params);
-        if ($sampling != '--') {
-            $params = [
-                'id' => $input['id'],
-                'type' => $input['type'],
-                'sampling' => $input['sampling'],
-                'glassProdLineID' => $input['glassProdLineID'],
-                'schedate' => $input['schedate'],
-                'prd_no' => $input['prd_no'],
-                'orderQty' => $input['orderQty'],
-            ];
-            $input = array_except($input, ['orderQty']);
-        } else {
-            $input = array_except($input, ['cus_no', 'orderQty', 'sampling']);
-        }
-        $result = $this->history->saveHistory($input);
-        if ($result['success'] && $sampling != '--') {
-            if ($input['type'] == 'add') {
-                $params['created'] = \Carbon\Carbon::now();
-            } else {
-                $params['modified'] = \Carbon\Carbon::now();
-            }
-            $insertOld = $this->history->saveOldSchedule($params);
-            if (!$insertOld['success']) {
-                return $insertOld;
-            }
-        }
-        */
         return $result;
     }
 
-    //*******
+    /**
+     * @return mixed
+     */
     public function deleteHistory()
     {
         $input = request()->input();

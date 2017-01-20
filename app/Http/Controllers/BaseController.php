@@ -23,13 +23,24 @@ class BaseController extends Controller {
 		return $this;
 	}
 
-    // Return the response status code
+    /**
+     * Return the response status code
+     *
+     * @return int
+     */
     public function getStatusCode()
     {
         return $this->statusCode;
     }
 
-    // Construct the entire response and return it
+
+    /**
+     * Construct the entire response and return it
+     *
+     * @param $message
+     * @param null $data
+     * @return mixed
+     */
     public function makeResponse($message, $data = null)
     {
         return Response::json([
@@ -39,7 +50,10 @@ class BaseController extends Controller {
         ], $this->getStatusCode());
     }
 
-    // Setup the layout used by the controller.
+    /**
+     * Setup the layout used by the controller.
+     *
+     */
 	protected function setupLayout()
 	{
 		if ( ! is_null($this->layout))

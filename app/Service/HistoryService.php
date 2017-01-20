@@ -18,18 +18,33 @@ use App\Repositories\HistoryRepository;
  */
 class HistoryService
 {
+    /**
+     * @var HistoryRepository
+     */
     public $history;
 
+    /**
+     * HistoryService constructor.
+     * @param HistoryRepository $history
+     */
     public function __construct(HistoryRepository $history)
     {
         $this->history = $history;
     }
-    
+
+    /**
+     * @param $input
+     * @return array|mixed
+     */
     public function saveHistoryPrework($input)
     {
         return $this->checkHistoryDataExists($input);
     }
 
+    /**
+     * @param $input
+     * @return array|mixed
+     */
     private function checkHistoryDataExists($input)
     {
         if ($input['type'] == 'add' && $this->history->checkExists($input)) {
@@ -39,6 +54,10 @@ class HistoryService
         return $this->checkHistorySchedule($input);
     }
 
+    /**
+     * @param $input
+     * @return mixed
+     */
     private function checkHistorySchedule($input)
     {   
         $checkSchedule = $this->history->checkSchedule($input);
@@ -49,6 +68,10 @@ class HistoryService
         return $this->setHistoryID($input);
     }
 
+    /**
+     * @param $input
+     * @return mixed
+     */
     private function setHistoryID($input)
     {
         if ($input['id'] == '' || $input['id'] == null) {
@@ -58,6 +81,10 @@ class HistoryService
         return $input;
     }
 
+    /**
+     * @param $array
+     * @return array
+     */
     public function getScheduleParams($array)
     {
         $params = [

@@ -11,7 +11,6 @@ namespace App\Service;
 
 use App\Repositories\ItemRepository;
 use Auth;
-use App\Service\User;
 
 /**
  * Class ItemService
@@ -20,7 +19,7 @@ use App\Service\User;
  */
 class ItemService
 {
-    use User;
+    use UserService;
 
     /** ItemRepository $item */
     public $item;

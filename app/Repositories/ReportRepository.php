@@ -11,16 +11,46 @@ use App\Models\productionHistory\QualityControl;
 use App\Models\UPGWeb\Glass;
 use App\Models\taskTracking\TaskListDetail;
 
-//
+/**
+ * Class ReportRepository
+ * @package App\Repositories
+ */
 class ReportRepository extends BaseRepository
 {
+    /**
+     * @var Common
+     */
     public $common;
+    /**
+     * @var ProductionHistory
+     */
     public $history;
+    /**
+     * @var GlassRunDetail
+     */
     public $runDetail;
+    /**
+     * @var QualityControl
+     */
     public $qc;
+    /**
+     * @var TaskListDetail
+     */
     public $taskDetail;
+    /**
+     * @var Glass
+     */
     public $glass;
-    //
+
+    /**
+     * ReportRepository constructor.
+     * @param Common $common
+     * @param ProductionHistory $history
+     * @param GlassRunDetail $runDetail
+     * @param QualityControl $qc
+     * @param Glass $glass
+     * @param TaskListDetail $taskDetail
+     */
     public function __construct(
         Common $common,
         ProductionHistory $history,
@@ -37,7 +67,10 @@ class ReportRepository extends BaseRepository
         $this->taskDetail = $taskDetail;
     }
 
-    //*******
+    /**
+     * @param $snm
+     * @return mixed
+     */
     public function getReportHistoryList($snm)
     {
         $schedule = $this->history;
@@ -65,7 +98,10 @@ class ReportRepository extends BaseRepository
         return $formTestModel;
     }
 
-    //**********
+    /**
+     * @param $request
+     * @return mixed
+     */
     public function getHistoryList($request)
     {
         $snm = $request->input('snm');
@@ -107,7 +143,10 @@ class ReportRepository extends BaseRepository
         return $fromOldSchedule;
     }
 
-    //*******
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getFormHistoryList($id)
     {
         $formSchedule = $this->history
@@ -137,7 +176,10 @@ class ReportRepository extends BaseRepository
         return $formTestModel;
     }
 
-    //*********
+    /**
+     * @param $table
+     * @return array
+     */
     public function getFormHistoryCustomer($table)
     {
         $customer = [];
@@ -157,7 +199,10 @@ class ReportRepository extends BaseRepository
         return $customer;
     }
 
-    //**********
+    /**
+     * @param $request
+     * @return mixed
+     */
     public function getQCList($request)
     {
         $snm = $request->input('snm');
@@ -180,21 +225,29 @@ class ReportRepository extends BaseRepository
         return $scheduleList;
     }
 
-    //********
+    /**
+     * @return mixed
+     */
     public function getGlass()
     {
         $list = $this->glass->orderBy('snm');
         return $list;
     }
 
-    //**************
+    /**
+     * @param $prd_no
+     * @return mixed
+     */
     public function getTaskDetailByPrdNO($prd_no)
     {
         $list = $this->taskDetail->where('PRD_NO', $prd_no);
         return $list;
     }
 
-    //***********
+    /**
+     * @param $prd_no
+     * @return mixed
+     */
     public function getProdData($prd_no)
     {
         $list = $this->history
@@ -211,7 +264,10 @@ class ReportRepository extends BaseRepository
         return $list;
     }
 
-    //*****
+    /**
+     * @param $id
+     * @return null
+     */
     public function getQC($id)
     {
         $data = $this->qc->where('qualityControl.id', $id);

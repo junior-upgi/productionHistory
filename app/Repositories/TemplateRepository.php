@@ -200,14 +200,19 @@ class TemplateRepository extends BaseRepository
         return $templateResult;
     }
 
-    //
+    /**
+     * @return DefectTemplate
+     */
     public function getTemplateList()
     {
         $list = $this->template;
         return $list;
     }
 
-    //
+    /**
+     * @param $id
+     * @return mixed
+     */
     public function getTemplate($id)
     {
         $data = $this->template->where('id', $id);

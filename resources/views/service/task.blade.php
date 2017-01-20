@@ -1,4 +1,4 @@
-<script src="{{ url('/js/service/task.js?v=4') }}"></script>
+<script src="{{ url('services') }}"></script>
 <div class="modal fade" id="taskModal">
     <div class="modal-dialog">
         <div class="modal-content">
