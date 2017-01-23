@@ -87,7 +87,14 @@ Route::group(['prefix' => 'defect'], function() {
     Route::delete('deleteItem', 'ItemController@deleteItem');
 
     Route::get('getTemplate', 'TemplateController@getTemplate');
+    Route::get('searchTemplate', 'TemplateController@searchTemplate');
+    Route::get('getTemplateList', 'TemplateController@getTemplateList');
     Route::get('getTemplateItem', 'TemplateController@getTemplateItem');
-    Route::post('saveTemplate', 'TemplateController@saveTemplate');
+    Route::post('insertTemplate', 'TemplateController@insertTemplate');
+    Route::put('updateTemplate', 'TemplateController@updateTemplate');
     Route::delete('deleteTemplate', 'TemplateController@deleteTemplate');
+
+    Route::get('getCheckList', 'CheckController@getCheckList');
+    Route::get('searchCheck', 'CheckController@searchCheck');
+    Route::get('scheduleList', 'CheckController@getScheduleList');
 });

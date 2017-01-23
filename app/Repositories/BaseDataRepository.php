@@ -79,8 +79,8 @@ class BaseDataRepository extends BaseRepository
      * @param $snm
      * @return mixed
      */
-    public function getGlassBySnm($snm)
+    public function getPrdNo($snm)
     {
-        return $this->glass->where('snm', 'like', "%$snm%");
+        return $this->glass->where('snm', 'like', "%$snm%")->first()->prd_no;
     }
 }

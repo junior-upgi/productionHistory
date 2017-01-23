@@ -8,4 +8,5 @@ class Glass extends Model
 {   
     protected $connection = 'UPGWeb';
     protected $table = "glass";
+    public $keyType = 'string';
 }

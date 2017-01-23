@@ -9,4 +9,5 @@ class Staff extends Model
     protected $connection = 'UPGWeb';
     protected $table = "vStaffNode";
     public $keyType = 'string';
+
 }

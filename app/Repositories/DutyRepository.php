@@ -1,9 +1,15 @@
 <?php
+/**
+ * CheckRepository
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/01/19
+ * @since 1.0.0 spark: 於此版本開始編寫註解
+ */
 namespace App\Repositories;
 
 use DB;
-use App\Repositories\BaseRepository;
-
 use App\Service\Common;
 use App\Models\productionHistory\ProductionDuty;
 use App\Models\UPGWeb\Staff;
@@ -41,6 +47,10 @@ class DutyRepository extends BaseRepository
      * @var Staff
      */
     public $staff;
+    /**
+     * @var ScheduleRepository
+     */
+    public $schedule;
 
     /**
      * DutyRepository constructor.
@@ -50,6 +60,7 @@ class DutyRepository extends BaseRepository
      * @param GlassRun $run
      * @param GlassRunPlan $plan
      * @param AllGlassRun $allGlass
+     * @param ScheduleRepository $schedule
      */
     public function __construct(
         Common $common,
@@ -57,7 +68,8 @@ class DutyRepository extends BaseRepository
         Staff $staff,
         GlassRun $run,
         GlassRunPlan $plan,
-        AllGlassRun $allGlass
+        AllGlassRun $allGlass,
+        ScheduleRepository $schedule
     ) {
         $this->common = $common;
         $this->run = $run;
@@ -65,90 +77,35 @@ class DutyRepository extends BaseRepository
         $this->allGlass = $allGlass;
         $this->duty = $duty;
         $this->staff = $staff;
+        $this->schedule = $schedule;
     }
 
     /**
+     * 取得排程資料
+     *
      * @param $request
      * @return array
      */
     public function getSchedule($request)
     {
-        $prd_no = $request->input('prd_no');
-        $runProdLineID = $request->input('glassProdLineID');
-        $schedate = date('Y/m/d', strtotime($request->input('schedate')));
-        $view = $request->input('view');
-        switch ($view) {
-            case 'run':
-                $data = $this->run
-                    ->where('prd_no', $prd_no)
-                    ->where('glassProdLineID', $runProdLineID)
-                    ->where('schedate', $schedate)
-                    ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-                break;
-            
-            case 'plan':
-                $data = $this->plan
-                    ->where('prd_no', $prd_no)
-                    ->where('glassProdLineID', $runProdLineID)
-                    ->where('schedate', $schedate)
-                    ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-                break;
-            
-            case 'allGlass':
-                $data = $this->allGlass
-                    ->where('prd_no', $prd_no)
-                    ->where('glassProdLineID', $runProdLineID)
-                    ->where('schedate', $schedate)
-                    ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-                break;
-        }
-        if (isset($data)) {
-            return ['success' => true, 'data' => $data];
-        }
-        return ['success' => false];
+        return $this->schedule->getSchedule($request);
     }
 
     /**
+     * 取得排程清單
+     *
      * @param $view
      * @param $request
      * @return null
      */
     public function getScheduleList($view, $request)
     {
-        $snm = $request->input('snm');
-        $runProdLineID = $request->input('glassProdLineID');
-        $schedateOp = 'like';
-        $schedate = '%' . $request->input('schedate') . '%';
-        if ($schedate != '%%') {
-            $schedateOp = '=';
-            $schedate = date('Y-m-d', strtotime($request->input('schedate')));
-        }
-        switch ($view) {
-            case 'plan':
-                $table = $this->plan;
-                break;
-            case 'run':
-                $table = $this->run;
-                break;
-            case 'allGlass':
-                $table = $this->allGlass;
-                break;
-            default:
-                return null;
-        }
-        $list = $table
-            ->where('PRDT_SNM', 'like', "%$snm%")
-            ->where('glassProdLineID', 'like', "%$runProdLineID%")
-            ->where('schedate', $schedateOp, $schedate)
-            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
-            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID');
-        if ($view == 'run') {
-            $list = $list->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
-        }
-        return $list;
+        return $this->schedule->getScheduleList($view, $request);
     }
 
     /**
+     * 取得值班表清單
+     *
      * @param $request
      * @return mixed
      */
@@ -162,8 +119,7 @@ class DutyRepository extends BaseRepository
             $dutyDateOp = '=';
             $dutyDate = date('Y-m-d', strtotime($request->input('dutyDate')));
         }
-        $schedule = $this->duty;
-        $scheduleList = $schedule
+        $scheduleList = $this->duty
             ->join('allGlassRun', function ($join) {
                 $join->on('productionDuty.glassProdLineID', 'allGlassRun.glassProdLineID')
                     ->on('productionDuty.prd_no', 'allGlassRun.prd_no')
@@ -177,52 +133,50 @@ class DutyRepository extends BaseRepository
             ->select('productionDuty.id', 'productionDuty.glassProdLineID', 'dutyDate', 
                 'shift', 'UPGWeb.dbo.vStaffNode.name as staffName', 'allGlassRun.PRDT_SNM as snm', 
                 'quantity', 'pack', 'productionDuty.efficiency', 'annealGrade', 'startShutdown', 'endShutdown');
-        $a = $scheduleList->get();
         return $scheduleList;
     }
 
     /**
+     * 取得員工資料
+     *
      * @return mixed
      */
     public function getStaff()
     {
-        $list = $this->staff->where('serving', 1);
-        return $list;
+        return $this->staff->where('serving', 1);
     }
 
     /**
+     * 取得值班表資料
+     *
      * @param $id
      * @return null
      */
     public function getDuty($id)
     {
-        $data = $this->duty->where('productionDuty.id', $id);
-        if ($data->exists()) {
-            $data = $data
-                ->join('allGlassRun', function ($join) {
-                    $join->on('productionDuty.glassProdLineID', 'allGlassRun.glassProdLineID')
-                        ->on('productionDuty.prd_no', 'allGlassRun.prd_no')
-                        ->on('productionDuty.schedate', 'allGlassRun.schedate');
-                })
-                ->join('UPGWeb.dbo.vStaffNode', 'UPGWeb.dbo.vStaffNode.ID', 'productionDuty.staffID')
-                ->orderBy('dutyDate', 'shift', 'glassProdLineID')
-                ->select('productionDuty.id', 'productionDuty.glassProdLineID', 'productionDuty.schedate', 'productionDuty.prd_no', 
-                    'dutyDate', 'shift', 'UPGWeb.dbo.vStaffNode.ID as staffID', 'UPGWeb.dbo.vStaffNode.name as staffName', 
-                    'allGlassRun.PRDT_SNM as snm', 'quantity', 'pack', 'productionDuty.efficiency', 'annealGrade', 
-                    'startShutdown', 'endShutdown', 'jobChange', 'speedChange', 'improve');
-            return $data;
-        }
-        return null;
+        return $this->duty
+            ->join('allGlassRun', function ($join) {
+                $join->on('productionDuty.glassProdLineID', 'allGlassRun.glassProdLineID')
+                    ->on('productionDuty.prd_no', 'allGlassRun.prd_no')
+                    ->on('productionDuty.schedate', 'allGlassRun.schedate');
+            })
+            ->join('UPGWeb.dbo.vStaffNode', 'UPGWeb.dbo.vStaffNode.ID', 'productionDuty.staffID')
+            ->where('productionDuty.id', $id)
+            ->orderBy('dutyDate', 'shift', 'glassProdLineID')
+            ->select('productionDuty.id', 'productionDuty.glassProdLineID', 'productionDuty.schedate', 'productionDuty.prd_no',
+                'dutyDate', 'shift', 'UPGWeb.dbo.vStaffNode.ID as staffID', 'UPGWeb.dbo.vStaffNode.name as staffName',
+                'allGlassRun.PRDT_SNM as snm', 'quantity', 'pack', 'productionDuty.efficiency', 'annealGrade',
+                'startShutdown', 'endShutdown', 'jobChange', 'speedChange', 'improve');
     }
 
     /**
+     * 儲存值班珴資料
+     *
      * @param $input
      * @return mixed
      */
     public function saveDuty($input)
     {
-        $table = $this->duty;
-        $result = $this->save($table, $input);
-        return $result;
+        return $this->save($this->duty, $input);
     }
 }

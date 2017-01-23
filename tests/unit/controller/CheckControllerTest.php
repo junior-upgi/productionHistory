@@ -4,6 +4,8 @@ use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
+use App\Models\productionHistory\DefectCheck;
+
 /**
  * Class CheckControllerTest
  */
@@ -18,7 +20,7 @@ class CheckControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->mock = $this->initMock(\App\Repositories\CheckRepository::class);
+        $this->mock = $this->initMock(\App\Service\CheckService::class);
         $this->target = $this->app->make(\App\Http\Controllers\CheckController::class);
     }
 
@@ -38,15 +40,19 @@ class CheckControllerTest extends TestCase
     public function test_getCheckList()
     {
         /** arrange */
-        $table = \App\Models\productionHistory\DefectcCheck::class;
+        $table = new DefectCheck();
         $expected = $table;
 
         /** act */
-        $this->mock->shouldReceive('getCheckList')
+        $mock = Mockery::mock(\App\Service\CheckService::class);
+        $this->app->instance(\App\Service\CheckService::class, $mock);
+
+        $mock->shouldReceive('getCheckList')
             ->once()
             ->withAnyArgs()
             ->andReturn($table);
-        $actual = $this->target->getCheckList();
+        $target = $this->app->make(\App\Http\Controllers\CheckController::class);
+        $actual = $target->getCheckList();
 
         /** assert */
         $this->assertEquals($expected, $actual);
@@ -69,6 +75,42 @@ class CheckControllerTest extends TestCase
             ->andReturn($expected);
         $target = $this->app->make(\App\Http\Controllers\CheckController::class);
         $actual = $target->searchCheck();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+
+    public function test_getScheduleList()
+    {
+        /** arrange */
+        $expected = 'success';
+        $mock = Mockery::mock(\App\Service\CheckService::class);
+        $this->app->instance(\App\Service\CheckService::class, $mock);
+
+        /** act */
+        $mock->shouldReceive('getScheduleList')
+            ->once()
+            ->withAnyArgs()
+            ->andReturn($expected);
+        $target = $this->app->make(\App\Http\Controllers\CheckController::class);
+        $actual = $target->getScheduleList();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_insertCheck()
+    {
+        /** arrange */
+        $expected = 'success';
+
+        /** act */
+        $this->mock->shouldReceive('insertCheck')
+            ->once()
+            ->withAnyArgs()
+            ->andReturn($expected);
+        $actual = $this->target->insertCheck();
 
         /** assert */
         $this->assertEquals($expected, $actual);

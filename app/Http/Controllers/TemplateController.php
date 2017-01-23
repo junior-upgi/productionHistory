@@ -2,8 +2,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests;
-use App\Repositories\TemplateRepository;
-use App\Repositories\ItemRepository;
+use App\Service\TemplateService;
 
 /**
  * Class TemplateController
@@ -12,97 +11,100 @@ use App\Repositories\ItemRepository;
 class TemplateController extends BaseController
 {
     /**
-     * @var TemplateRepository
+     * @var TemplateService
      */
-    public $template;
-
-    /**
-     * @var ItemRepository
-     */
-    public $item;
+    public $service;
 
     /**
      * TemplateController constructor.
-     * @param TemplateRepository $template
-     * @param ItemRepository $item
+     *
+     * @param TemplateService $service
+     * @internal param TemplateRepository $template
+     * @internal param ItemRepository $item
      */
-    public function __construct(TemplateRepository $template, ItemRepository $item)
+    public function __construct(TemplateService $service)
     {
-        $this->template = $template;
-        $this->item = $item;
+        $this->service = $service;
     }
 
     /**
+     *
+     *
      * @return mixed
      */
     public function getTemplate()
     {
-        $input = request()->input();
-        if (isset($input['id']) > 0) {
-            $data = $this->template->getTemplate($input['id'])->first()->toArray();
-            return $data;
-        } else if (isset($input['name'])) {
-            $name = iconv('utf8', 'big5', $input['name']);
-            $list = $this->template->getTemplateList()
-                ->where('name', 'like', '%' . $name . '%')
-                ->orderBy('name')->get()->toArray();
-            return $list;
-        } else  {
-            $list = $this->template->getTemplateList()
-                ->orderBy('name')->get()->toArray();
-            return $list;
-        }
+        $data = $this->service->template->getTemplate(request()->input('id'))->first()->toArray();
+        return $data;
     }
 
     /**
+     *
+     *
+     * @return mixed
+     */
+    public function searchTemplate()
+    {
+        $list = $this->service->template->getTemplateList()
+            ->where('name', 'like', '%' . iconv('utf8', 'big5', request()->input('name')) . '%')
+            ->orderBy('name')->get()->toArray();
+        return $list;
+    }
+
+    /**
+     *
+     *
+     * @return mixed
+     */
+    public function getTemplateList()
+    {
+        $list = $this->service->template->getTemplateList()
+            ->orderBy('name')->get()->toArray();
+        return $list;
+    }
+
+
+    /**
+     *
+     *
      * @return array
      */
     public function getTemplateItem()
     {
-        $input = request()->input();
-        if (isset($input['id'])) {
-            $id = $input['id'];
-            $template = $this->template->getTemplate($id)->first()->toArray();
-            $itemList = $this->template->getNonSelectItem($id)->get()->toArray();
-            $selectList = $this->template->getSelectedItem($id)->get()->toArray();
-        } else {
-            $template = [];
-            $itemList = $this->item->getItemList()->orderBy('name')->get()->toArray();
-            $selectList = [];
-        }
         return [
-            'template' => $template,
-            'itemList' => $itemList,
-            'selectList' => $selectList,
+            'template' => $this->service->template->getTemplate(request()->input('id'))->first(),
+            'itemList' => $this->service->template->getNonSelectItem(request()->input('id'))->get(),
+            'selectList' => $this->service->template->getSelectedItem(request()->input('id'))->get(),
         ];
     }
 
     /**
-     * @return array
+     *
+     *
+     * @return mixed
      */
-    public function saveTemplate()
+    public function insertTemplate()
     {
-        $input = request()->input();
-        $main = $input['mainData'];
-        $detail = $input['detailData'];
-        if ($main['type'] == 'add') {
-            $result = $this->template->insertTemplate($main, $detail);
-        } else if ($main['type'] == 'edit') {
-            $result = $this->template->updateTemplate($main, $detail);
-        } else {
-            return ['success' => false, 'msg' => '參數錯誤!'];
-        }
-        return $result;
+        return $this->service->insertTemplate(request()->input());
     }
 
     /**
+     *
+     *
+     * @return mixed
+     */
+    public function updateTemplate()
+    {
+        return $this->service->updateTemplate(request()->input());
+    }
+
+    /**
+     *
+     *
      * @return mixed
      */
     public function deleteTemplate()
     {
-        $input = request()->input();
-        $id = $input['id'];
-        $result = $this->template->deleteTemplate($id);
-        return $result;
+        return $this->service->template->deleteTemplate(request()->input('id'));
     }
 }

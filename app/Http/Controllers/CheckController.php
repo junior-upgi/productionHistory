@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Repositories\CheckRepository;
 use App\Service\CheckService;
 
 /**
@@ -12,11 +11,6 @@ use App\Service\CheckService;
 class CheckController extends Controller
 {
     /**
-     * @var CheckRepository
-     */
-    public $check;
-
-    /**
      * @var CheckService
      */
     public $service;
@@ -24,12 +18,11 @@ class CheckController extends Controller
     /**
      * CheckController constructor.
      *
-     * @param CheckRepository $check
      * @param CheckService $service
+     * @internal param CheckRepository $check
      */
-    public function __construct(CheckRepository $check, CheckService $service)
+    public function __construct(CheckService $service)
     {
-        $this->check = $check;
         $this->service = $service;
     }
 
@@ -40,7 +33,7 @@ class CheckController extends Controller
      */
     public function getCheckList()
     {
-        return $this->check->getCheckList();
+        return $this->service->getCheckList();
     }
 
     /**
@@ -53,4 +46,18 @@ class CheckController extends Controller
         return $this->service->searchCheck(request()->input());
     }
 
+    /**
+     *  取得排程清單
+     *
+     * @return mixed
+     */
+    public function getScheduleList()
+    {
+        return $this->service->getScheduleList(request());
+    }
+
+    public function insertCheck()
+    {
+        return $this->service->insertCheck(request()->input());
+    }
 }

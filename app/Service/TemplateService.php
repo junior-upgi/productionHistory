@@ -1,73 +1,66 @@
 <?php
 /**
- * ItemController資料處理服務
- *
- * @version 1.0.0
- * @author spark it@upgi.com.tw
- * @date 17/1/17
- * @since 1.0.0 spark: 於此版本開始編寫註解，已優化程式碼
+ * Created by PhpStorm.
+ * User: Spark
+ * Date: 2017/1/23
+ * Time: 下午2:05
  */
+
 namespace App\Service;
 
-use App\Repositories\ItemRepository;
+use App\Repositories\TemplateRepository;
 use Carbon\Carbon;
 
-/**
- * Class ItemService
- *
- * @package App\Service
- */
-class ItemService
+class TemplateService
 {
     use UserService;
 
-    /** ItemRepository $item */
-    public $item;
-
-    /** 
-     * construct
-     *
-     * @param ItemRepository $item
+    /**
+     * @var TemplateRepository
      */
-    public function __construct(ItemRepository $item)
+    public $template;
+
+    /**
+     * TemplateService constructor.
+     *
+     * @param TemplateRepository $template
+     */
+    public function __construct(TemplateRepository $template)
     {
-        $this->item = $item;
+        $this->template = $template;
     }
 
     /**
-     * 上層項目新增資料處理
      *
-     * @param Request->input() $input
      *
-     * @return array
+     * @param $input
+     * @return mixed
      */
-    public function insertItem($input)
+    public function InsertTemplate($input)
     {
         $mainParams = $this->setInsertMainParams($input['mainData']);
         $detailParams = $this->setInsertDetailParams($input['detailData'], $mainParams['id']);
-        return $this->item->insertItem($mainParams, $detailParams);
+        return $this->template->insertTemplate($mainParams, $detailParams);
     }
 
     /**
-     * 上層項目更新資料處理
      *
-     * @param Request->input() $input
-     * 
-     * @return array
+     *
+     * @param $input
+     * @return mixed
      */
-    public function updateItem($input)
+    public function UpdateTemplate($input)
     {
         $mainParams = $this->setUpdateMainParams($input['mainData']);
         $detailParams = $this->setUpdateDetailParams($input['detailData'], $mainParams['id']);
-        return $this->item->updateItem($mainParams, $detailParams);
+        return $this->template->updateTemplate($mainParams, $detailParams);
     }
 
     /**
-     * 設定新增上層項目主表參數
      *
-     * @param array $main
      *
-     * @return array
+     * @param $main
+     * @return mixed
      */
     private function setInsertMainParams($main)
     {
@@ -76,11 +69,10 @@ class ItemService
     }
 
     /**
-     * 設定更新上層項目主表參數
      *
-     * @param array $main
      *
-     * @return array
+     * @param $main
+     * @return mixed
      */
     private function setUpdateMainParams($main)
     {
@@ -106,10 +98,9 @@ class ItemService
     /**
      * 設定新增上層項目已選缺點參數
      *
-     * @param array $detail
-     * @param string $id
-     *
-     * @return array
+     * @param $detail
+     * @param $id
+     * @return mixed
      */
     private function setInsertDetailParams($detail, $id)
     {
@@ -142,8 +133,8 @@ class ItemService
         $params = [];
         $now = Carbon::now();
         for ($i = 0; $i < count($detail); $i++) {
-            $param['itemID'] = $id;
-            $param['defectID'] = $detail[$i]['id'];
+            $param['templateID'] = $id;
+            $param['itemID'] = $detail[$i]['id'];
             $param['sequence'] = $i;
             $param[$type.'_at'] = $now;
             $param[$type.'_by'] = $this->getErpID();

@@ -10,7 +10,7 @@
             <div class="modal-body">
                 <div class="row">
                     <input type="hidden" name="_token" value="{{{ csrf_token() }}}">
-                    <input type="hidden" name="type" v-model="dataSet.type">
+                    <input type="hidden" id="type" name="type" v-model="dataSet.type">
                     <input type="hidden" name="id" v-model="dataSet.id">
                     <form class="form-inline" role="form">
                         <div class="form-group col-md-12">
@@ -58,7 +58,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
-                <button type="button" class="btn btn-primary" data-loading-text="資料送出中..." 
+                <button type="button" class="btn btn-primary" data-loading-text="資料送出中..."
                     autocomplete="off" id="btnSave" @click="save()">
                     @{{ formSet.btn }}
                 </button>

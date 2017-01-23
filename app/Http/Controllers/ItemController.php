@@ -46,7 +46,7 @@ class ItemController extends BaseController
      *
      * @return array
      */
-    public function searchItemList()
+    public function searchItem()
     {
         return $this->service->item->getItemList()
             ->where('name', 'like', '%' . iconv('utf8', 'big5', request()->input('name')) . '%')

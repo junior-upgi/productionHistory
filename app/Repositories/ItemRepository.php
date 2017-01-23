@@ -1,4 +1,12 @@
 <?php
+/**
+ * ItemRepository
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/01/23
+ * @since 1.0.0 spark: 於此版本開始編寫註解
+ */
 namespace App\Repositories;
 
 use App\Models\productionHistory\Defect;
@@ -49,6 +57,8 @@ class ItemRepository extends BaseRepository
     }
 
     /**
+     * 取得上層項目清單
+     *
      * @return DefectItem
      */
     public function getItemList()
@@ -57,6 +67,8 @@ class ItemRepository extends BaseRepository
     }
 
     /**
+     * 取得上層項目缺點清單
+     *
      * @param $id
      * @return mixed
      */
@@ -66,6 +78,8 @@ class ItemRepository extends BaseRepository
     }
 
     /**
+     * 取得可選缺點清單
+     *
      * @param $id
      * @return mixed
      */
@@ -83,6 +97,8 @@ class ItemRepository extends BaseRepository
     }
 
     /**
+     * 取得已選缺點清單
+     *
      * @param $id
      * @return mixed
      */
@@ -98,6 +114,8 @@ class ItemRepository extends BaseRepository
     }
 
     /**
+     * 取得上層項目資料
+     *
      * @param $id
      * @return mixed
      */
@@ -107,16 +125,8 @@ class ItemRepository extends BaseRepository
     }
 
     /**
-     * @param $table
-     * @param $input
-     * @return mixed
-     */
-    public function saveData($table, $input)
-    {
-        return $this->save($table, $input);
-    }
-
-    /**
+     * 新增上層項目資料
+     *
      * @param $main
      * @param $detail
      * @return array
@@ -136,6 +146,8 @@ class ItemRepository extends BaseRepository
     }
 
     /**
+     * 更新上層項目資料
+     *
      * @param $main
      * @param $detail
      * @return array
@@ -156,6 +168,8 @@ class ItemRepository extends BaseRepository
     }
 
     /**
+     * 刪除上層項目資料
+     *
      * @param $id
      * @return mixed
      */

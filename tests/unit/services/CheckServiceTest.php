@@ -94,4 +94,25 @@ class CheckServiceTest extends TestCase
         /** assert */
         $this->assertEquals($expected, $actual);
     }
+
+    public function test_getScheduleList()
+    {
+        /** arrange */
+        $request = [];
+        $expected = 'success';
+
+        /** act */
+        $mock = Mockery::mock(\App\Repositories\ScheduleRepository::class);
+        $this->app->instance(\App\Repositories\ScheduleRepository::class, $mock);
+        $target = $this->app->make(\App\Service\CheckService::class);
+
+        $mock->shouldReceive('getScheduleList')
+            ->once()
+            ->withAnyArgs()
+            ->andReturn($expected);
+        $actual = $target->getScheduleList($request);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
 }

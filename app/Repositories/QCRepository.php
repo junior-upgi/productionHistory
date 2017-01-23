@@ -125,7 +125,6 @@ class QCRepository extends BaseRepository
             ->select('SPC_NAME', DB::raw('SUM(QTY) as QTY'))
             ->get()->toArray();
         $array = [];
-        $str = '';
         foreach ($data as $d) {
             array_push($array, $d['SPC_NAME'] . number_format($d['QTY']));
         }
@@ -172,37 +171,7 @@ class QCRepository extends BaseRepository
      */
     public function getScheduleList($view, $request)
     {
-        $snm = $request->input('snm');
-        $runProdLineID = $request->input('glassProdLineID');
-        $schedateOp = 'like';
-        $schedate = '%' . $request->input('schedate') . '%';
-        if ($schedate != '%%') {
-            $schedateOp = '=';
-            $schedate = date('Y-m-d', strtotime($request->input('schedate')));
-        }
-        switch ($view) {
-            case 'plan':
-                $table = $this->schedule->plan;
-                break;
-            case 'run':
-                $table = $this->schedule->run;
-                break;
-            case 'allGlass':
-                $table = $this->schedule->allGlass;
-                break;
-            default:
-                return null;
-        }
-        $list = $table
-            ->where('PRDT_SNM', 'like', "%$snm%")
-            ->where('glassProdLineID', 'like', "%$runProdLineID%")
-            ->where('schedate', $schedateOp, $schedate)
-            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
-            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID');
-        if ($view == 'run') {
-            $list = $list->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
-        }
-        return $list;
+        return $this->getScheduleList($view, $request);
     }
 
     /**
@@ -228,7 +197,6 @@ class QCRepository extends BaseRepository
             ->where('qualityControl.schedate', $schedateOp, $schedate)
             ->orderBy('schedate', 'desc')->orderBy('DB_U105.dbo.PRDT.SNM')->orderBy('glassProdLineID')
             ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm');
-        $a = $scheduleList->get();
         return $scheduleList;
     }
 
@@ -254,14 +222,10 @@ class QCRepository extends BaseRepository
      */
     public function getQC($id)
     {
-        $data = $this->qc->where('qualityControl.id', $id);
-        if ($data->exists()) {
-            $data = $data
-                ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no')
-                ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm');
-            return $data;
-        }
-        return null;
+        return $this->qc
+            ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no')
+            ->where('qualityControl.id', $id)
+            ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm');
     }
 
     /**

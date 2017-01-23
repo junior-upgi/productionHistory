@@ -44,6 +44,10 @@ class HistoryRepository extends BaseRepository
      * @var BaseDataRepository
      */
     public $base;
+    /**
+     * @var ScheduleRepository
+     */
+    public $schedule;
 
     /**
      * HistoryRepository constructor.
@@ -54,6 +58,7 @@ class HistoryRepository extends BaseRepository
      * @param AllGlassRun $allGlass
      * @param OldSchedule $oldSchedule
      * @param BaseDataRepository $base
+     * @param ScheduleRepository $schedule
      */
     public function __construct(
         Common $common,
@@ -62,7 +67,8 @@ class HistoryRepository extends BaseRepository
         GlassRunPlan $plan,
         AllGlassRun $allGlass,
         OldSchedule $oldSchedule,
-        BaseDataRepository $base
+        BaseDataRepository $base,
+        ScheduleRepository $schedule
     ) {
         $this->common = $common;
         $this->history = $history;
@@ -71,6 +77,7 @@ class HistoryRepository extends BaseRepository
         $this->allGlass = $allGlass;
         $this->oldSchedule = $oldSchedule;
         $this->base = $base;
+        $this->schedule = $schedule;
     }
 
     /**
@@ -123,39 +130,7 @@ class HistoryRepository extends BaseRepository
      */
     public function getSchedule($request)
     {
-        $prd_no = $request->input('prd_no');
-        $runProdLineID = $request->input('glassProdLineID');
-        $schedate = date('Y/m/d', strtotime($request->input('schedate')));
-        $view = $request->input('view');
-        switch ($view) {
-            case 'run':
-                $data = $this->run
-                    ->where('prd_no', $prd_no)
-                    ->where('glassProdLineID', $runProdLineID)
-                    ->where('schedate', $schedate)
-                    ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-                break;
-            
-            case 'plan':
-                $data = $this->plan
-                    ->where('prd_no', $prd_no)
-                    ->where('glassProdLineID', $runProdLineID)
-                    ->where('schedate', $schedate)
-                    ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-                break;
-            
-            case 'allGlass':
-                $data = $this->allGlass
-                    ->where('prd_no', $prd_no)
-                    ->where('glassProdLineID', $runProdLineID)
-                    ->where('schedate', $schedate)
-                    ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-                break;
-        }
-        if (isset($data)) {
-            return ['success' => true, 'data' => $data];
-        }
-        return ['success' => false];
+        return $this->schedule->getSchedule($request);
     }
 
     /**
@@ -165,37 +140,7 @@ class HistoryRepository extends BaseRepository
      */
     public function getScheduleList($view, $request)
     {
-        $snm = $request->input('snm');
-        $runProdLineID = $request->input('glassProdLineID');
-        $schedateOp = 'like';
-        $schedate = '%' . $request->input('schedate') . '%';
-        if ($schedate != '%%') {
-            $schedateOp = '=';
-            $schedate = date('Y-m-d', strtotime($request->input('schedate')));
-        }
-        switch ($view) {
-            case 'plan':
-                $table = $this->plan;
-                break;
-            case 'run':
-                $table = $this->run;
-                break;
-            case 'allGlass':
-                $table = $this->allGlass;
-                break;
-            default:
-                return null;
-        }
-        $list = $table
-            ->where('PRDT_SNM', 'like', "%$snm%")
-            ->where('glassProdLineID', 'like', "%$runProdLineID%")
-            ->where('schedate', $schedateOp, $schedate)
-            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
-            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID');
-        if ($view == 'run') {
-            $list = $list->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
-        }
-        return $list;
+        return $this->schedule->getScheduleList($view, $request);
     }
 
     /**
@@ -322,9 +267,7 @@ class HistoryRepository extends BaseRepository
      */
     public function saveHistory($input)
     {
-        $table = $this->history;
-        $result = $this->save($table, $input, [], 'id', true);
-        return $result;
+        return $this->save($this->history, $input, [], 'id', true);
     }
 
     /**
@@ -333,9 +276,7 @@ class HistoryRepository extends BaseRepository
      */
     public function deleteHistory($id)
     {
-        $table = $this->history;
-        $result = $this->delfete($table, $id);
-        return $result;
+        return $this->delete($this->history, $id);
     }
 
     /**

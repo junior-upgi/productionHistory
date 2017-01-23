@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Auth;
 use App\Repositories\HistoryRepository;
@@ -16,14 +15,16 @@ class HistoryController extends Controller
     //
     public $history;
     public $service;
-    
+
     /**
      * 建構式
-     * 
-     * @param HistoryRepostiry $history 注入HistoryRepository
+     *
+     * @param HistoryRepository|HistoryRepository $history 注入HistoryRepository
+     * @param HistoryService $service
      */
-    public function __construct(HistoryRepository $history, HistoryService $service) 
-    {
+    public function __construct(
+        HistoryRepository $history, HistoryService $service
+    ) {
         $this->history = $history;
         $this->service = $service;
     }

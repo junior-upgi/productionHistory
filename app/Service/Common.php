@@ -11,6 +11,7 @@ namespace App\Service;
 
 use App\Models\upgiSystem\File;
 use Auth;
+use Carbon\Carbon;
 
 /**
  * Class ProductRepository
@@ -92,7 +93,7 @@ class Common
     {
         try {
             if ($table->timestamps != false) {
-                $params[$type.'_at'] = \Carbon\Carbon::now();
+                $params[$type.'_at'] = Carbon::now();
                 $params[$type.'_by'] = $this->getErpID();
             }
             return $params;
@@ -201,8 +202,9 @@ class Common
      * @param string $id 檔案id
      * @return string base64編碼
      */
-    public function getFile(File $file, $id)
+    public function getFile($id)
     {
+        $file = new File();
         return $file->getFileCode($id);
     }
 
@@ -212,8 +214,9 @@ class Common
      * @param string $id 檔案id
      * @return string
      */
-    public function getFileInfo(File $file, $id)
+    public function getFileInfo($id)
     {
+        $file = new File();
         return $file->getFile($id);
     }
     

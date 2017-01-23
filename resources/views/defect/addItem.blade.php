@@ -59,7 +59,7 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">關閉</button>
                 <button type="button" class="btn btn-primary" data-loading-text="資料送出中..." 
-                    autocomplete="off" id="btnSave" @click="save(dataSet)">
+                    autocomplete="off" id="btnSave" @click="save()">
                     @{{ formSet.btn }}
                 </button>
             </div>

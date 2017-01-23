@@ -2,8 +2,8 @@
 
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+
 use App\Models\productionHistory\DefectCheck;
 use App\Repositories\CheckRepository;
 
@@ -92,6 +92,10 @@ class CheckRepositoryTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * 測試以日期搜尋
+     *
+     */
     public function test_searchCheckBySchedate()
     {
         /** arrange */

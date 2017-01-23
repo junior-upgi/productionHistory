@@ -1,4 +1,12 @@
 <?php
+/**
+ * TemplateRepository
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/01/19
+ * @since 1.0.0 spark: 於此版本開始編寫註解
+ */
 namespace App\Repositories;
 
 use App\Models\productionHistory\DefectItem;
@@ -14,9 +22,21 @@ use App\Service\Common;
  */
 class TemplateRepository extends BaseRepository
 {
+    /**
+     * @var DefectItem
+     */
     public $item;
+    /**
+     * @var DefectTemplate
+     */
     public $template;
+    /**
+     * @var TemplateItem
+     */
     public $templateItem;
+    /**
+     * @var Common
+     */
     public $common;
 
     /**
@@ -40,24 +60,14 @@ class TemplateRepository extends BaseRepository
     }
 
     /**
+     * 取得套板可選項目清單
      *
-     *
-     * @param $id
-     * @return mixed
-     */
-    public function getTemplateItem($id)
-    {
-        $list = $this->templateItem->where('templateID', $id);
-        return $list;
-    }
-
-    /**
      * @param $id
      * @return mixed
      */
     public function getNonSelectItem($id)
     {
-        $list = $this->item
+        return $this->item
             ->whereNotExists(function ($query) use ($id) {
                 $query->select(\DB::raw(1))
                     ->from('templateItem')
@@ -66,156 +76,99 @@ class TemplateRepository extends BaseRepository
             })
             ->orderBy('name')
             ->select('defectItem.*');
-        return $list;
     }
 
     /**
+     * 取得已選擇的上層項目
+     *
      * @param $id
      * @return mixed
      */
     public function getSelectedItem($id)
     {
-        $list = $this->templateItem
+        return $this->templateItem
             ->where('templateID', $id)
             ->join('defectItem', function ($join) {
                 $join->whereRaw('templateItem.itemID = defectItem.id COLLATE database_default');
             })
             ->orderBy('sequence')
             ->select('defectItem.*');
-        return $list;
     }
 
     /**
-     * @param $table
-     * @param $input
-     * @return mixed
-     */
-    public function saveData($table, $input)
-    {
-        $result = $this->save($table, $input);
-        return $result;
-    }
-
-    /**
+     * 新增套板
+     *
      * @param $main
      * @param $detail
      * @return array
      */
     public function insertTemplate($main, $detail)
     {
-        $id = $this->common->getNewGUID();
-        $template = $this->template;
-        $templateItem = $this->templateItem;
-        $main = array_except($main, ['type']);
-        $main['id'] = $id;
-
         try {
-            $template->getConnection()->beginTransaction();
-            $main['name'] = iconv('utf8', 'big5', $main['name']);
-            $main = $this->common->timestamps($template, $main, 'created');
-            $template->insert($main);
-
-            for ($i = 0; $i < count($detail); $i++) {
-                $params = [
-                    'templateID' => $id,
-                    'itemID' => $detail[$i]['id'],
-                    'sequence' => $i + 1,
-                ];
-                $params = $this->common->timestamps($template, $params, 'created');
-                $templateItem->insert($params);
-            }
-
-            $template->getConnection()->commit();
-    
-            return [
-                'success' => true,
-                'msg' => 'success',
-            ];
+            $this->template->getConnection()->beginTransaction();
+            $this->template->insert($main);
+            $this->templateItem->insert($detail);
+            $this->template->getConnection()->commit();
+            return ['success' => true, 'msg' => 'success'];
         } catch (\Exception $e) {
-            $template->getConnection()->rollback();
-            return [
-                'success' => false,
-                'msg' => $e->getMessage(),
-            ];
+            $this->template->getConnection()->rollback();
+            return ['success' => false, 'msg' => $e->getMessage()];
         }
     }
 
     /**
+     * 更新套板
+     *
      * @param $main
      * @param $detail
      * @return array
      */
     public function updateTemplate($main, $detail)
     {
-        $id = $main['id'];
-        $template = $this->template;
-        $templateItem = $this->templateItem;
-        $main = array_except($main, ['type', 'id']);
-
         try {
-            $template->getConnection()->beginTransaction();
-            $main['name'] = iconv('utf8', 'big5', $main['name']);
-            $main = $this->common->timestamps($template, $main, 'updated');
-            $template->where('id', $id)->update($main);
-
-            $templateItem->where('templateID', $id)->forceDelete();
-
-            for ($i = 0; $i < count($detail); $i++) {
-                $params = [
-                    'templateID' => $id,
-                    'itemID' => $detail[$i]['id'],
-                    'sequence' => $i + 1,
-                ];
-                $params = $this->common->timestamps($templateItem, $params, 'created');
-                $templateItem->insert($params);
-            }
-
-            $template->getConnection()->commit();
-    
-            return [
-                'success' => true,
-                'msg' => 'success',
-            ];
+            $this->template->getConnection()->beginTransaction();
+            $this->template->where('id', $main['id'])->update($main);
+            $this->templateItem->where('templateID', $main['id'])->forceDelete();
+            $this->templateItem->where('templateID', $main['id'])->insert($detail);
+            $this->template->getConnection()->commit();
+            return ['success' => true, 'msg' => 'success'];
         } catch (\Exception $e) {
-            $template->getConnection()->rollback();
-            return [
-                'success' => false,
-                'msg' => $e->getMessage(),
-            ];
+            $this->template->getConnection()->rollback();
+            return ['success' => false, 'msg' => $e->getMessage()];
         }
     }
 
     /**
+     * 刪除套樣
+     *
      * @param $id
      * @return mixed
      */
     public function deleteTemplate($id)
     {
-        $template = $this->template;
-        $templateResult = $this->delete($template, $id);
-
-        $templateItem = $this->templateItem;
-        $this->forceDelete($templateItem, $id);
-
-        return $templateResult;
+        $result = $this->delete($this->template, $id);
+        $this->forceDelete($this->templateItem, $id);
+        return $result;
     }
 
     /**
+     * 取得套板清單
+     *
      * @return DefectTemplate
      */
     public function getTemplateList()
     {
-        $list = $this->template;
-        return $list;
+        return $this->template;
     }
 
     /**
+     * 取得套板資料
+     *
      * @param $id
      * @return mixed
      */
     public function getTemplate($id)
     {
-        $data = $this->template->where('id', $id);
-        return $data;
+        return $this->template->where('id', $id);
     }
 }

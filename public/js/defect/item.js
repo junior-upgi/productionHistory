@@ -1,4 +1,5 @@
-var item = new Vue({
+var item;
+item = new Vue({
     el: '#item',
     data: {
         items: {},
@@ -11,15 +12,15 @@ var item = new Vue({
     },
 
     mounted: function () {
-        this.getItemList();
+        this.getItemList(null);
         Sortable.create(document.getElementById('selectSort'), {
-            onEnd: function(e) {
-                var clonedItems = item.setSelect.filter(function(r){
+            onEnd: function (e) {
+                var clonedItems = item.setSelect.filter(function (r) {
                     return r;
                 });
                 clonedItems.splice(e.newIndex, 0, clonedItems.splice(e.oldIndex, 1)[0]);
                 item.setSelect = [];
-                item.$nextTick(function(){
+                item.$nextTick(function () {
                     item.setSelect = clonedItems;
                 });
             }
@@ -27,15 +28,14 @@ var item = new Vue({
     },
 
     methods: {
-        getItemList: function (data = null) {
+        getItemList: function () {
             $.ajax({
                 type: "GET",
-                data: data,
                 url: url + "/defect/getItemList",
-                success: function(results){
+                success: function (results) {
                     item.items = results;
                 },
-                error: function(e){
+                error: function (e) {
                     var response = jQuery.parseJSON(e.responseText);
                     console.log(response.message);
                 }
@@ -44,16 +44,21 @@ var item = new Vue({
 
         search: function () {
             var name = $('#search_name').val();
-            if (name.trim() == '')
-            {
-                item.getItem(data);
-            }
-            var data = {
-                name: name
-            };
-            item.getItem(data);
+            var data = {name: name};
+            $.ajax({
+                type: "GET",
+                data: data,
+                url: url + "/defect/searchItem",
+                success: function (results) {
+                    item.items = results;
+                },
+                error: function (e) {
+                    var response = jQuery.parseJSON(e.responseText);
+                    console.log(response.message);
+                }
+            });
         },
-        
+
         tooltip: function (event) {
             $(event.target).tooltip('show');
             $('[data-toggle="tooltip"]').tooltip();
@@ -116,12 +121,12 @@ var item = new Vue({
             $.ajax({
                 type: "GET",
                 url: url + "/defect/getDefectGroup",
-                success: function(results){
+                success: function (results) {
                     item.setDefect = results.defectGroup;
                     item.setSelect = results.selected;
                     $('#addModal').modal({backdrop: 'static'}, 'show');
                 },
-                error: function(e){
+                error: function (e) {
                     var response = jQuery.parseJSON(e.responseText);
                     console.log(response.message);
                 }
@@ -139,7 +144,7 @@ var item = new Vue({
                 type: "GET",
                 url: url + "/defect/getDefectGroup",
                 data: data,
-                success: function(results){
+                success: function (results) {
                     item.dataSet = results.item;
                     item.dataSet.type = 'edit';
                     item.setDefect = results.defectGroup;
@@ -148,14 +153,14 @@ var item = new Vue({
                     console.log(item.setSelect);
                     $('#addModal').modal({backdrop: 'static'}, 'show');
                 },
-                error: function(e){
+                error: function (e) {
                     var response = jQuery.parseJSON(e.responseText);
                     console.log(response.message);
                 }
             });
         },
 
-        save: function (data) {
+        save: function () {
             var action = item.formSet.btn;
             var mainData = item.dataSet;
             var detailData = item.setSelect;
@@ -164,16 +169,16 @@ var item = new Vue({
 
             if (detailData == undefined || mainData == undefined) {
                 return false;
-            }
+            };
             data = {
                 mainData: mainData,
                 detailData: detailData,
             };
-            
+
             if ($('#type').val() == 'add') {
                 goUrl = url + "/defect/insertItem";
-                type = 'POST';  
-            } 
+                type = 'POST';
+            }
 
             if ($('#type').val() == 'edit') {
                 goUrl = url + "/defect/updateItem";
@@ -187,15 +192,15 @@ var item = new Vue({
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
                 data: data,
-                error: function(e) {
-                    var response = jQuery.parseJSON(e.responseText);	
-                    swal(action + "資料失敗!", response.message, "error");	
-                    item.setInit();	    
+                error: function (e) {
+                    var response = jQuery.parseJSON(e.responseText);
+                    swal(action + "資料失敗!", response.message, "error");
+                    item.setInit();
                     return false;
                 },
 
-                success: function(result){			  		  	
-                    if (result.success == true){	 
+                success: function (result) {
+                    if (result.success == true) {
                         item.setInit();
                         item.getItemList();
                         swal({
@@ -215,52 +220,51 @@ var item = new Vue({
                         $('#addModal').modal('hide');
                     }
                 }
-            }); 
+            });
         },
 
         del: function (id) {
             swal({
-                title: "刪除資料?",
-                text: "此動作將會刪除資料!",
-                type: "warning",
-                showCancelButton: true,
-                cancelButtonText: '取消',
-                confirmButtonClass: "btn-danger",
-                confirmButtonText: "刪除",
-                closeOnConfirm: false
-            },
-            function(){
-                $.ajax({
-                    type: 'DELETE',
-                    url: url + "/defect/deleteItem",
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {id: id},
-                    error: function(e) {
-                        var response = jQuery.parseJSON(e.responseText);	
-                        swal("刪除資料失敗!", response.message, "error");	
-                        item.setInit();	    
-                        return false;
-                    },
-
-                    success: function(result){			  		  	
-                        if (result.success == true){	 
+                    title: "刪除資料?",
+                    text: "此動作將會刪除資料!",
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: '取消',
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "刪除",
+                    closeOnConfirm: false
+                },
+                function () {
+                    $.ajax({
+                        type: 'DELETE',
+                        url: url + "/defect/deleteItem",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {id: id},
+                        error: function (e) {
+                            var response = jQuery.parseJSON(e.responseText);
+                            swal("刪除資料失敗!", response.message, "error");
                             item.setInit();
-                            item.getItem();
-                            swal({
-                                title: "刪除資料成功!",
-                                type: "success",
-                                showCancelButton: false,
-                                confirmButtonClass: "btn-success",
-                                confirmButtonText: "OK",
-                                closeOnConfirm: true
-                            });
-                            item.getItem();
+                            return false;
+                        },
+
+                        success: function (result) {
+                            if (result.success == true) {
+                                item.setInit();
+                                swal({
+                                    title: "刪除資料成功!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonClass: "btn-success",
+                                    confirmButtonText: "OK",
+                                    closeOnConfirm: true
+                                });
+                                item.getItemList();
+                            }
                         }
-                    }
-                }); 
-            });
+                    });
+                });
         },
 
         setInit: function () {
@@ -272,7 +276,7 @@ var item = new Vue({
             item.setSelect = {};
         }
     }
-});   
+});
 
 Array.prototype.remove = function () {
     var what, a = arguments, L = a.length, ax;

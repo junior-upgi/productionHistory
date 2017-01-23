@@ -10,6 +10,7 @@ namespace App\Service;
 
 use App\Repositories\CheckRepository;
 use App\Repositories\BaseDataRepository;
+use App\Repositories\ScheduleRepository;
 
 /**
  * Class CheckService
@@ -21,21 +22,34 @@ class CheckService
      * @var CheckRepository
      */
     public $check;
-
     /**
      * @var BaseDataRepository
      */
     public $base;
+    /**
+     * @var ScheduleRepository
+     */
+    public $schedule;
 
     /**
      * CheckService constructor.
      * @param CheckRepository $check
      * @param BaseDataRepository $base
+     * @param ScheduleRepository $schedule
      */
-    public function __construct(CheckRepository $check, BaseDataRepository $base)
-    {
+    public function __construct(
+        CheckRepository $check,
+        BaseDataRepository $base,
+        ScheduleRepository $schedule
+    ){
         $this->check = $check;
         $this->base = $base;
+        $this->schedule = $schedule;
+    }
+
+    public function getCheckList()
+    {
+        return $this->check->getCheckList();
     }
 
     /**
@@ -53,5 +67,16 @@ class CheckService
         if (isset($input['start']) || isset($input['end'])) {
             return $this->check->searchCheckBySchedate($input['start'], $input['end']);
         }
+    }
+
+    public function getScheduleList($request)
+    {
+        $view = 'run';
+        return $this->schedule->getScheduleList($view, $request);
+    }
+
+    public function insertCheck($input)
+    {
+        return $this->check->insertCheck($input);
     }
 }
