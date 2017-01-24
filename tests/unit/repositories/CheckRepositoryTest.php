@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use App\Models\productionHistory\DefectCheck;
 use App\Repositories\CheckRepository;
+use Illuminate\Support\Facades\App;
 
 class CheckRepositoryTest extends TestCase
 {
@@ -120,5 +121,72 @@ class CheckRepositoryTest extends TestCase
 
         /** assert */
         $this->assertEquals($expected, $actual);
+    }
+
+    public function test_insertCheck()
+    {
+        /** arrange */
+        $id = '99999999-9999-9999-9999-999999999999';
+        $params = [
+            'id' => $id,
+            'prd_no' => 'TS999999'
+        ];
+        $table = new DefectCheck();
+
+        /** act */
+        $target = App::make(CheckRepository::class);
+        $actual1 = $target->insertCheck($params);
+        $actual2 = $table->where('id', $id)->first();
+        $expected = $id;
+
+        /** assert */
+        $this->assertTrue($actual1['success']);
+        $this->assertEquals($expected, $actual2->id);
+    }
+
+    public function test_updateCheck()
+    {
+        /** arrange */
+        $id = '99999999-9999-9999-9999-999999999999';
+        $params = [
+            'id' => $id,
+            'prd_no' => 'TS999999'
+        ];
+        $table = new DefectCheck();
+        $table->insert($params);
+        $set = ['prd_no' => 'TS000000'];
+
+        /** act */
+        $target = App::make(CheckRepository::class);
+        $actual1 = $target->updateCheck($id, $set);
+        $actual2 = $table->where('id', $id)->first();
+        $expected = $set['prd_no'];
+
+        /** assert */
+        $this->assertTrue($actual1['success']);
+        $this->assertEquals($expected, $actual2->prd_no);
+    }
+
+    public function test_deleteCheck()
+    {
+        /** arrange */
+        $id = '99999999-9999-9999-9999-999999999999';
+        $params = [
+            'id' => $id,
+            'prd_no' => 'TS999999'
+        ];
+        $table = new DefectCheck();
+        $table->insert($params);
+
+        /** act */
+        $actual1 = $this->target->deleteCheck($id);
+        $actual2 = $table->where('id', $id);
+        $actual3 = $table->withTrashed()->where('id', $id);
+        $expected = 0;
+
+        /** assert */
+        $this->assertTrue($actual1['success']);
+        $this->assertEquals($expected, $actual2->count());
+        $this->assertNotEquals(null, $actual3->first()->deleted_at);
     }
 }

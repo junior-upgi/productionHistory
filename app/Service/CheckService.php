@@ -47,6 +47,11 @@ class CheckService
         $this->schedule = $schedule;
     }
 
+    /**
+     * 取得檢查表清單
+     *
+     * @return \App\Models\productionHistory\DefectCheck
+     */
     public function getCheckList()
     {
         return $this->check->getCheckList();
@@ -69,14 +74,51 @@ class CheckService
         }
     }
 
+    /**
+     * 取得排程清單，已執行完畢之排程
+     *
+     * @param $request
+     * @return null
+     */
     public function getScheduleList($request)
     {
         $view = 'run';
         return $this->schedule->getScheduleList($view, $request);
     }
 
+    /**
+     * 新增檢查表
+     *
+     * @param $input
+     * @return mixed
+     */
     public function insertCheck($input)
     {
-        return $this->check->insertCheck($input);
+        $params = array_except($input, ['_token']);
+        return $this->check->insertCheck($params);
+    }
+
+    /**
+     * 更新檢查表
+     *
+     * @param $input
+     * @return mixed
+     */
+    public function updateCheck($input)
+    {
+        $id = $input['id'];
+        $params = array_except($input, ['id', '_token']);
+        return $this->check->updateCheck($id, $params);
+    }
+
+    /**
+     * 刪除檢查表
+     *
+     * @param $id
+     * @return array
+     */
+    public function deleteCheck($id)
+    {
+        return $this->check->deleteCheck($id);
     }
 }

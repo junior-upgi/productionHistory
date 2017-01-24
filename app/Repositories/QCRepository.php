@@ -171,7 +171,7 @@ class QCRepository extends BaseRepository
      */
     public function getScheduleList($view, $request)
     {
-        return $this->getScheduleList($view, $request);
+        return $this->schedule->getScheduleList($view, $request);
     }
 
     /**

@@ -56,8 +56,33 @@ class CheckController extends Controller
         return $this->service->getScheduleList(request());
     }
 
+    /**
+     * 新增檢查表資料
+     *
+     * @return mixed
+     */
     public function insertCheck()
     {
         return $this->service->insertCheck(request()->input());
+    }
+
+    /**
+     * 更新檢查表資料
+     *
+     * @return mixed
+     */
+    public function updateCheck()
+    {
+        return $this->service->updateCheck(request()->input());
+    }
+
+    /**
+     * 刪除檢查表
+     *
+     * @return array
+     */
+    public function deleteCheck()
+    {
+        return $this->service->deleteCheck(request()->input('id'));
     }
 }

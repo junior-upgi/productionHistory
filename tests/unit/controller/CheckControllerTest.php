@@ -115,4 +115,39 @@ class CheckControllerTest extends TestCase
         /** assert */
         $this->assertEquals($expected, $actual);
     }
+
+    public function test_updateCheck()
+    {
+        /** arrange */
+        $input = [];
+        $expected = 'success';
+
+        /** act */
+        $this->mock->shouldReceive('updateCheck')
+            ->once()
+            ->withAnyArgs()
+            ->andReturn($expected);
+
+        $actual = $this->target->updateCheck($input);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_deleteCheck()
+    {
+        /** arrange */
+        $id = request()->input('id');
+
+        /** act */
+        $expected = 'success';
+        $this->mock->shouldReceive('deleteCheck')
+            ->once()
+            ->with($id)
+            ->andReturn($expected);
+        $actual = $this->target->deleteCheck();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
 }

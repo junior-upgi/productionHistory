@@ -115,4 +115,64 @@ class CheckServiceTest extends TestCase
         /** assert */
         $this->assertEquals($expected, $actual);
     }
+
+    public function test_insertCheck()
+    {
+        /** arrange */
+        $params = [];
+        $expected = 'success';
+
+        /** act */
+        $mock = Mockery::mock(\App\Repositories\CheckRepository::class);
+        $this->app->instance(\App\Repositories\CheckRepository::class, $mock);
+        $target = $this->app->make(\App\Service\CheckService::class);
+
+        $mock->shouldReceive('insertCheck')
+            ->once()
+            ->with($params)
+            ->andReturn($expected);
+
+        $actual = $target->insertCheck($params);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_updateCheck()
+    {
+        /** arrange */
+        $input = [
+            'id' => '99999999-9999-9999-9999-999999999999',
+            'prd_no' => 'TS999999'
+        ];
+        $params = ['prd_no' => 'TS999999'];
+        $expected = 'success';
+
+        /** act */
+        $this->mock->shouldReceive('updateCheck')
+            ->once()
+            ->with($input['id'], $params)
+            ->andReturn($expected);
+        $actual = $this->target->updateCheck($input);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_deleteCheck()
+    {
+        /** arrange */
+        $id = '99999999-9999-9999-9999-999999999999';
+
+        /** act */
+        $expected = 'siuccess';
+        $this->mock->shouldReceive('deleteCheck')
+            ->once()
+            ->with($id)
+            ->andReturn($expected);
+        $actual = $this->target->deleteCheck($id);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
 }

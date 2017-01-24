@@ -10,6 +10,8 @@
 namespace App\Repositories;
 
 use App\Models\productionHistory\DefectCheck;
+use App\Service\UserService;
+use Carbon\Carbon;
 
 /**
  * Class CheckRepository
@@ -17,6 +19,8 @@ use App\Models\productionHistory\DefectCheck;
  */
 class CheckRepository
 {
+    use UserService;
+
     /**
      * @var DefectCheck
      */
@@ -32,6 +36,8 @@ class CheckRepository
     }
 
     /**
+     * 取得檢查表資料
+     *
      * @return DefectCheck
      */
     public function getCheckList()
@@ -40,7 +46,7 @@ class CheckRepository
     }
 
     /**
-     * search Check by prd_no and return collection
+     * 以prd_no 搜尋檢查表
      *
      * @param $prd_no
      * @return mixed
@@ -51,8 +57,8 @@ class CheckRepository
     }
 
     /**
-     * search Check by schedate and return collection
-     * start, end is set than search
+     * 以schedate 搜尋檢查表
+     * 如果start 或end 存在則進行搜尋
      *
      * @param $start
      * @param $end
@@ -68,5 +74,68 @@ class CheckRepository
                 $q->where('schedate', '<=', $end);
             }
         });
+    }
+
+    /**
+     * 新增檢查表資料
+     *
+     * @param $params
+     * @return array
+     */
+    public function insertCheck($params)
+    {
+        try {
+            $this->check->insert($this->setTimestamp($params, 'created'));
+            return ['success' => true, 'msg' => '新增檢查表成功'];
+        } catch(\Exception $e) {
+            return ['success' => false, 'msg' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * 更新檢查表資料
+     *
+     * @param $id
+     * @param $params
+     * @return array
+     */
+    public function updateCheck($id, $params)
+    {
+        try {
+            $this->check->where('id', $id)->update($this->setTimestamp($params, 'updated'));
+            return ['success' => true, 'msg' => '更新檢查表成功'];
+        } catch(\Exception $e) {
+            return ['success' => false, 'msg' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * 刪除檢查表
+     *
+     * @param $id
+     * @return array
+     */
+    public function deleteCheck($id)
+    {
+        try {
+            $this->check->where('id', $id)->update($this->setTimestamp([], 'deleted'));
+            return ['success' => true, 'msg' => '刪除檢查表成功'];
+        } catch (\Exception $e) {
+            return ['success' => false, 'msg' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * 設定時間戳記
+     *
+     * @param $params
+     * @param $type
+     * @return mixed
+     */
+    private function setTimestamp($params, $type)
+    {
+        $params[$type . '_at'] = Carbon::now();
+        $params[$type . '_by'] = $this->getErpID();
+        return $params;
     }
 }

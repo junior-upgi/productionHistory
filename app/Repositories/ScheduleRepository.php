@@ -67,113 +67,171 @@ class ScheduleRepository extends BaseRepository
     }
 
     /**
+     * 取得排程資料
+     *
      * @param $request
      * @return array
      */
     public function getSchedule($request)
     {
-        $prd_no = $request->input('prd_no');
-        $runProdLineID = $request->input('glassProdLineID');
-        $schedate = date('Y/m/d', strtotime($request->input('schedate')));
+        $where['prd_no'] = $request->input('prd_no');
+        $where['runProdLineID'] = $request->input('glassProdLineID');
+        $where['schedate'] = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
-        switch ($view) {
-            case 'run':
-                $data = $this->run
-                    ->where('prd_no', $prd_no)
-                    ->where('glassProdLineID', $runProdLineID)
-                    ->where('schedate', $schedate)
-                    ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-                break;
-            
-            case 'plan':
-                $data = $this->plan
-                    ->where('prd_no', $prd_no)
-                    ->where('glassProdLineID', $runProdLineID)
-                    ->where('schedate', $schedate)
-                    ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-                break;
-            
-            case 'allGlass':
-                $data = $this->allGlass
-                    ->where('prd_no', $prd_no)
-                    ->where('glassProdLineID', $runProdLineID)
-                    ->where('schedate', $schedate)
-                    ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
-                break;
-        }
-        if (isset($data)) {
-            return ['success' => true, 'data' => $data];
-        }
-        return ['success' => false];
+        $data = $this->getScheduleViewSelect($this->getTable($view), $where);
+        isset($data) ? $set = ['success' => true, 'data' => $data] : $set = ['success' => false];
+        return $set;
     }
 
     /**
+     * 回傳排程資料
+     *
+     * @param $table
+     * @param $where
+     * @return mixed
+     */
+    private function getScheduleViewSelect($table, $where)
+    {
+        return $table
+            ->where('prd_no', $where['prd_no'])
+            ->where('glassProdLineID', $where['runProdLineID'])
+            ->where('schedate', $where['schedate'])
+            ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
+    }
+
+    /**
+     * 取得排程顧客資料
+     *
      * @param $request
      * @return string
      */
     public function getScheduleCustomer($request)
     {
-        $prd_no = $request->input('prd_no');
-        $runProdLineID = $request->input('glassProdLineID');
-        $schedate = date('Y/m/d', strtotime($request->input('schedate')));
+        $where['prd_no'] = $request->input('prd_no');
+        $where['runProdLineID'] = $request->input('glassProdLineID');
+        $where['schedate'] = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
-        switch ($view) {
-            case 'plan':
-                $table = $this->planDetail;
-                break;
-            case 'run':
-                $table = $this->runDetail;
-                break;
-            default:
-                return '';
-        } 
-        $data = $table
-            ->where('prd_no', $prd_no)
-            ->where('glassProdLineID', $runProdLineID)
-            ->where('schedate', $schedate)
-            ->select('CUS_SNM')->get()->toArray();
-        $data = array_collapse($data);
-        $str = implode(' , ', $data);
-        return $str;
+        if ($view == 'plan') {
+            return $this->getScheduleWithSample($this->getTable($view), $where);
+        }
+        return $this->getScheduleWithoutSample($this->getTable($view), $where);
     }
 
     /**
+     * 取得排程清單
+     *
      * @param $view
      * @param $request
      * @return null
      */
     public function getScheduleList($view, $request)
     {
-        $snm = $request->input('snm');
-        $runProdLineID = $request->input('glassProdLineID');
-        $schedateOp = 'like';
-        $schedate = '%' . $request->input('schedate') . '%';
-        if ($schedate != '%%') {
-            $schedateOp = '=';
-            $schedate = date('Y-m-d', strtotime($request->input('schedate')));
+        $date = $this->formatSchedate(request()->input('schedate'));
+        $where['snm'] = $request->input('snm');
+        $where['glassProdLineID'] = $request->input('glassProdLineID');
+        $where['op'] = $date['op'];
+        $where['date'] = $date['date'];
+        return $this->getSheduleCustomer($this->getTable($view . 'Detail'), $where);
+    }
+
+    /**
+     * 取得排程顧客資料
+     *
+     * @param $table
+     * @param $where
+     * @return string
+     */
+    private function getSheduleCustomer($table, $where)
+    {
+        $data = $table
+            ->where('prd_no', $where['prd_no'])
+            ->where('glassProdLineID', $where['runProdLineID'])
+            ->where('schedate', $where['schedate'])
+            ->select('CUS_SNM')->get()->toArray();
+        $data = array_collapse($data);
+        $str = implode(' , ', $data);
+        return $str;
+
+    }
+
+    /**
+     * 調整排程日期格式
+     *
+     * @param $date
+     * @return mixed
+     */
+    private function formatSchedate($date)
+    {
+        $set['op'] = 'like';
+        $set['date'] = '%' . $date . '%';
+        if ($set['date'] != '%%') {
+            $set['op'] = '=';
+            $set['date'] = date('Y-m-d', strtotime($date));
         }
+        return $set;
+    }
+
+    /**
+     * 取得排程資料，含sampling欄位
+     *
+     * @param $table
+     * @param $where
+     * @return
+     * @internal param $view
+     */
+    private function getScheduleWithSample($table, $where)
+    {
+        return $table
+            ->where('PRDT_SNM', 'like', '%' . $where['snm'] . '%')
+            ->where('glassProdLineID', 'like', '%' . $where['runProdLineID'] . '%')
+            ->where('schedate', $where['op'], $where['date'])
+            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
+            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
+    }
+
+    /**
+     * 取得排程資料，不含sampling欄位
+     *
+     * @param $table
+     * @param $where
+     * @return mixed
+     */
+    private function getScheduleWithoutSample($table, $where)
+    {
+        return $table
+            ->where('PRDT_SNM', 'like', '%' . $where['snm'] . '%')
+            ->where('glassProdLineID', 'like', '%' . $where['runProdLineID'] . '%')
+            ->where('schedate', $where['op'], $where['date'])
+            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
+            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID');
+    }
+
+    /**
+     * 回傳資料表
+     *
+     * @param $view
+     * @return AllGlassRun|GlassRun|GlassRunDetail|GlassRunPlan|GlassRunPlanDetail|null
+     */
+    private function getTable($view)
+    {
         switch ($view) {
             case 'plan':
-                $table = $this->plan;
+                return $this->plan;
                 break;
             case 'run':
-                $table = $this->run;
+                return $this->run;
                 break;
             case 'allGlass':
-                $table = $this->allGlass;
+                return $this->allGlass;
+                break;
+            case 'planDetail':
+                return $this->planDetail;
+                break;
+            case 'runDetail':
+                return $this->runDetail;
                 break;
             default:
                 return null;
         }
-        $list = $table
-            ->where('PRDT_SNM', 'like', "%$snm%")
-            ->where('glassProdLineID', 'like', "%$runProdLineID%")
-            ->where('schedate', $schedateOp, $schedate)
-            ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
-            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID');
-        if ($view == 'run') {
-            $list = $list->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
-        }
-        return $list;
     }
 }
