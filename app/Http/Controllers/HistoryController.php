@@ -1,4 +1,12 @@
 <?php
+/**
+ * 生產履歷controller
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/1/23
+ * @since 1.0.0 spark: 於此版本開始編寫註解，已優化程式碼
+ */
 namespace App\Http\Controllers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -12,8 +20,13 @@ use App\Service\HistoryService;
  */
 class HistoryController extends Controller
 {
-    //
+    /**
+     * @var HistoryRepository
+     */
     public $history;
+    /**
+     * @var HistoryService
+     */
     public $service;
 
     /**
@@ -30,76 +43,79 @@ class HistoryController extends Controller
     }
 
     /**
+     *
+     *
      * @return array
      */
     public function getStaff()
     {
-        $staff = $this->history->getStaff()->get()->toArray();
-        $json = [];
-        $json['message'] = '';
-        $json['value'] = $staff;
-        return $json;
+        return [
+            'message' => '',
+            'value' => $this->history->getStaff()->get()->toArray()
+        ];
     }
 
     /**
+     *
+     *
      * @return array
      */
     public function getCustomer()
     {
-        $staff = $this->history->getCustomer()->get()->toArray();
-        $json = [];
-        $json['message'] = '';
-        $json['value'] = $staff;
-        return $json;
+        return [
+            'message' => '',
+            'value' => $this->history->getCustomer()->get()->toArray()
+        ];
     }
 
     /**
+     *
+     *
      * @return array
      */
     public function getGlass()
     {
-        $glass = $this->history->getGlass()->get()->toArray();
-        $json = [];
-        $json['message'] = '';
-        $json['value'] = $glass;
-        return $json;
+        return [
+            'message' => '',
+            'value' => $this->history->getGlass()->get()->toArray()
+        ];
     }
 
     /**
+     *
+     *
      * @return array
      */
     public function getSchedule()
     {
-        $request = request();
-        $data = $this->history->getSchedule($request);
-        return $data;
+        return $this->history->getSchedule(request());
     }
 
     /**
+     *
+     *
      * @return \Illuminate\View\View
      */
     public function historySchedule()
     {
-        $request = request();
-        $list = $this->history->getScheduleList('run', $request)->paginate(20);
-
         return view('history.schedule')
-            ->with('list', $list)
-            ->with('snm', $request->input('snm'))
-            ->with('glassProdLineID', $request->input('glassProdLineID'))
-            ->with('schedate', $request->input('schedate'));            
+            ->with('list',$this->history->getScheduleList('run', request())->paginate(20))
+            ->with('snm', request()->input('snm'))
+            ->with('glassProdLineID', request()->input('glassProdLineID'))
+            ->with('schedate', request()->input('schedate'));
     }
 
     /**
+     *
+     *
      * @return \Illuminate\View\View
      */
     public function historyList()
     {
-        $request = request();
-        $page = $request->input('page', 1);
+        $page = request()->input('page', 1);
         $paginate = 20;
 
-        $list = $this->history->getHistoryList($request)->get()->toArray();
+        $list = $this->history->getHistoryList(request())->get()->toArray();
 
         $offSet = ($page * $paginate) - $paginate;
 		$itemsForCurrentPage = array_slice($list, $offSet, $paginate, true);
@@ -107,18 +123,19 @@ class HistoryController extends Controller
 
         return view('history.list')
             ->with('list', $result)
-            ->with('snm', $request->input('snm'))
-            ->with('glassProdLineID', $request->input('glassProdLineID'))
-            ->with('schedate', $request->input('schedate')); 
+            ->with('snm', request()->input('snm'))
+            ->with('glassProdLineID', request()->input('glassProdLineID'))
+            ->with('schedate', request()->input('schedate'));
     }
 
     /**
+     *
+     *
      * @return array
      */
     public function getHistory()
     {
-        $id = request()->input('id');
-        $data = $this->history->getHistory($id)->first();
+        $data = $this->history->getHistory(request()->input('id'))->first();
         if (isset($data)) {
             return ['success' => true, 'data' => $data];
         }
@@ -126,37 +143,18 @@ class HistoryController extends Controller
     }
 
     /**
+     *
+     *
      * @return array|mixed
      */
     public function saveHistory()
     {
-        $request = request();
-        $input = $request->input();
-
-        $history_params = $this->service->saveHistoryPrework($input);
-        if (isset($history_params['success'])) {
-            return $history_params;
-        }
-
-        if ($history_params['sampling'] == '--') {
-            $history_params = array_except($history_params, ['cus_no', 'orderQty', 'sampling']);
-            $result = $this->history->saveHistory($history_params);
-            return $result;
-        } else {
-            $params = $this->service->getScheduleParams($history_params);
-            $history_params = array_except($history_params, ['orderQty']);
-            $result = $this->history->saveHistory($history_params);
-            if ($result['success']) {
-                $insertOld = $this->history->saveOldSchedule($params);
-                if (!$insertOld) {
-                    return $insertOld;
-                }
-            }
-        }
-        return $result;
+        return $this->service->saveHistoryPrework(request()->input());
     }
 
     /**
+     *
+     *
      * @return mixed
      */
     public function deleteHistory()

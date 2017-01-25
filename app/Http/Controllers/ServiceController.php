@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests;
+use App\Repositories\BaseDataRepository;
 use App\Service\Common;
 use App\Repositories\TaskRepository;
 
@@ -23,15 +21,22 @@ class ServiceController extends Controller
      */
     public $task;
 
+    public $base;
+
     /**
      * ServiceController constructor.
      * @param Common $common
      * @param TaskRepository $task
+     * @param BaseDataRepository $base
      */
-    public function __construct(Common $common, TaskRepository $task)
-    {
+    public function __construct(
+        Common $common,
+        TaskRepository $task,
+        BaseDataRepository $base
+    ) {
         $this->common = $common;
         $this->task = $task;
+        $this->base = $base;
     }
 
     /**
@@ -75,4 +80,14 @@ class ServiceController extends Controller
         $result = $this->task->saveTask($input);
         return $result;
     }
+
+    /**
+     * @return \App\Models\UPGWeb\Customer
+     */
+    public function getCustomer()
+    {
+        return $this->base->getCustomer();
+    }
+
+
 }

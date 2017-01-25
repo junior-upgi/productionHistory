@@ -97,4 +97,13 @@ Route::group(['prefix' => 'defect'], function() {
     Route::get('getCheckList', 'CheckController@getCheckList');
     Route::get('searchCheck', 'CheckController@searchCheck');
     Route::get('scheduleList', 'CheckController@getScheduleList');
+    Route::post('insertCheck', 'CheckController@insertCheck');
+    Route::put('updateCheck', 'CheckController@updateCheck');
+    Route::delete('deleteCheck', 'CheckController@deleteCheck');
+
+    Route::get('getProductionDefect', 'CheckController@getProductionDefect');
+    Route::get('getProductionDefectList', 'CheckController@getProductionDefectList');
+    Route::post('insertProductionDefect', 'CheckController@insertProductionDefect');
+    Route::put('updateProductionDefect', 'CheckController@updateProductionDefect');
+    Route::delete('deleteProductionDefect', 'CheckController@deleteProductionDefect');
 });

@@ -10,8 +10,7 @@
 namespace App\Repositories;
 
 use App\Models\productionHistory\DefectCheck;
-use App\Service\UserService;
-use Carbon\Carbon;
+use App\Service\DataFormatService;
 
 /**
  * Class CheckRepository
@@ -19,7 +18,7 @@ use Carbon\Carbon;
  */
 class CheckRepository
 {
-    use UserService;
+    use DataFormatService;
 
     /**
      * @var DefectCheck
@@ -85,7 +84,7 @@ class CheckRepository
     public function insertCheck($params)
     {
         try {
-            $this->check->insert($this->setTimestamp($params, 'created'));
+            $this->check->insert($this->setTimestamp('created', $params));
             return ['success' => true, 'msg' => '新增檢查表成功'];
         } catch(\Exception $e) {
             return ['success' => false, 'msg' => $e->getMessage()];
@@ -102,7 +101,7 @@ class CheckRepository
     public function updateCheck($id, $params)
     {
         try {
-            $this->check->where('id', $id)->update($this->setTimestamp($params, 'updated'));
+            $this->check->where('id', $id)->update($this->setTimestamp('updated', $params));
             return ['success' => true, 'msg' => '更新檢查表成功'];
         } catch(\Exception $e) {
             return ['success' => false, 'msg' => $e->getMessage()];
@@ -118,24 +117,10 @@ class CheckRepository
     public function deleteCheck($id)
     {
         try {
-            $this->check->where('id', $id)->update($this->setTimestamp([], 'deleted'));
+            $this->check->where('id', $id)->update($this->setTimestamp('deleted', []));
             return ['success' => true, 'msg' => '刪除檢查表成功'];
         } catch (\Exception $e) {
             return ['success' => false, 'msg' => $e->getMessage()];
         }
-    }
-
-    /**
-     * 設定時間戳記
-     *
-     * @param $params
-     * @param $type
-     * @return mixed
-     */
-    private function setTimestamp($params, $type)
-    {
-        $params[$type . '_at'] = Carbon::now();
-        $params[$type . '_by'] = $this->getErpID();
-        return $params;
     }
 }

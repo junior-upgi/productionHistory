@@ -1,6 +1,15 @@
 <?php
+/**
+ * HistoryRepository
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/01/23
+ * @since 1.0.0 spark: 於此版本開始編寫註解
+ */
 namespace App\Repositories;
 
+use App\Service\DataFormatService;
 use DB;
 
 use App\Service\Common;
@@ -16,6 +25,7 @@ use App\Models\productionHistory\OldSchedule;
  */
 class HistoryRepository extends BaseRepository
 {
+    use DataFormatService;
     /**
      * @var Common
      */
@@ -81,6 +91,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @param $input
      * @return bool
      */
@@ -99,6 +111,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @param $input
      * @return array
      */
@@ -125,6 +139,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @param $request
      * @return array
      */
@@ -134,6 +150,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @param $view
      * @param $request
      * @return null
@@ -144,6 +162,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @param $request
      * @return mixed
      */
@@ -151,15 +171,21 @@ class HistoryRepository extends BaseRepository
     {
         $snm = $request->input('snm');
         $runProdLineID = $request->input('glassProdLineID');
-        $schedateOp = 'like';
-        $schedate = '%' . $request->input('schedate') . '%';
-        if ($schedate != '%%') {
-            $schedateOp = '=';
-            $schedate = date('Y-m-d', strtotime($request->input('schedate')));
-        }
-        $schedule = $this->history;
-        
-        $fromSchedule = $schedule
+        $date = $this->formatSchedate($request->input('schedate'));
+        return $this->getHistoryListFromSchedule($snm, $date, $runProdLineID);
+    }
+
+    /**
+     *
+     *
+     * @param $snm
+     * @param $date
+     * @param $runProdLineID
+     * @return mixed
+     */
+    private function getHistoryListFromSchedule($snm, $date, $runProdLineID)
+    {
+        $schedule = $this->history
             ->join('allGlassRun', function ($join) {
                 $join->on('productionHistory.glassProdLineID', 'allGlassRun.glassProdLineID')
                     ->on('productionHistory.prd_no', 'allGlassRun.prd_no')
@@ -168,27 +194,41 @@ class HistoryRepository extends BaseRepository
             ->where('allGlassrun.id', null)
             ->where('allGlassRun.PRDT_SNM', 'like', "%$snm%")
             ->where('productionHistory.glassProdLineID', 'like', "%$runProdLineID%")
-            ->where('productionhistory.schedate', $schedateOp, $schedate)
-            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
+            ->where('productionhistory.schedate', $date['op'], $date['date'])
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate',
+                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling',
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $oldSchedule = $this->history;
-        $fromOldSchedule = $oldSchedule
+        return $this->getHistoryListFromOldSchedule($schedule, $snm, $date, $runProdLineID);
+    }
+
+    /**
+     *
+     *
+     * @param $schedule
+     * @param $snm
+     * @param $date
+     * @param $runProdLineID
+     * @return mixed
+     */
+    private function getHistoryListFromOldSchedule($schedule, $snm, $date, $runProdLineID)
+    {
+        return  $this->history
             ->join('allGlassRun', function ($join) {
                 $join->on('productionHistory.id', 'allGlassRun.id');
             })
             ->where('allGlassRun.PRDT_SNM', 'like', "%$snm%")
             ->where('productionHistory.glassProdLineID', 'like', "%$runProdLineID%")
-            ->where('productionhistory.schedate', $schedateOp, $schedate)
-            ->union($fromSchedule)
+            ->where('productionhistory.schedate', $date['op'], $date['date'])
+            ->union($schedule)
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('prd_no')
-            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling', 
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate',
+                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'productionHistory.sampling',
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        return $fromOldSchedule;
     }
 
     /**
+     *
+     *
      * @return \App\Models\UPGWeb\Staff
      */
     public function getStaff()
@@ -197,6 +237,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @return \App\Models\UPGWeb\Customer
      */
     public function getCustomer()
@@ -205,6 +247,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @return \App\Models\UPGWeb\Glass
      */
     public function getGlass()
@@ -213,6 +257,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @param $id
      * @return null
      */
@@ -221,28 +267,9 @@ class HistoryRepository extends BaseRepository
         $data = $this->history->where('productionHistory.id', $id);
         if ($data->exists()) {
             if ($data->first()->sampling == 0) {
-                $data = $data
-                    ->join('allGlassRun', function ($join) {
-                        $join->on('productionHistory.glassProdLineID', 'allGlassRun.glassProdLineID')
-                            ->on('productionHistory.prd_no', 'allGlassRun.prd_no')
-                            ->on('productionHistory.schedate', 'allGlassRun.schedate');
-                    })
-                    ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                        'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
-                        'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling', 'allGlassRun.orderQty');
+                return $this->getHistoryIsSampling($data);
             } else {
-                $data = $data
-                    ->join('tbmkno', function ($join) {
-                        $join->on('productionHistory.glassProdLineID', 'tbmkno.glassProdLineID')
-                            ->on('productionHistory.prd_no', 'tbmkno.prd_no')
-                            ->on('productionHistory.schedate', 'tbmkno.schedate');
-                    })
-                    ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'cus_no')
-                    ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
-                    ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                        'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'cus_no', 
-                        'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName', 'tbmkno.id as tbmknoID', 
-                        'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling', 'tbmkno.orderQty');
+                return $this->getHistoryNotSampling($data);
             }
             return $data;
         }
@@ -250,6 +277,49 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
+     * @param $data
+     * @return mixed
+     */
+    private function getHistoryIsSampling($data)
+    {
+        return $data
+            ->join('allGlassRun', function ($join) {
+                $join->on('productionHistory.glassProdLineID', 'allGlassRun.glassProdLineID')
+                    ->on('productionHistory.prd_no', 'allGlassRun.prd_no')
+                    ->on('productionHistory.schedate', 'allGlassRun.schedate');
+            })
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate',
+                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency',
+                'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling', 'allGlassRun.orderQty');
+    }
+
+    /**
+     *
+     *
+     * @param $data
+     * @return mixed
+     */
+    private function getHistoryNotSampling($data)
+    {
+        return $data
+            ->join('tbmkno', function ($join) {
+                $join->on('productionHistory.glassProdLineID', 'tbmkno.glassProdLineID')
+                    ->on('productionHistory.prd_no', 'tbmkno.prd_no')
+                    ->on('productionHistory.schedate', 'tbmkno.schedate');
+            })
+            ->join('UPGWeb.dbo.vCustomer', 'UPGWeb.dbo.vCustomer.ID', 'cus_no')
+            ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate',
+                'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 'cus_no',
+                'UPGWeb.dbo.vCustomer.name as customerName', 'UPGWeb.dbo.vCustomer.sname as customerSName', 'tbmkno.id as tbmknoID',
+                'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect', 'productionHistory.sampling', 'tbmkno.orderQty');
+    }
+
+    /**
+     *
+     *
      * @param $params
      * @return mixed
      */
@@ -262,6 +332,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @param $input
      * @return mixed
      */
@@ -271,6 +343,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @param $id
      * @return mixed
      */
@@ -280,6 +354,8 @@ class HistoryRepository extends BaseRepository
     }
 
     /**
+     *
+     *
      * @param $key
      * @return mixed
      */

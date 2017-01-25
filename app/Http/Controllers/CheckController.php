@@ -1,8 +1,16 @@
 <?php
-
+/**
+ * 檢查表controller
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/1/24
+ * @since 1.0.0 spark: 於此版本開始編寫註解，已優化程式碼
+ */
 namespace App\Http\Controllers;
 
 use App\Service\CheckService;
+use App\Service\ProductionDefectService;
 
 /**
  * Class CheckController
@@ -14,16 +22,24 @@ class CheckController extends Controller
      * @var CheckService
      */
     public $service;
+    /**
+     * @var ProductionDefectService
+     */
+    public $defectService;
 
     /**
      * CheckController constructor.
      *
      * @param CheckService $service
+     * @param ProductionDefectService $defectService
      * @internal param CheckRepository $check
      */
-    public function __construct(CheckService $service)
-    {
+    public function __construct(
+        CheckService $service,
+        ProductionDefectService $defectService
+    ) {
         $this->service = $service;
+        $this->defectService = $defectService;
     }
 
     /**
@@ -84,5 +100,45 @@ class CheckController extends Controller
     public function deleteCheck()
     {
         return $this->service->deleteCheck(request()->input('id'));
+    }
+
+    /**
+     * 取得檢查表缺點清單
+     *
+     * @return mixed
+     */
+    public function getProductionDefectList()
+    {
+        return $this->defectService->getProductionDefectList(request()->input('id'));
+    }
+
+    /**
+     * 新增生產缺點
+     *
+     * @return mixed
+     */
+    public function insertProductionDefect()
+    {
+        return $this->defectService->insertProductionDefect(request()->input());
+    }
+
+    /**
+     * 更新生產缺點
+     *
+     * @return mixed
+     */
+    public function updateProductionDefect()
+    {
+        return $this->defectService->updateProductionDefect(request()->input());
+    }
+
+    /**
+     * 刪除生產缺點
+     *
+     * @return mixed
+     */
+    public function deleteProductionDefect()
+    {
+        return $this->defectService->deleteProductionDefect(request()->input());
     }
 }

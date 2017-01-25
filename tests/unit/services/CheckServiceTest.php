@@ -165,7 +165,7 @@ class CheckServiceTest extends TestCase
         $id = '99999999-9999-9999-9999-999999999999';
 
         /** act */
-        $expected = 'siuccess';
+        $expected = 'success';
         $this->mock->shouldReceive('deleteCheck')
             ->once()
             ->with($id)

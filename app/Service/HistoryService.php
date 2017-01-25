@@ -24,6 +24,8 @@ class HistoryService
     public $history;
 
     /**
+     *
+     *
      * HistoryService constructor.
      * @param HistoryRepository $history
      */
@@ -33,6 +35,8 @@ class HistoryService
     }
 
     /**
+     *
+     *
      * @param $input
      * @return array|mixed
      */
@@ -42,6 +46,8 @@ class HistoryService
     }
 
     /**
+     *
+     *
      * @param $input
      * @return array|mixed
      */
@@ -55,6 +61,8 @@ class HistoryService
     }
 
     /**
+     *
+     *
      * @param $input
      * @return mixed
      */
@@ -63,12 +71,15 @@ class HistoryService
         $checkSchedule = $this->history->checkSchedule($input);
         if ($checkSchedule['result']) {
             $input['sampling'] = '--';
-            $input['id'] == $checkSchedule['id'];
+            $input['id'] = $checkSchedule['id'];
+            return $this->saveHistoryNewSchedule($this->setHistoryID($input));
         }
-        return $this->setHistoryID($input);
+        return $this->saveHistoryAndOldSchedule($this->setHistoryID($input));
     }
 
     /**
+     *
+     *
      * @param $input
      * @return mixed
      */
@@ -82,6 +93,41 @@ class HistoryService
     }
 
     /**
+     *
+     *
+     * @param $input
+     * @return mixed
+     */
+    private function saveHistoryNewSchedule($input)
+    {
+        $params = array_except($input, ['cus_no', 'orderQty', 'sampling']);
+        $result = $this->history->saveHistory($params);
+        return $result;
+    }
+
+    /**
+     *
+     *
+     * @param $history_params
+     * @return mixed
+     */
+    private function saveHistoryAndOldSchedule($history_params)
+    {
+        $params = $this->service->getScheduleParams($history_params);
+        $history_params = array_except($history_params, ['orderQty']);
+        $result = $this->history->saveHistory($history_params);
+        if ($result['success']) {
+            $insertOld = $this->history->saveOldSchedule($params);
+            if (!$insertOld) {
+                return $insertOld;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     *
+     *
      * @param $array
      * @return array
      */

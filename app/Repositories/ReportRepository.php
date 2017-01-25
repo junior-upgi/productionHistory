@@ -83,7 +83,18 @@ class ReportRepository extends BaseRepository
      */
     public function getReportHistoryList($snm)
     {
-        $formSchedule = $this->history
+        return $this->getReportFromSchedule($snm);
+    }
+
+    /**
+     *
+     *
+     * @param $snm
+     * @return mixed
+     */
+    private function getReportFromSchedule($snm)
+    {
+        $schedule = $this->history
             ->where('sampling', 0)
             ->join('allGlassRun', function ($join) {
                 $join->on('productionHistory.glassProdLineID', 'allGlassRun.glassProdLineID')
@@ -91,19 +102,30 @@ class ReportRepository extends BaseRepository
                     ->on('productionHistory.schedate', 'allGlassRun.schedate');
             })
             ->where('allGlassRun.PRDT_SNM', $snm)
-            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate',
+                'fillOutDate', 'gauge', 'allGlassRun.PRDT_SNM as snm', 'formingMethod', 'other', 'productionHistory.efficiency',
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        $formTestModel = $this->history
+        return $this->getReportFromTestModel($schedule, $snm);
+    }
+
+    /**
+     *
+     *
+     * @param $schedule
+     * @param $snm
+     * @return mixed
+     */
+    private function getReportFromTestModel($schedule, $snm)
+    {
+        return $this->history
             ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'productionHistory.prd_no')
             ->where('sampling', 1)
             ->where('UPGWeb.dbo.glass.snm', $snm)
-            ->union($formSchedule)
+            ->union($schedule)
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('prd_no')
-            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate', 
-                'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency', 
+            ->select('productionHistory.id', 'productionHistory.prd_no', 'productionHistory.glassProdLineID', 'productionHistory.schedate',
+                'fillOutDate', 'gauge', 'UPGWeb.dbo.glass.snm as snm', 'formingMethod', 'other', 'productionHistory.efficiency',
                 'productionHistory.weight', 'actualWeight', 'stressLevel', 'thermalShock', 'productionHistory.speed', 'productionHistory.defect');
-        return $formTestModel;
     }
 
     /**

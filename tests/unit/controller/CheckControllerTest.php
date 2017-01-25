@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CheckController;
+use App\Service\CheckService;
+use App\Service\ProductionDefectService;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -20,8 +23,8 @@ class CheckControllerTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->mock = $this->initMock(\App\Service\CheckService::class);
-        $this->target = $this->app->make(\App\Http\Controllers\CheckController::class);
+        $this->mock = $this->initMock(CheckService::class);
+        $this->target = $this->app->make(CheckController::class);
     }
 
     /**
@@ -40,18 +43,17 @@ class CheckControllerTest extends TestCase
     public function test_getCheckList()
     {
         /** arrange */
-        $table = new DefectCheck();
-        $expected = $table;
+        $expected = 'success';
 
         /** act */
-        $mock = Mockery::mock(\App\Service\CheckService::class);
-        $this->app->instance(\App\Service\CheckService::class, $mock);
+        $mock = Mockery::mock(CheckService::class);
+        $this->app->instance(CheckService::class, $mock);
 
         $mock->shouldReceive('getCheckList')
             ->once()
             ->withAnyArgs()
-            ->andReturn($table);
-        $target = $this->app->make(\App\Http\Controllers\CheckController::class);
+            ->andReturn($expected   );
+        $target = $this->app->make(CheckController::class);
         $actual = $target->getCheckList();
 
         /** assert */
@@ -65,15 +67,15 @@ class CheckControllerTest extends TestCase
     {
         /** arrange */
         $expected = 'success';
-        $mock = Mockery::mock(\App\Service\CheckService::class);
-        $this->app->instance(\App\Service\CheckService::class, $mock);
+        $mock = Mockery::mock(CheckService::class);
+        $this->app->instance(CheckService::class, $mock);
 
         /** act */
         $mock->shouldReceive('searchCheck')
             ->once()
             ->withAnyArgs()
             ->andReturn($expected);
-        $target = $this->app->make(\App\Http\Controllers\CheckController::class);
+        $target = $this->app->make(CheckController::class);
         $actual = $target->searchCheck();
 
         /** assert */
@@ -85,15 +87,15 @@ class CheckControllerTest extends TestCase
     {
         /** arrange */
         $expected = 'success';
-        $mock = Mockery::mock(\App\Service\CheckService::class);
-        $this->app->instance(\App\Service\CheckService::class, $mock);
+        $mock = Mockery::mock(CheckService::class);
+        $this->app->instance(CheckService::class, $mock);
 
         /** act */
         $mock->shouldReceive('getScheduleList')
             ->once()
             ->withAnyArgs()
             ->andReturn($expected);
-        $target = $this->app->make(\App\Http\Controllers\CheckController::class);
+        $target = $this->app->make(CheckController::class);
         $actual = $target->getScheduleList();
 
         /** assert */
@@ -146,6 +148,89 @@ class CheckControllerTest extends TestCase
             ->with($id)
             ->andReturn($expected);
         $actual = $this->target->deleteCheck();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     *
+     */
+    public function test_getProductionDefectList()
+    {
+        /** arrange */
+        $checkID = request()->input('id');
+        $mock = Mockery::mock(ProductionDefectService::class);
+        $this->app->instance(ProductionDefectService::class, $mock);
+
+        /** act */
+        $expected = 'success';
+        $mock->shouldReceive('getProductionDefectList')
+            ->once()
+            ->with($checkID)
+            ->andReturn($expected);
+        $target = $this->app->make(CheckController::class);
+        $actual = $target->getProductionDefectList();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_insertProductionDefect()
+    {
+        /** arrange */
+        $input = request()->input();
+        $mock = Mockery::mock(ProductionDefectService::class);
+        $this->app->instance(ProductionDefectService::class, $mock);
+
+        /** act */
+        $expected = [];
+        $mock->shouldReceive('insertProductionDefect')
+            ->once()
+            ->with($input)
+            ->andReturn($expected);
+        $target = $this->app->make(CheckController::class);
+        $actual = $target->insertProductionDefect();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_updateProductionDefect()
+    {
+        /** arrange */
+        $input = request()->input();
+        $mock = Mockery::mock(ProductionDefectService::class);
+        $this->app->instance(ProductionDefectService::class, $mock);
+
+        /** act */
+        $expected = [];
+        $mock->shouldReceive('updateProductionDefect')
+            ->once()
+            ->with($input)
+            ->andReturn($expected);
+        $target = $this->app->make(CheckController::class);
+        $actual = $target->updateProductionDefect();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_deleteProductionDefect()
+    {
+        /** arrange */
+        $input = request()->input('id');
+        $mock = Mockery::mock(ProductionDefectService::class);
+        $this->app->instance(ProductionDefectService::class, $mock);
+
+        /** act */
+        $expected = [];
+        $mock->shouldReceive('deleteProductionDefect')
+            ->once()
+            ->with($input)
+            ->andReturn($expected);
+        $target = $this->app->make(CheckController::class);
+        $actual = $target->deleteProductionDefect($input);
 
         /** assert */
         $this->assertEquals($expected, $actual);
