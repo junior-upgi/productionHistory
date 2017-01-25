@@ -1,4 +1,12 @@
 <?php
+/**
+ * DefectRepository
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/01/25
+ * @since 1.0.0 spark: 於此版本開始編寫註解
+ */
 namespace App\Repositories;
 
 use App\Models\productionHistory\Defect;

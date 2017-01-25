@@ -1,7 +1,7 @@
 @extends('layouts.masterpage')
 @section('title', '品管管制表清單')
 @section('content')
-<script src="{{ url('/js/qc/list.js?v=2') }}"></script>
+<script src="{{ url('/js/qc/list.js?v=3') }}"></script>
 @inject('service', 'App\Presenters\ServicePresenter')
 {!! $service->picScript() !!}
 <div class="row">

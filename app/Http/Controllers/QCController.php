@@ -1,7 +1,7 @@
 <?php
 namespace App\Http\Controllers;
 
-use Auth;
+use App\Service\QCService;
 use App\Repositories\QCRepository;
 
 /**
@@ -14,42 +14,49 @@ class QCController extends Controller
      * @var QCRepostiry|QCRepository
      */
     public $qc;
+    public $service;
 
     /**
      * 建構式
      *
      * @param QCRepository $qc 注入QCRepository
+     * @param QCService $service
      */
-    public function __construct(QCRepository $qc) 
+    public function __construct(QCRepository $qc, QCService $service)
     {
         $this->qc = $qc;
+        $this->service = $service;
     }
 
     /**
+     * 取得員工清單
+     *
      * @return array
      */
     public function getStaff()
     {
-        $staff = $this->qc->getStaff()->get()->toArray();
-        $json = [];
-        $json['message'] = '';
-        $json['value'] = $staff;
-        return $json;
+        return [
+            'message' => '',
+            'value' => $this->qc->getStaff()->get()->toArray()
+        ];
     }
 
     /**
+     * 取得顧客清單
+     *
      * @return array
      */
     public function getCustomer()
     {
-        $staff = $this->qc->getCustomer()->get()->toArray();
-        $json = [];
-        $json['message'] = '';
-        $json['value'] = $staff;
-        return $json;
+        return [
+            'message' => '',
+            'value' => $this->qc->getCustomer()->get()->toArray()
+        ];
     }
 
     /**
+     * 取得排程資料
+     *
      * @return array
      */
     public function getQCSchedule()
@@ -69,81 +76,60 @@ class QCController extends Controller
     }
 
     /**
+     * 取得排程清單
+     *
      * @return \Illuminate\View\View
      */
     public function qcSchedule()
     {
-        $request = request();
-        $list = $this->qc->getScheduleList('plan', $request)->paginate(20);
-
         return view('qc.schedule')
-            ->with('list', $list)
-            ->with('snm', $request->input('snm'))
-            ->with('glassProdLineID', $request->input('glassProdLineID'))
-            ->with('schedate', $request->input('schedate'));    
+            ->with('list', $this->qc->getScheduleList('plan', request())->paginate(20))
+            ->with('snm', request()->input('snm'))
+            ->with('glassProdLineID', request()->input('glassProdLineID'))
+            ->with('schedate', request()->input('schedate'));
     }
 
     /**
+     * 取得品管清單
+     *
      * @return \Illuminate\View\View
      */
     public function qcList()
     {
-        $request = request();
-        $list = $this->qc->getQCList($request)->paginate(20);
         return view('qc.list')
-            ->with('list', $list)
-            ->with('snm', $request->input('snm'))
-            ->with('glassProdLineID', $request->input('glassProdLineID'))
-            ->with('schedate', $request->input('schedate'));  
+            ->with('list', $this->qc->getQCList(request())->paginate(20))
+            ->with('snm', request()->input('snm'))
+            ->with('glassProdLineID', request()->input('glassProdLineID'))
+            ->with('schedate', request()->input('schedate'));
     }
 
     /**
+     * 取得品管資料
+     *
      * @return array
      */
     public function getQC()
     {
-        $id = request()->input('id');
-        $data = $this->qc->getQC($id)->first();
-        if (isset($data)) {
-            return ['success' => true, 'data' => $data];
-        }
-        return ['success' => false];
+        return $this->qc->getQC(request()->input('id'))->first();
     }
 
     /**
+     * 儲存品管資料
+     *
      * @return array|mixed
      */
     public function saveQC()
     {
-        $request = request();
-        $input = $request->input();
-        $file = $request->file('setDraw');
-        if (isset($file)) {
-            $fileID = $this->qc->saveFile($file);
-            if (!isset($fileID)) {
-                return ['success' => false, 'msg' => '檔案上傳失敗'];
-            }
-            $input['draw'] = $fileID;
-        } else {
-            $input['draw'] = $input['setDraw'];
-            $input = array_except($input, ['setDraw']);
-        }
-        //$a = implode(',', $input);
-        if (isset($input['fullInspection'])) {
-            $input['fullInspection'] = implode(',', $input['fullInspection']);
-        }
-        $result = $this->qc->saveQC($input);
-        return $result;
+        return $this->service->saveQC(request());
     }
 
     /**
+     * 刪除品管資料
+     *
      * @return mixed
      */
     public function deleteQC()
     {
-        $input = request()->input();
-        $id = $input['id'];
-        $result = $this->qc->deleteQC($id);
-        return $result;        
+        return $this->qc->deleteQC(request()->input('id'));
     }
 }

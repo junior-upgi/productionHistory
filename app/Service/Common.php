@@ -245,7 +245,7 @@ class Common
      *
      * @return string 回傳GUID
      */
-    public static function getNewGUID()
+    public function getNewGUID()
     {
         $charid = strtoupper(md5(uniqid(mt_rand(), true)));
         $hyphen = chr(45);// "-"

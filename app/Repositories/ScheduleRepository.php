@@ -1,4 +1,12 @@
 <?php
+/**
+ * ScheduleRepository
+ *
+ * @version 1.0.0
+ * @author spark it@upgi.com.tw
+ * @date 17/01/25
+ * @since 1.0.0 spark: 於此版本開始編寫註解
+ */
 namespace App\Repositories;
 
 use DB;
@@ -75,7 +83,7 @@ class ScheduleRepository extends BaseRepository
     public function getSchedule($request)
     {
         $where['prd_no'] = $request->input('prd_no');
-        $where['runProdLineID'] = $request->input('glassProdLineID');
+        $where['glassProdLineID'] = $request->input('glassProdLineID');
         $where['schedate'] = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
         $data = $this->getScheduleViewSelect($this->getTable($view), $where);
@@ -94,9 +102,9 @@ class ScheduleRepository extends BaseRepository
     {
         return $table
             ->where('prd_no', $where['prd_no'])
-            ->where('glassProdLineID', $where['runProdLineID'])
+            ->where('glassProdLineID', $where['glassProdLineID'])
             ->where('schedate', $where['schedate'])
-            ->select('id', 'prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
+            ->select('prd_no', 'PRDT_SNM as snm', 'glassProdLineID', 'schedate', 'orderQty')->first();
     }
 
     /**
@@ -107,14 +115,12 @@ class ScheduleRepository extends BaseRepository
      */
     public function getScheduleCustomer($request)
     {
+        $date = $this->formatSchedate(request()->input('schedate'));
         $where['prd_no'] = $request->input('prd_no');
-        $where['runProdLineID'] = $request->input('glassProdLineID');
+        $where['glassProdLineID'] = $request->input('glassProdLineID');
         $where['schedate'] = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
-        if ($view == 'plan') {
-            return $this->getScheduleWithSample($this->getTable($view), $where);
-        }
-        return $this->getScheduleWithoutSample($this->getTable($view), $where);
+        return $this->getSheduleCustomer($this->getTable($view . 'Detail'), $where);
     }
 
     /**
@@ -131,7 +137,10 @@ class ScheduleRepository extends BaseRepository
         $where['glassProdLineID'] = $request->input('glassProdLineID');
         $where['op'] = $date['op'];
         $where['date'] = $date['date'];
-        return $this->getSheduleCustomer($this->getTable($view . 'Detail'), $where);
+        if ($view == 'plan') {
+            return $this->getScheduleWithoutSample($this->getTable($view), $where);
+        }
+        return $this->getScheduleWithSample($this->getTable($view), $where);
     }
 
     /**
@@ -145,7 +154,7 @@ class ScheduleRepository extends BaseRepository
     {
         $data = $table
             ->where('prd_no', $where['prd_no'])
-            ->where('glassProdLineID', $where['runProdLineID'])
+            ->where('glassProdLineID', $where['glassProdLineID'])
             ->where('schedate', $where['schedate'])
             ->select('CUS_SNM')->get()->toArray();
         $data = array_collapse($data);
@@ -183,7 +192,7 @@ class ScheduleRepository extends BaseRepository
     {
         return $table
             ->where('PRDT_SNM', 'like', '%' . $where['snm'] . '%')
-            ->where('glassProdLineID', 'like', '%' . $where['runProdLineID'] . '%')
+            ->where('glassProdLineID', 'like', '%' . $where['glassProdLineID'] . '%')
             ->where('schedate', $where['op'], $where['date'])
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
             ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
@@ -200,7 +209,7 @@ class ScheduleRepository extends BaseRepository
     {
         return $table
             ->where('PRDT_SNM', 'like', '%' . $where['snm'] . '%')
-            ->where('glassProdLineID', 'like', '%' . $where['runProdLineID'] . '%')
+            ->where('glassProdLineID', 'like', '%' . $where['glassProdLineID'] . '%')
             ->where('schedate', $where['op'], $where['date'])
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
             ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID');
@@ -212,7 +221,7 @@ class ScheduleRepository extends BaseRepository
      * @param $view
      * @return AllGlassRun|GlassRun|GlassRunDetail|GlassRunPlan|GlassRunPlanDetail|null
      */
-    private function getTable($view)
+    public function getTable($view)
     {
         switch ($view) {
             case 'plan':

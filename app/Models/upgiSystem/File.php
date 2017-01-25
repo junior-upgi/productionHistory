@@ -91,10 +91,10 @@ class File extends Model
             );
             $this->insert($params);
             $conn->commit();
+            return $id;
         } catch (\Exception $e) {
             $conn->rollback();
-            return false;
+            return null;
         }
-        return true;
     }
 }

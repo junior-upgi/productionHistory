@@ -5,11 +5,14 @@
  * Date: 2017/1/24
  * Time: 下午4:03
  */
-
 namespace App\Service;
 
 use Carbon\Carbon;
 
+/**
+ * Class DataFormatService
+ * @package App\Service
+ */
 trait DataFormatService
 {
     use UserService;

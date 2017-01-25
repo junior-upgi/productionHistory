@@ -25,8 +25,8 @@ function edit(id) {
             swal("讀取資料失敗!", xhr.statusText, "error");
         },
         success: function(result) {
-            if (result.success) {
-                setHistoryData(result.data);
+            if (result) {
+                setHistoryData(result);
             } else {
                 swal("讀取資料失敗!", '找不到資料', "error");
             }
