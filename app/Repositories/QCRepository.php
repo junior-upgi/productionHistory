@@ -203,10 +203,12 @@ class QCRepository extends BaseRepository
     public function getQCList($request)
     {
         $date = $this->formatSchedate($request->input('schedate'));
+        $snm = $request->input('snm');
+        $glassProdLineID = $request->input('glassProdLineID');
         $scheduleList = $this->qc
             ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no')
-            ->where('DB_U105.dbo.PRDT.SNM', 'like', '%' . $request->input('snm') . '%')
-            ->where('qualityControl.glassProdLineID', 'like', '%' . $request->input('glassProdLineID') . '%')
+            ->where('DB_U105.dbo.PRDT.SNM', 'like', "%$snm%")
+            ->where('qualityControl.glassProdLineID', 'LIKE', "%$glassProdLineID%")
             ->where('qualityControl.schedate', $date['op'], $date['date'])->orderBy('schedate', 'desc')
             ->orderBy('DB_U105.dbo.PRDT.SNM')->orderBy('glassProdLineID')
             ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm');

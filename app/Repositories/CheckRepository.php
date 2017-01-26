@@ -41,7 +41,9 @@ class CheckRepository
      */
     public function getCheckList()
     {
-        return $this->check;
+        return $this->check
+            ->join('UPGWeb.dbo.glass', 'defectCheck.prd_no', 'glass.prd_no')
+            ->select('defectCheck.*', 'glass.snm');
     }
 
     /**

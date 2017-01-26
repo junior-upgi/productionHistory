@@ -57,7 +57,10 @@ class CheckRepositoryTest extends TestCase
         $table = new DefectCheck();
 
         /** act */
-        $expected = $table;
+        $expected = $table
+            ->join('UPGWeb.dbo.glass', 'defectCheck.prd_no', 'glass.prd_no')
+            ->select('defectCheck.*', 'glass.snm');
+
         $target = App::make(CheckRepository::class);
 
         $actual = $target->getCheckList();

@@ -49,6 +49,9 @@
 	<script src="{{ url('/script/master.js?x=1') }}"></script>
 	<script src="{{ url('/script/vue.js') }}"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.4.2/Sortable.min.js"></script>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/select2.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/vuejs-paginator/2.0.0/vuejs-paginator.min.js"></script>
 	<script>
 		var url = "{{ url('/') }}";
 		$(function () {
@@ -76,7 +79,7 @@
 							生產缺點記錄<span class="caret"></span>
 						</a>
 						<ul class="dropdown-menu" role="menu">
-							<li><a href="{{ url('/nav/defect.template') }}">生產缺點記錄單</a></li>
+							<li><a href="{{ url('/nav/check.list') }}">檢查表</a></li>
 							<li class="divider"></li>
 							<li><a href="{{ url('/nav/defect.template') }}">缺點樣板管理</a></li>
 							<li><a href="{{ url('/nav/defect.item') }}">缺點上層項目管理</a></li>

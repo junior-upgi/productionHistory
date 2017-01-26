@@ -54,7 +54,7 @@ class CheckService
      */
     public function getCheckList()
     {
-        return $this->check->getCheckList();
+        return $this->check->getCheckList()->get();
     }
 
     /**
@@ -67,10 +67,10 @@ class CheckService
     {
         if (isset($input['snm'])) {
             $prd_no = $this->base->getPrdNo($input['snm']);
-            return $this->check->searchCheckByPrdNo($prd_no);
+            return $this->check->searchCheckByPrdNo($prd_no)->get();
         }
         if (isset($input['start']) || isset($input['end'])) {
-            return $this->check->searchCheckBySchedate($input['start'], $input['end']);
+            return $this->check->searchCheckBySchedate($input['start'], $input['end'])->get();
         }
     }
 
@@ -83,7 +83,8 @@ class CheckService
     public function getScheduleList($request)
     {
         $view = 'run';
-        return $this->schedule->getScheduleList($view, $request);
+        $collection = $this->schedule->getScheduleList($view, $request)->get();
+        return $collection;
     }
 
     /**

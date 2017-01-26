@@ -1,5 +1,9 @@
 <?php
 
+use App\Repositories\BaseDataRepository;
+use App\Repositories\CheckRepository;
+use App\Service\CheckService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -18,7 +22,7 @@ class CheckServiceTest extends TestCase
     public function setUp()
     {
         parent::setUp();
-        $this->mock = $this->initMock(\App\Repositories\CheckRepository::class);
+        $this->mock = $this->initMock(CheckRepository::class);
         $this->target = $this->app->make(\App\Service\CheckService::class);
     }
 
@@ -33,22 +37,43 @@ class CheckServiceTest extends TestCase
     }
 
     /**
- * 測試根據輸入資料，呼叫以ID查詢的方法
- *
- */
+     *
+     */
+    public function test_getCheckList()
+    {
+        /** arrange */
+        $expected = new Class{ public function get() {} };
+
+        /** act */
+        $mock = Mockery::mock(CheckRepository::class);
+        $this->app->instance(CheckRepository::class, $mock);
+        $target = $this->app->make(CheckService::class);
+        $mock->shouldReceive('getCheckList')
+            ->once()
+            ->andReturn($expected);
+        $actual = $target->getCheckList();
+
+        /** assert */
+        $this->assertEquals($expected->get(), $actual);
+    }
+
+    /**
+     * 測試根據輸入資料，呼叫以ID查詢的方法
+     *
+     */
     public function test_searchCheck_by_id()
     {
         /** arrange */
         $input = ['snm' => '123456'];
         $expected = 'TS123456';
-        $final = 'success';
+        $final = new class { public function get() {} };;
 
         /** act */
-        $mock_base = Mockery::mock(\App\Repositories\BaseDataRepository::class);
-        $this->app->instance(\App\Repositories\BaseDataRepository::class, $mock_base);
+        $mock_base = Mockery::mock(BaseDataRepository::class);
+        $this->app->instance(BaseDataRepository::class, $mock_base);
 
-        $mock_data = Mockery::mock(\App\Repositories\CheckRepository::class);
-        $this->app->instance(\App\Repositories\CheckRepository::class, $mock_data);
+        $mock_data = Mockery::mock(CheckRepository::class);
+        $this->app->instance(CheckRepository::class, $mock_data);
         $target = $this->app->make(\App\Service\CheckService::class);
 
         $mock_base->shouldReceive('getPrdNo')
@@ -64,7 +89,7 @@ class CheckServiceTest extends TestCase
         $actual = $target->searchCheck($input);
 
         /** assert */
-        $this->assertEquals($final, $actual);
+        $this->assertEquals($final->get(), $actual);
     }
 
     /**
@@ -76,11 +101,11 @@ class CheckServiceTest extends TestCase
 
         /** arrange */
         $input = ['start' => '2016-01-01', 'end' => '2016-12-31'];
-        $expected = 'success';
+        $expected = new class { public function get() {} };
 
         /** act */
-        $mock_data = Mockery::mock(\App\Repositories\CheckRepository::class);
-        $this->app->instance(\App\Repositories\CheckRepository::class, $mock_data);
+        $mock_data = Mockery::mock(CheckRepository::class);
+        $this->app->instance(CheckRepository::class, $mock_data);
         $target = $this->app->make(\App\Service\CheckService::class);
 
 
@@ -92,14 +117,18 @@ class CheckServiceTest extends TestCase
         $actual = $target->searchCheck($input);
 
         /** assert */
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected->get(), $actual);
     }
 
+    /**
+     *
+     */
     public function test_getScheduleList()
     {
+
         /** arrange */
         $request = [];
-        $expected = 'success';
+        $expected = new class { public function get() {} };
 
         /** act */
         $mock = Mockery::mock(\App\Repositories\ScheduleRepository::class);
@@ -113,7 +142,7 @@ class CheckServiceTest extends TestCase
         $actual = $target->getScheduleList($request);
 
         /** assert */
-        $this->assertEquals($expected, $actual);
+        $this->assertEquals($expected->get(), $actual);
     }
 
     public function test_insertCheck()
@@ -123,8 +152,8 @@ class CheckServiceTest extends TestCase
         $expected = 'success';
 
         /** act */
-        $mock = Mockery::mock(\App\Repositories\CheckRepository::class);
-        $this->app->instance(\App\Repositories\CheckRepository::class, $mock);
+        $mock = Mockery::mock(CheckRepository::class);
+        $this->app->instance(CheckRepository::class, $mock);
         $target = $this->app->make(\App\Service\CheckService::class);
 
         $mock->shouldReceive('insertCheck')
