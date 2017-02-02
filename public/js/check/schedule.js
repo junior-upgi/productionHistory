@@ -12,6 +12,8 @@ schedule = new Vue({
         totalPage: null,
         pageIndex: null,
         pageIndexCount: 5,
+        formSet: {title: null, btn: null},
+        dataSet: {type: null, id: null}
     },
 
     mounted: function () {
@@ -76,5 +78,37 @@ schedule = new Vue({
         getPageList: function (start, end) {
             schedule.pageList = schedule.scheduleList.slice(start, end);
         },
+
+        add: function (data) {
+            schedule.formSet = {
+                title: '新增檢查表',
+                btn: '新增'
+            };
+            var params = 'schedate=' + data.schedate + '&prd_no=' + data.prd_no + '&snm=' + data.snm +
+                '&glassProdLineID=' + data.glassProdLineID + '&orderQty=' + data.orderQty + '&id=' + data.id;
+            document.location.href = url + '/nav/check.addCheck?' + params;
+            //$('#addModal').modal({backdrop: 'static'}, 'show');
+        },
+
+        edit: function () {
+            schedule.formSet = {
+                title: '編輯檢查表',
+                btn: '編輯'
+            };
+            $.ajax({
+                type: "GET",
+                url: url + "/defect/getDefect",
+                data: data,
+                success: function(results){
+                    defect.dataSet = results;
+                    defect.dataSet.type = 'edit';
+                    $('#addModal').modal({backdrop: 'static'}, 'show');
+                },
+                error: function(e){
+                    var response = jQuery.parseJSON(e.responseText);
+                    console.log(response.message);
+                }
+            });
+        }
     }
 });

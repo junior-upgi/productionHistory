@@ -2,6 +2,7 @@
 
 use App\Repositories\BaseDataRepository;
 use App\Repositories\CheckRepository;
+use App\Repositories\ScheduleRepository;
 use App\Service\CheckService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -128,11 +129,18 @@ class CheckServiceTest extends TestCase
 
         /** arrange */
         $request = [];
-        $expected = new class { public function get() {} };
+        $expected = new class {
+            public function whereNotExists() {
+                return $this;
+            }
+            public function get() {
+                return 'success';
+            }
+        };
 
         /** act */
-        $mock = Mockery::mock(\App\Repositories\ScheduleRepository::class);
-        $this->app->instance(\App\Repositories\ScheduleRepository::class, $mock);
+        $mock = Mockery::mock(ScheduleRepository::class);
+        $this->app->instance(ScheduleRepository::class, $mock);
         $target = $this->app->make(\App\Service\CheckService::class);
 
         $mock->shouldReceive('getScheduleList')
@@ -148,7 +156,8 @@ class CheckServiceTest extends TestCase
     public function test_insertCheck()
     {
         /** arrange */
-        $params = [];
+        $input = ['id' => '2EEC2F65-EF36-687D-8AFC-CBBB14499500', 'decoration' => array()];
+        $params = ['id' => '2EEC2F65-EF36-687D-8AFC-CBBB14499500', 'decoration' => ''];
         $expected = 'success';
 
         /** act */
@@ -161,7 +170,7 @@ class CheckServiceTest extends TestCase
             ->with($params)
             ->andReturn($expected);
 
-        $actual = $target->insertCheck($params);
+        $actual = $target->insertCheck($input);
 
         /** assert */
         $this->assertEquals($expected, $actual);
@@ -203,5 +212,26 @@ class CheckServiceTest extends TestCase
 
         /** assert */
         $this->assertEquals($expected, $actual);
+    }
+
+    public function test_getScheduleCustomer()
+    {
+        /** arrange */
+        $input = [];
+        $mock = Mockery::mock(ScheduleRepository::class);
+        $this->app->instance(ScheduleRepository::class, $mock);
+
+        /** act */
+        $expected = 'success';
+        $mock->shouldReceive('getScheduleCustomer')
+            ->once()
+            ->with($input)
+            ->andReturn($expected);
+        $target = $this->app->make(CheckService::class);
+        $actual = $target->getScheduleCustomer($input);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+
     }
 }

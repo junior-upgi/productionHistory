@@ -87,7 +87,7 @@ class CheckRepository
     {
         try {
             $this->check->insert($this->setTimestamp('created', $params));
-            return ['success' => true, 'msg' => '新增檢查表成功'];
+            return ['success' => true, 'msg' => '新增檢查表成功', 'id' => $params['id']];
         } catch(\Exception $e) {
             return ['success' => false, 'msg' => $e->getMessage()];
         }

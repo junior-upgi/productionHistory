@@ -11,6 +11,7 @@ namespace App\Service;
 use App\Repositories\CheckRepository;
 use App\Repositories\BaseDataRepository;
 use App\Repositories\ScheduleRepository;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class CheckService
@@ -18,6 +19,8 @@ use App\Repositories\ScheduleRepository;
  */
 class CheckService
 {
+    use DataFormatService;
+
     /**
      * @var CheckRepository
      */
@@ -82,9 +85,27 @@ class CheckService
      */
     public function getScheduleList($request)
     {
-        $view = 'run';
-        $collection = $this->schedule->getScheduleList($view, $request)->get();
+        $collection = $this->schedule->getScheduleList('run', $request)
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('defectCheck')
+                    ->whereRaw('defectCheck.schedate = glassRun.schedate')
+                    ->whereRaw('defectCheck.glassProdLineID = glassRun.glassProdLineID')
+                    ->whereRaw('defectCheck.prd_no = glassRun.prd_no');
+            })->get();
         return $collection;
+    }
+
+    /**
+     * 取得排客戶資料
+     *
+     * @param $request
+     * @return string
+     * @internal param $input
+     */
+    public function getScheduleCustomer($request)
+    {
+        return $this->schedule->getScheduleCustomer($request);
     }
 
     /**
@@ -96,7 +117,33 @@ class CheckService
     public function insertCheck($input)
     {
         $params = array_except($input, ['_token']);
+        $params = $this->insertCheckPrework($params);
         return $this->check->insertCheck($params);
+    }
+
+    /**
+     * @param $params
+     * @return mixed
+     */
+    private function insertCheckPrework($params)
+    {
+        if (isset($params['decoration'])) {
+            $params['decoration'] = implode(',', $params['decoration']);
+            $params = $this->setCheckID($params);
+        }
+        return $params;
+    }
+
+    /**
+     * @param $params
+     * @return mixed
+     */
+    private function setCheckID($params)
+    {
+        if (strlen($params['id']) != 36) {
+            $params['id'] = $this->getNewGUID();
+        }
+        return $params;
     }
 
     /**

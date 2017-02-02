@@ -51,7 +51,7 @@
                 <tbody>
                 <tr v-for="item in pageList">
                     <td>
-                        <button class="btn btn-primary">填寫檢查表</button>
+                        <button class="btn btn-primary" @click="add(item)">填寫檢查表</button>
                     </td>
                     <td>
                         <span v-if="item.sampling == 0"> 量產</span>
@@ -66,15 +66,15 @@
             </table>
             <ul class="pagination" style="margin: 0px;">
                 <li v-bind:class="{'disabled': (currentPage === 1)}"
-                    @click.prevent="setPage(currentPage - 1)"><a href="#">Prev</a></li>
+                    @click.prevent="setPage(currentPage - 1)"><a href="#">上一頁</a></li>
                 <li v-for="(n, index) in pageIndex"
                     v-bind:class="{'active': (currentPage === (n))}"
                     @click.prevent="setPage(n)"><a href="#">@{{ n }}</a></li>
                 <li v-bind:class="{'disabled': (currentPage === totalPage)}"
-                    @click.prevent="setPage(currentPage + 1)"><a href="#">Next</a></li>
+                    @click.prevent="setPage(currentPage + 1)"><a href="#">下一頁</a></li>
             </ul>
         </div>
     </div>
 </div>
-<script src="{{ url('/js/check/schedule.js?v=6') }}"></script>
+<script src="{{ url('/js/check/schedule.js?v=7') }}"></script>
 @stop

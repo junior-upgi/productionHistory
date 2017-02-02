@@ -9,6 +9,7 @@
  */
 namespace App\Http\Controllers;
 
+use App\Repositories\TemplateRepository;
 use App\Service\CheckService;
 use App\Service\ProductionDefectService;
 
@@ -26,20 +27,27 @@ class CheckController extends Controller
      * @var ProductionDefectService
      */
     public $defectService;
+    /**
+     * @var TemplateRepository
+     */
+    public $template;
 
     /**
      * CheckController constructor.
      *
      * @param CheckService $service
      * @param ProductionDefectService $defectService
+     * @param TemplateRepository $template
      * @internal param CheckRepository $check
      */
     public function __construct(
         CheckService $service,
-        ProductionDefectService $defectService
+        ProductionDefectService $defectService,
+        TemplateRepository $template
     ) {
         $this->service = $service;
         $this->defectService = $defectService;
+        $this->template = $template;
     }
 
     /**
@@ -140,5 +148,13 @@ class CheckController extends Controller
     public function deleteProductionDefect()
     {
         return $this->defectService->deleteProductionDefect(request()->input());
+    }
+
+    /**
+     * @return string
+     */
+    public function getScheduleCustomer()
+    {
+        return $this->service->getScheduleCustomer(request());
     }
 }

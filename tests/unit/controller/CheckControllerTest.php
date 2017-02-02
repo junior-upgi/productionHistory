@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CheckController;
+use App\Repositories\TemplateRepository;
 use App\Service\CheckService;
 use App\Service\ProductionDefectService;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -231,6 +232,27 @@ class CheckControllerTest extends TestCase
             ->andReturn($expected);
         $target = $this->app->make(CheckController::class);
         $actual = $target->deleteProductionDefect($input);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_addCheck()
+    {
+        /** arrange */
+        $mock = Mockery::mock(CheckService::class);
+        $this->app->instance(CheckService::class, $mock);
+
+        /** act */
+        $result = [];
+        $mock->shouldReceive('getScheduleCustomer')
+            ->once()
+            ->with(request())
+            ->andReturn($result);
+
+        $expected = $result;
+        $target = $this->app->make(CheckController::class);
+        $actual = $target->getScheduleCustomer();
 
         /** assert */
         $this->assertEquals($expected, $actual);

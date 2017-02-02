@@ -115,12 +115,13 @@ class ScheduleRepository extends BaseRepository
      */
     public function getScheduleCustomer($request)
     {
-        $date = $this->formatSchedate(request()->input('schedate'));
+        $i = $request->input();
+        //$date = $this->formatSchedate(request()->input('schedate'));
         $where['prd_no'] = $request->input('prd_no');
         $where['glassProdLineID'] = $request->input('glassProdLineID');
         $where['schedate'] = date('Y/m/d', strtotime($request->input('schedate')));
         $view = $request->input('view');
-        return $this->getSheduleCustomer($this->getTable($view . 'Detail'), $where);
+        return $this->collapseCustomer($this->getTable($view . 'Detail'), $where);
     }
 
     /**
@@ -144,13 +145,13 @@ class ScheduleRepository extends BaseRepository
     }
 
     /**
-     * 取得排程顧客資料
+     * 組合排程顧客資料
      *
      * @param $table
      * @param $where
      * @return string
      */
-    private function getSheduleCustomer($table, $where)
+    private function collapseCustomer($table, $where)
     {
         $data = $table
             ->where('prd_no', $where['prd_no'])
@@ -195,7 +196,7 @@ class ScheduleRepository extends BaseRepository
             ->where('glassProdLineID', 'like', '%' . $where['glassProdLineID'] . '%')
             ->where('schedate', $where['op'], $where['date'])
             ->orderBy('schedate', 'desc')->orderBy('glassProdLineID')->orderBy('PRDT_SNM')
-            ->select('schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
+            ->select('id', 'schedate', 'prd_no', 'PRDT_SNM as snm', 'orderQty', 'glassProdLineID', 'sampling');
     }
 
     /**
