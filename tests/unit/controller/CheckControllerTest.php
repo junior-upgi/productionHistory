@@ -257,4 +257,24 @@ class CheckControllerTest extends TestCase
         /** assert */
         $this->assertEquals($expected, $actual);
     }
+
+    public function test_getCheck()
+    {
+        /** arrange */
+        $input = request()->input('');
+        $mock = Mockery::mock(CheckService::class);
+        $this->app->instance(CheckService::class, $mock);
+
+        /** act */
+        $expected = [];
+        $mock->shouldReceive('getCheck')
+            ->once()
+            ->with($input)
+            ->andReturn($expected);
+        $target = $this->app->make(CheckController::class);
+        $actual = $target->getCheck();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
 }

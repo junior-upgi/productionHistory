@@ -78,6 +78,19 @@ class CheckRepository
     }
 
     /**
+     * 以ID取得檢查表資料
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getCheck($id)
+    {
+        return $this->check->where('id', $id)
+            ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'defectCheck.prd_no')
+            ->select('defectCheck.*', 'UPGWeb.dbo.glass.snm');
+    }
+
+    /**
      * 新增檢查表資料
      *
      * @param $params

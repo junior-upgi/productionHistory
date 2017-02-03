@@ -234,4 +234,43 @@ class CheckServiceTest extends TestCase
         $this->assertEquals($expected, $actual);
 
     }
+
+    public function test_getCheck()
+    {
+        /** arrange */
+        $id = 'checkID';
+        $customer = 'customer';
+        $data = ['prd_no' => 'prd_no', 'glassProdLineID' => '1-1', 'schedate' => '2000-01-01'];
+        $collection = new class {
+            public function first()
+            {
+                return ['prd_no' => 'prd_no', 'glassProdLineID' => '1-1', 'schedate' => '2000-01-01'];
+            }
+        };
+        $mock_schedule = Mockery::mock(ScheduleRepository::class);
+        $this->app->instance(ScheduleRepository::class, $mock_schedule);
+
+        $mock_check = Mockery::mock(CheckRepository::class);
+        $this->app->instance(CheckRepository::class, $mock_check);
+
+        /** act */
+        $mock_schedule->shouldReceive('getScheduleCustomerByParams')
+            ->once()
+            ->with('run', $data['prd_no'], $data['glassProdLineID'], $data['schedate'])
+            ->andReturn($customer);
+
+        $mock_check->shouldReceive('getCheck')
+            ->once()
+            ->with($id)
+            ->andReturn($collection);
+
+        $data['customer'] = $customer;
+        $expected = $data;
+
+        $target = $this->app->make(CheckService::class);
+        $actual = $target->getCheck($id);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
 }

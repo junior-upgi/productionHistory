@@ -115,12 +115,28 @@ class ScheduleRepository extends BaseRepository
      */
     public function getScheduleCustomer($request)
     {
-        $i = $request->input();
-        //$date = $this->formatSchedate(request()->input('schedate'));
-        $where['prd_no'] = $request->input('prd_no');
-        $where['glassProdLineID'] = $request->input('glassProdLineID');
-        $where['schedate'] = date('Y/m/d', strtotime($request->input('schedate')));
-        $view = $request->input('view');
+        return $this->getScheduleCustomerByParams(
+            $request->input('view'),
+            $request->input('prd_no'),
+            $request->input('glassProdLineID'),
+            date('Y/m/d', strtotime($request->input('schedate')))
+        );
+    }
+
+    /**
+     * 代入參數取得排程顧客資料
+     *
+     * @param $view
+     * @param $prd_no
+     * @param $glassProdLineID
+     * @param $schedate
+     * @return string
+     */
+    public function getScheduleCustomerByParams($view, $prd_no, $glassProdLineID, $schedate)
+    {
+        $where['prd_no'] = $prd_no;
+        $where['glassProdLineID'] = $glassProdLineID;
+        $where['schedate'] = date('Y/m/d', strtotime($schedate));
         return $this->collapseCustomer($this->getTable($view . 'Detail'), $where);
     }
 

@@ -78,6 +78,20 @@ class CheckService
     }
 
     /**
+     * 以ID取得檢查表資料
+     *
+     * @param $id
+     * @return mixed
+     */
+    public function getCheck($id)
+    {
+        $data = $this->check->getCheck($id)->first();
+        $customer = $this->schedule->getScheduleCustomerByParams('run', $data['prd_no'], $data['glassProdLineID'], $data['schedate']);
+        $data['customer'] = $customer;
+        return $data;
+    }
+
+    /**
      * 取得排程清單，已執行完畢之排程
      *
      * @param $request
@@ -97,7 +111,7 @@ class CheckService
     }
 
     /**
-     * 取得排客戶資料
+     * 取得排程客戶資料
      *
      * @param $request
      * @return string
@@ -118,7 +132,8 @@ class CheckService
     {
         $params = array_except($input, ['_token']);
         $params = $this->insertCheckPrework($params);
-        return $this->check->insertCheck($params);
+        $params = $this->setCheckID($params);
+        return $this->check->insertCheck($this->toBig5($params));
     }
 
     /**
@@ -129,7 +144,6 @@ class CheckService
     {
         if (isset($params['decoration'])) {
             $params['decoration'] = implode(',', $params['decoration']);
-            $params = $this->setCheckID($params);
         }
         return $params;
     }
@@ -156,7 +170,8 @@ class CheckService
     {
         $id = $input['id'];
         $params = array_except($input, ['id', '_token']);
-        return $this->check->updateCheck($id, $params);
+        $params = $this->insertCheckPrework($params);
+        return $this->check->updateCheck($id, $this->toBig5($params));
     }
 
     /**

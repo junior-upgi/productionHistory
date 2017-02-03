@@ -71,6 +71,16 @@ class CheckController extends Controller
     }
 
     /**
+     * 取得檢查表資料
+     *
+     * @return mixed
+     */
+    public function getCheck()
+    {
+        return $this->service->getCheck(request()->input('id'));
+    }
+
+    /**
      *  取得排程清單
      *
      * @return mixed

@@ -65,4 +65,19 @@ trait DataFormatService
 
         return $uuid;
     }
+
+    /**
+     * 轉換為big5
+     *
+     * @param $params
+     * @return mixed
+     */
+    public function toBig5($params)
+    {
+        list($key, $value) = array_divide($params);
+        for ($i = 0; $i < count($key); $i++) {
+            $array[$key[$i]] = mb_convert_encoding($value[$i], "big5", "utf-8");
+        }
+        return $array;
+    }
 }

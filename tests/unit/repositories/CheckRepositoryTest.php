@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\UPGWeb\Glass;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -124,6 +125,25 @@ class CheckRepositoryTest extends TestCase
 
         /** assert */
         $this->assertEquals($expected, $actual);
+    }
+
+    public function test_getCheck()
+    {
+        /** arrange */
+
+        $table = new DefectCheck();
+        $glass = new Glass();
+        $prd_no = $glass->first()->prd_no;
+        $data = ['id' => '00000000-0000-0000-0000-000000000000', 'schedate' => '2016/01/01', 'prd_no' => $prd_no];
+
+        /** act */
+        $table->insert($data);
+        $expected = $data['id'];
+        $target = App::make(CheckRepository::class);
+        $actual = $target->getCheck($data['id'])->first();
+
+        /** assert */
+        $this->assertEquals($expected, $actual->id);
     }
 
     public function test_insertCheck()
