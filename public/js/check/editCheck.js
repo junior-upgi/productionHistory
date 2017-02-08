@@ -82,7 +82,7 @@ var editCheck = new Vue({
             $.ajax({
                 type: "GET",
                 url: url + "/defect/getCheck",
-                data: {'id': urlParams.get('id')},
+                data: {'id': urlParams.get('checkID')},
                 success: function(results){
                     editCheck.checkData = results;
                     editCheck.decoration = editCheck.setDecoration(results['decoration']);

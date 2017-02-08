@@ -40,11 +40,45 @@ trait DataFormatService
      * @param $type
      * @return mixed
      */
-    public function setTimestamp($type, $params = [])
+    public function setTimestamp($type, $params)
+    {
+        if (isset($params[0])) {
+            return $this->setTimestampBy2DArray($type, $params);
+        }
+        return $this->setTimestampBy1DArray($type, $params);
+    }
+
+    /**
+     *
+     *
+     * @param $type
+     * @param $params
+     * @return mixed
+     */
+    private function setTimestampBy1DArray($type, $params)
     {
         $params[$type . '_at'] = Carbon::now();
         $params[$type . '_by'] = $this->getErpID();
         return $params;
+    }
+
+    /**
+     *
+     *
+     * @param $type
+     * @param $params
+     * @return array
+     */
+    public function setTimestampBy2DArray($type, $params)
+    {
+        $new = [];
+        for ($i = 0; $i < count($params); $i++) {
+            $set = $params[$i];
+            $set[$type . '_at'] = Carbon::now();
+            $set[$type . '_by'] = $this->getErpID();
+            array_push($new, $set);
+        }
+        return $new;
     }
 
     /**

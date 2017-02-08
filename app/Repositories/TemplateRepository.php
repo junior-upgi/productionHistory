@@ -9,6 +9,8 @@
  */
 namespace App\Repositories;
 
+use App\Models\productionHistory\Defect;
+use App\Models\productionHistory\DefectGroup;
 use App\Models\productionHistory\DefectItem;
 use App\Models\productionHistory\DefectTemplate;
 use App\Models\productionHistory\TemplateItem;
@@ -38,6 +40,14 @@ class TemplateRepository extends BaseRepository
      * @var Common
      */
     public $common;
+    /**
+     * @var Defect
+     */
+    public $defect;
+    /**
+     * @var DefectGroup
+     */
+    public $defectGroup;
 
     /**
      * TemplateRepository constructor.
@@ -45,18 +55,54 @@ class TemplateRepository extends BaseRepository
      * @param DefectItem $item
      * @param DefectTemplate $template
      * @param TemplateItem $templateItem
+     * @param Defect $defect
+     * @param DefectGroup $defectGroup
      * @param Common $common
      */
     public function __construct(
         DefectItem $item,
         DefectTemplate $template,
         TemplateItem $templateItem,
+        Defect $defect,
+        DefectGroup $defectGroup,
         Common $common
     ) {
         $this->common = $common;
         $this->item = $item;
         $this->template = $template;
         $this->templateItem = $templateItem;
+        $this->defect = $defect;
+        $this->defectGroup = $defectGroup;
+    }
+
+    public function getTemplateItem($id)
+    {
+        return $this->templateItem
+            ->join('defectItem', function ($join) {
+                $join->whereRaw('defectItem.id = templateItem.itemID COLLATE database_default');
+            })
+            ->where('templateItem.templateID', $id)
+            ->orderBy('templateItem.sequence')
+            ->select('templateItem.itemID', 'defectItem.name as itemName');
+    }
+
+    public function getTemplateDefect($id)
+    {
+        return $this->templateItem
+            ->join('defectItem', function ($join) {
+                $join->whereRaw('defectItem.id = templateItem.itemID COLLATE database_default');
+            })
+            ->join('defectGroup', function ($join) {
+                $join->whereRaw('defectGroup.itemID = templateItem.itemID COLLATE database_default');
+            })
+            ->join('defect', function ($join) {
+                $join->whereRaw('defect.id = defectGroup.defectID COLLATE database_default');
+            })
+            ->where('templateItem.templateID', $id)
+            ->orderBy('templateItem.sequence')
+            ->orderBy('defectGroup.sequence')
+            ->select('templateItem.itemID', 'defectItem.name as itemName',
+                'defectGroup.defectID', 'defect.name as defectName');
     }
 
     /**

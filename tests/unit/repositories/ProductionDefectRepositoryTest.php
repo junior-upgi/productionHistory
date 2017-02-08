@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\productionHistory\ProductionData;
 use App\Models\productionHistory\ProductionDefect;
 use App\Repositories\ProductionDefectRepository;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
@@ -33,7 +34,44 @@ class ProductionDefectRepositoryTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_getProductionDefectList()
+    public function test_yes()
+    {
+
+    }
+
+    public function test_gtProductionDataList()
+    {
+        /** arrange */
+        $table = new productionData();
+        $checkID = '00000000-0000-0000-0000-000000000000';
+        $checkID2 = '00000000-0000-0000-2222-000000000000';
+        $params = [
+            ['checkID' => $checkID, 'prodDate' => '2000-01-02', 'classType' => '1'],
+            ['checkID' => $checkID, 'prodDate' => '2000-01-01', 'classType' => '2'],
+            ['checkID' => $checkID, 'prodDate' => '2000-01-01', 'classType' => '3'],
+            ['checkID' => $checkID2, 'prodDate' => '2000-01-01', 'classType' => '2'],
+            ['checkID' => $checkID2, 'prodDate' => '2000-01-01', 'classType' => '3'],
+            ['checkID' => $checkID2, 'prodDate' => '2000-01-02', 'classType' => '1'],
+        ];
+        $table->insert($params);
+
+        /** act */
+        $expected1 = $table->where('checkID', $checkID)->get()->count();
+        $actual1 = $this->target->getProductionDataList($checkID)->get()->count();
+
+        $expected2 = [
+            ['checkID' => $checkID, 'prodDate' => '2000-01-01 00:00:00', 'classType' => '2'],
+            ['checkID' => $checkID, 'prodDate' => '2000-01-01 00:00:00', 'classType' => '3'],
+            ['checkID' => $checkID, 'prodDate' => '2000-01-02 00:00:00', 'classType' => '1'],
+        ];
+        $actual2 = $this->target->getProductionDataList($checkID)->select('checkID', 'prodDate', 'classType')->get()->toArray();
+
+        /** assert */
+        $this->assertEquals($expected1, $actual1);
+        $this->assertEquals($expected2, $actual2);
+    }
+
+    public function _test_getProductionDefectList()
     {
         /** arrange */
         $table = new ProductionDefect();
@@ -65,7 +103,7 @@ class ProductionDefectRepositoryTest extends TestCase
         $this->assertEquals($expected2, $actual2);
     }
 
-    public function test_insertProductionDefect()
+    public function _test_insertProductionDefect()
     {
         /** arrange */
         $id = '99999999-9999-9999-9999-999999999999';
@@ -87,7 +125,7 @@ class ProductionDefectRepositoryTest extends TestCase
         $this->assertEquals($expected, $actual2->id);
     }
 
-    public function test_updateProductionDefect()
+    public function _test_updateProductionDefect()
     {
         /** arrange */
         $id = '99999999-9999-9999-9999-999999999999';
@@ -112,7 +150,7 @@ class ProductionDefectRepositoryTest extends TestCase
         $this->assertEquals($expected, $actual2->value);
     }
 
-    public function test_deleteProductionDefect()
+    public function _test_deleteProductionDefect()
     {
         /** arrange */
         $id = '99999999-9999-9999-9999-999999999999';

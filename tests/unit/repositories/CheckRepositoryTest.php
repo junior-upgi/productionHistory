@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\UPGWeb\Glass;
+use App\Service\DataFormatService;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\App;
 class CheckRepositoryTest extends TestCase
 {
     use DatabaseTransactions;
+    use DataFormatService;
 
     /**
      * @var
@@ -146,7 +148,7 @@ class CheckRepositoryTest extends TestCase
         $this->assertEquals($expected, $actual->id);
     }
 
-    public function test_insertCheck()
+    public function _test_insertCheck()
     {
         /** arrange */
         $id = '99999999-9999-9999-9999-999999999999';
@@ -167,7 +169,7 @@ class CheckRepositoryTest extends TestCase
         $this->assertEquals($expected, $actual2->id);
     }
 
-    public function test_updateCheck()
+    public function _test_updateCheck()
     {
         /** arrange */
         $id = '99999999-9999-9999-9999-999999999999';
@@ -190,7 +192,7 @@ class CheckRepositoryTest extends TestCase
         $this->assertEquals($expected, $actual2->prd_no);
     }
 
-    public function test_deleteCheck()
+    public function _test_deleteCheck()
     {
         /** arrange */
         $id = '99999999-9999-9999-9999-999999999999';
@@ -211,5 +213,17 @@ class CheckRepositoryTest extends TestCase
         $this->assertTrue($actual1['success']);
         $this->assertEquals($expected, $actual2->count());
         $this->assertNotEquals(null, $actual3->first()->deleted_at);
+    }
+
+    public function test_params()
+    {
+        $params1 = ['id' => 'test1'];
+        $params2 = [['id' => 'test1'], ['id' => 'test2']];
+
+        $actual1 = $this->setTimestamp('created', $params1);
+        $actual2 = $this->setTimestamp('created', $params2);
+
+        $this->assertTrue(isset($actual1['created_at']));
+        $this->assertTrue(isset($actual2[0]['created_at']));
     }
 }

@@ -121,13 +121,31 @@ class CheckController extends Controller
     }
 
     /**
+     * 取得檢查表套板資料
+     *
+     * @return array
+     */
+    public function getCheckTemplate()
+    {
+        return [
+            'item' => $this->defectService->getCheckTemplateItem(request()->input('checkID')),
+            'defect' => $this->defectService->getCheckTemplateDefect(request()->input('checkID'))
+        ];
+    }
+
+    /**
      * 取得檢查表缺點清單
      *
      * @return mixed
      */
     public function getProductionDefectList()
     {
-        return $this->defectService->getProductionDefectList(request()->input('id'));
+        return [
+            'productionData' => $this->defectService->getProductionDataList(request()->input('checkID')),
+            'defectList' => $this->defectService->getProductionDefectList(request()->input('checkID')),
+            'item' => $this->defectService->getCheckTemplateItem(request()->input('checkID')),
+            'defect' => $this->defectService->getCheckTemplateDefect(request()->input('checkID'))
+        ];
     }
 
     /**

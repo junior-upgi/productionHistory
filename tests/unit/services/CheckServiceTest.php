@@ -107,7 +107,7 @@ class CheckServiceTest extends TestCase
         /** act */
         $mock_data = Mockery::mock(CheckRepository::class);
         $this->app->instance(CheckRepository::class, $mock_data);
-        $target = $this->app->make(\App\Service\CheckService::class);
+        $target = $this->app->make(CheckService::class);
 
 
         $mock_data->shouldReceive('searchCheckBySchedate')
@@ -119,6 +119,20 @@ class CheckServiceTest extends TestCase
 
         /** assert */
         $this->assertEquals($expected->get(), $actual);
+    }
+
+    public function test_searchCheck_by_non()
+    {
+        /** arrange */
+        $input = [];
+
+        /** act */
+        $exception = null;
+        $target = $this->app->make(CheckService::class);
+        $actual = $target->searchCheck($input);
+
+        /** assert */
+        $this->assertEquals($exception, $actual);
     }
 
     /**
@@ -168,6 +182,29 @@ class CheckServiceTest extends TestCase
         $mock->shouldReceive('insertCheck')
             ->once()
             ->with($params)
+            ->andReturn($expected);
+
+        $actual = $target->insertCheck($input);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_insertCheck_nonID()
+    {
+        /** arrange */
+        $expected = 'success';
+
+        $input = ['id' => '', 'decoration' => array()];
+
+        /** act */
+        $mock = Mockery::mock(CheckRepository::class);
+        $this->app->instance(CheckRepository::class, $mock);
+        $target = $this->app->make(\App\Service\CheckService::class);
+
+        $mock->shouldReceive('insertCheck')
+            ->once()
+            ->withAnyArgs()
             ->andReturn($expected);
 
         $actual = $target->insertCheck($input);

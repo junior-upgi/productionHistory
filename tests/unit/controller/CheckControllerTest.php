@@ -165,12 +165,32 @@ class CheckControllerTest extends TestCase
         $this->app->instance(ProductionDefectService::class, $mock);
 
         /** act */
-        $expected = 'success';
+        $result1 = [];
+        $result2 = [];
+        $item = [];
+        $defect = [];
+        $expected = ['productionData' => $result1, 'defectList' => $result2, 'item' => $item, 'defect' => $defect];
         $mock->shouldReceive('getProductionDefectList')
             ->once()
             ->with($checkID)
-            ->andReturn($expected);
+            ->andReturn($result1);
         $target = $this->app->make(CheckController::class);
+
+        $mock->shouldReceive('getProductionDataList')
+            ->once()
+            ->with($checkID)
+            ->andReturn($result2);
+
+        $mock->shouldReceive('getCheckTemplateItem')
+            ->once()
+            ->with($checkID)
+            ->andReturn($item);
+
+        $mock->shouldReceive('getCheckTemplateDefect')
+            ->once()
+            ->with($checkID)
+            ->andReturn($defect);
+
         $actual = $target->getProductionDefectList();
 
         /** assert */
@@ -273,6 +293,34 @@ class CheckControllerTest extends TestCase
             ->andReturn($expected);
         $target = $this->app->make(CheckController::class);
         $actual = $target->getCheck();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_getCheckTemplate()
+    {
+        /** arrange */
+        $checkID = request()->input('checkID');
+        $mock = Mockery::mock(ProductionDefectService::class);
+        $this->app->instance(ProductionDefectService::class, $mock);
+
+        /** act */
+        $item = [];
+        $defect = [];
+        $expected = ['item' => $item, 'defect' => $defect];
+        $mock->shouldReceive('getCheckTemplateItem')
+            ->once()
+            ->with($checkID)
+            ->andReturn($item);
+
+        $mock->shouldReceive('getCheckTemplateDefect')
+            ->once()
+            ->with($checkID)
+            ->andReturn($defect);
+
+        $target = $this->app->make(CheckController::class);
+        $actual = $target->getCheckTemplate();
 
         /** assert */
         $this->assertEquals($expected, $actual);

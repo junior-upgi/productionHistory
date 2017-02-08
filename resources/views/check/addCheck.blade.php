@@ -71,13 +71,21 @@
                             </select>
                         </div>
                     </div>
+                    <div class="col-md-2">
+                        <div class="form-group form-group-sm">
+                            <label for="spotCheckTemplateID" class="control-label">抽驗套板名稱</label>
+                            <select name="spotCheckTemplateID" class="form-control">
+                                <option v-for="option in template" v-bind:value="option.id">@{{ option.name }}</option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-md-4">
                         <div class="form-group">
                             <label for="" class="control-label">其它</label>
                             <textarea class="form-control input-sm" name="other" rows="4" style="resize: none;"></textarea>
                         </div>
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label for="" class="control-label">備註</label>
                             <textarea class="form-control input-sm" name="remark" rows="4" style="resize: none;"></textarea>
@@ -103,6 +111,7 @@
                             <input type="text" class="form-control" name="weight" value="">
                         </div>
                     </div>
+                    <!--
                     <div class="col-md-2">
                         <div class="form-group form-group-sm">
                             <label for="speed" class="control-label">機速</label>
@@ -115,12 +124,14 @@
                             <input type="text" class="form-control" name="checkRate" value="">
                         </div>
                     </div>
+                    -->
                     <div class="col-md-2">
                         <div class="form-group form-group-sm">
-                            <label for="payRate" class="control-label">繳率率</label>
+                            <label for="payRate" class="control-label">繳庫率</label>
                             <input type="text" class="form-control" name="payRate" value="">
                         </div>
                     </div>
+                    <!--
                     <div class="col-md-2">
                         <div class="form-group form-group-sm">
                             <label for="thermalShock" class="control-label">熱震</label>
@@ -133,6 +144,7 @@
                             <input type="text" class="form-control" name="stressLevel" value="">
                         </div>
                     </div>
+                    -->
                     <div class="col-md-2">
                         <div class="form-group form-group-sm">
                             <label for="selectTime" class="control-label">選瓶時間</label>
@@ -145,6 +157,7 @@
                             <input type="text" class="form-control time" name="offlineTime" value="">
                         </div>
                     </div>
+                    <!--
                     <div class="col-md-2">
                         <div class="form-group form-group-sm">
                             <label for="actualWeightMin" class="control-label">實際生產重量最小值</label>
@@ -157,18 +170,21 @@
                             <input type="text" class="form-control" name="actualWeightMax" value="">
                         </div>
                     </div>
+                    -->
                     <div class="col-md-2">
                         <div class="form-group form-group-sm">
                             <label for="predictQuantity" class="control-label">預計生產數量</label>
                             <input type="text" class="form-control" name="predictQuantity" v-bind:value="schedule.orderQty">
                         </div>
                     </div>
+                    <!--
                     <div class="col-md-2">
                         <div class="form-group form-group-sm">
                             <label for="actualQuantity" class="control-label">實際生產數量</label>
                             <input type="text" class="form-control" name="actualQuantity" value="">
                         </div>
                     </div>
+                    -->
                     <div class="col-md-2">
                         <div class="form-group form-group-sm">
                             <label for="payQuantity" class="control-label">實際繳庫數量</label>

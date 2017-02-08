@@ -58,19 +58,19 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="item in checkList">
+                <tr v-for="check in checkList">
                     <td width="51">
                         <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip"
-                            data-placement="top" title="編輯" @click="edit(i.id)" @mouseenter="tooltip($event)">
+                            data-placement="top" title="編輯" @click="edit(check)" @mouseenter="tooltip($event)">
                         <span class="glyphicon glyphicon-edit"></span>
                         </button>
                     </td>
-                    <td>@{{ item.schedate }}</td>
-                    <td>@{{ item.snm }}</td>
-                    <td>@{{ item.glassProdLineID }}</td>
+                    <td>@{{ check.schedate }}</td>
+                    <td>@{{ check.snm }}</td>
+                    <td>@{{ check.glassProdLineID }}</td>
                     <td width="51">
                         <button type="button" class="btn btn-danger btn-sm" data-toggle="tooltip"
-                                data-placement="top" title="刪除" @click="del(i.id)" @mouseenter="tooltip($event)">
+                                data-placement="top" title="刪除" @click="del(check)" @mouseenter="tooltip($event)">
                         <span class="glyphicon glyphicon-trash"></span>
                         </button>
                     </td>
@@ -80,5 +80,5 @@
         </div>
     </div>
 </div>
-<script src="{{ url('/js/check/list.js?v=1') }}"></script>
+<script src="{{ url('/js/check/list.js?v=2') }}"></script>
 @stop

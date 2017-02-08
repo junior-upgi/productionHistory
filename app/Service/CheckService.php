@@ -75,6 +75,7 @@ class CheckService
         if (isset($input['start']) || isset($input['end'])) {
             return $this->check->searchCheckBySchedate($input['start'], $input['end'])->get();
         }
+        return null;
     }
 
     /**

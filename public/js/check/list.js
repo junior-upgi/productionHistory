@@ -25,6 +25,15 @@ check = new Vue({
                     console.log(response.message);
                 }
             });
-        }
+        },
+
+        edit: function (data) {
+            document.location.href = url + '/nav/check.editCheck?checkID=' + data.id;
+        },
+
+        tooltip: function (event) {
+            $(event.target).tooltip('show');
+            $('[data-toggle="tooltip"]').tooltip();
+        },
     }
 });

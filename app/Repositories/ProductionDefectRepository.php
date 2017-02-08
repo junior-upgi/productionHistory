@@ -9,6 +9,7 @@
 namespace App\Repositories;
 
 use App\Models\productionHistory\ProductionDefect;
+use App\Models\productionHistory\ProductionData;
 use App\Service\DataFormatService;
 
 /**
@@ -23,14 +24,31 @@ class ProductionDefectRepository
      * @var ProductionDefect
      */
     public $defect;
+    /**
+     * @var ProductionData
+     */
+    public $data;
 
     /**
      * ProductionDefectRepository constructor.
      * @param ProductionDefect $defect
+     * @param ProductionData $data
      */
-    public function __construct(ProductionDefect $defect)
+    public function __construct(ProductionDefect $defect, ProductionData $data)
     {
         $this->defect = $defect;
+        $this->data = $data;
+    }
+
+    /**
+     * 取得生產資訊清單
+     *
+     * @param $checkID
+     * @return mixed
+     */
+    public function getProductionDataList($checkID)
+    {
+        return $this->data->where('checkID', $checkID)->orderBy('prodDate')->orderBy('classType');
     }
 
     /**
@@ -47,13 +65,18 @@ class ProductionDefectRepository
     /**
      * 新增生產缺點
      *
-     * @param $params
+     * @param $dataParams
+     * @param $defectParams
      * @return array
+     * @internal param $params
      */
-    public function insertProductionDefect($params)
+    public function insertProductionDefect($dataParams, $defectParams)
     {
         try {
-            $this->defect->insert($params);
+            $this->defect->getConnection()->beginTransaction();
+            $this->data->insert($this->setTimestamp('created', $dataParams));
+            $this->defect->insert($this->setTimestamp('created', $defectParams));
+            $this->defect->getConnection()->commit();
             return ['success' => true, 'msg' => '新增生產缺點成功!'];
         } catch (\Exception $e) {
             return ['success' => false, 'msg' => $e->getMessage()];
