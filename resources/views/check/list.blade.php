@@ -29,6 +29,7 @@
                 <thead>
                 <tr>
                     <td></td>
+                    <td></td>
                     <td class="col-md-1">生產開始日期</td>
                     <td>瓶號</td>
                     <td>線別</td>
@@ -49,8 +50,8 @@
                     </td>
                     <td width="51">
                         <button type="button" class="btn btn-default btn-sm" data-toggle="tooltip"
-                                data-placement="top" title="履歷表" v-on:click="print(check)" @mouseenter="tooltip($event)">
-                        <span class="glyphicon glyphicon-edit"></span>
+                                data-placement="top" title="列印履歷表" v-on:click="print(check)" @mouseenter="tooltip($event)">
+                        <span class="glyphicon glyphicon-print"></span>
                         </button>
                     </td>
                     <td>@{{ check.schedate }}</td>
@@ -72,5 +73,5 @@
         </div>
     </div>
 </div>
-<script src="{{ url('/js/check/list.js?v=6') }}"></script>
+<script src="{{ url('/js/check/list.js?v=8') }}"></script>
 @stop

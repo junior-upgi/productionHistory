@@ -31,7 +31,7 @@ var check = new Vue({
         },
 
         print: function (data) {
-            document.location.href = url + '/nav/check.editCheck?checkID=' + data.id;
+            window.open(url + '/nav/check.checkReport?checkID=' + data.id, '_blank');
         },
 
         del: function (id) {
