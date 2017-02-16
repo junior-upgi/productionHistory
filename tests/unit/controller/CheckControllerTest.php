@@ -169,7 +169,10 @@ class CheckControllerTest extends TestCase
         $result2 = [];
         $item = [];
         $defect = [];
-        $expected = ['productionData' => $result1, 'defectList' => $result2, 'item' => $item, 'defect' => $defect];
+        $expected = ['productionData' => $result1, 'defectList' => $result2,
+            'item' => $item, 'defect' => $defect,
+            'spotCheckItem' => $item, 'spotCheckDefect' => $defect
+        ];
         $mock->shouldReceive('getProductionDefectList')
             ->once()
             ->with($checkID)
@@ -187,6 +190,16 @@ class CheckControllerTest extends TestCase
             ->andReturn($item);
 
         $mock->shouldReceive('getCheckTemplateDefect')
+            ->once()
+            ->with($checkID)
+            ->andReturn($defect);
+
+        $mock->shouldReceive('getSpotCheckTemplateItem')
+            ->once()
+            ->with($checkID)
+            ->andReturn($item);
+
+        $mock->shouldReceive('getSpotCheckTemplateDefect')
             ->once()
             ->with($checkID)
             ->andReturn($defect);
@@ -321,6 +334,38 @@ class CheckControllerTest extends TestCase
 
         $target = $this->app->make(CheckController::class);
         $actual = $target->getCheckTemplate();
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_printCheckReport() {
+        /** arrange */
+        $checkID = request()->input('checkID');
+        $mock_defect= Mockery::mock(ProductionDefectService::class);
+        $this->app->instance(ProductionDefectService::class, $mock_defect);
+        $mock_check = Mockery::mock(CheckService::class);
+        $this->app->instance(CheckService::class, $mock_check);
+
+        /** act */
+        $check = [];
+        $data = [];
+        $defect = [];
+        $expected = ['check' => $check, 'data' => $data, 'defect' => $defect];
+        $mock_check->shouldReceive('getCheck')
+            ->once()
+            ->with($checkID)
+            ->andReturn($check);
+        $mock_defect->shouldReceive('getProductionDataList')
+            ->once()
+            ->with($checkID)
+            ->andReturn($data);
+        $mock_defect->shouldReceive('getDefectAvg')
+            ->once()
+            ->with($checkID)
+            ->andReturn($defect);
+        $target = $this->app->make(CheckController::class);
+        $actual = $target->printCheckReport();
 
         /** assert */
         $this->assertEquals($expected, $actual);

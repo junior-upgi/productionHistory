@@ -1,4 +1,4 @@
-@extends('layouts.masterpage')
+@extends('layouts.master_page')
 @section('title', '編輯檢查表')
 @section('content')
     <div id="editCheck">
@@ -86,15 +86,19 @@
                                     <div class="form-group form-group-sm">
                                         <label for="templateID" class="control-label">生產缺點套板</label>
                                         <select name="templateID" class="form-control" v-model="templateID">
-                                            <option v-for="option in template"
-                                                    v-bind:value="option.id">@{{ option.name }}
+                                            <option value="">請選擇套板</option>
+                                            <option v-for="option in template" v-bind:value="option.id">
+                                                @{{ option.name }}
                                             </option>
                                         </select>
                                     </div>
                                     <div class="form-group form-group-sm">
                                         <label for="spotCheckTemplateID" class="control-label">抽驗缺點套板</label>
-                                        <select name="spotCheckTemplateID" class="form-control">
-                                            <option v-for="option in template" v-bind:value="option.id">@{{ option.name }}</option>
+                                        <select name="spotCheckTemplateID" class="form-control" v-model="spotCheckTemplateID">
+                                            <option value="">請選擇套板</option>
+                                            <option v-for="option in template" v-bind:value="option.id">
+                                                @{{ option.name }}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -180,6 +184,6 @@
             </div>
         </div>
     </div>
-    <script src="{{ url('/js/check/editCheck.js?v=5') }}"></script>
+    <script src="{{ url('/js/check/editCheck.js?v=11') }}"></script>
     @include('check.checkDefect')
 @endsection

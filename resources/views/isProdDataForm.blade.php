@@ -1,4 +1,4 @@
-@extends('layouts.masterpage')
+@extends('layouts.master_page')
 @section('content')
     <script>
         $(document).ready(function () {

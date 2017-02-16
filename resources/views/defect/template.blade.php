@@ -1,4 +1,4 @@
-@extends('layouts.masterpage')
+@extends('layouts.master_page')
 @section('title', '缺點套板管理')
 @section('content')
 <div id="template">

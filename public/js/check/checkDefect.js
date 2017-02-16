@@ -36,6 +36,7 @@ $(document).ready(function () {
                         closeOnConfirm: true
                     },
                     function () {
+                        productionInfo.getDefectList();
                         $('#addProductionDefectModal').modal('hide');
                     });
             } else {
@@ -70,7 +71,75 @@ $(document).ready(function () {
                         closeOnConfirm: true
                     },
                     function () {
+                        productionInfo.getDefectList();
                         $('#editProductionDefectModal').modal('hide');
+                    });
+            } else {
+                swal("更新資料失敗!", obj.msg, "error");
+                $('#BtnSave').button('reset');
+            }
+        },
+        error: function (obj) {
+            swal("發生異常錯誤!", obj.statusText, "error");
+            $('#BtnSave').button('reset');
+        }
+    });
+
+    $("#addSpotCheckDefectForm").ajaxForm({
+        url: url + '/defect/insertProductionDefect',
+        type: 'POST',
+        beforeSubmit: function () {
+            $('#BtnSave').button('loading');
+        },
+        success: function (obj) {
+            if (obj.success) {
+                swal({
+                        title: "新增資料成功!",
+                        text: obj.msg,
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "OK",
+                        closeOnConfirm: true
+                    },
+                    function () {
+                        productionInfo.getDefectList();
+                        $('#addSpotCheckDefectModal').modal('hide');
+                    });
+            } else {
+                swal("新增資料失敗!", obj.msg, "error");
+                $('#BtnSave').button('reset');
+            }
+        },
+        error: function (obj) {
+            swal("發生異常錯誤!", obj.statusText, "error");
+            $('#BtnSave').button('reset');
+        }
+    });
+
+    /**
+     * 更新抽驗缺點
+     */
+    $("#editSpotCheckDefectForm").ajaxForm({
+        url: url + '/defect/updateProductionDefect',
+        type: 'PUT',
+        beforeSubmit: function () {
+            $('#BtnSave').button('loading');
+        },
+        success: function (obj) {
+            if (obj.success) {
+                swal({
+                        title: "更新資料成功!",
+                        text: obj.msg,
+                        type: "success",
+                        showCancelButton: false,
+                        confirmButtonClass: "btn-success",
+                        confirmButtonText: "OK",
+                        closeOnConfirm: true
+                    },
+                    function () {
+                        productionInfo.getDefectList();
+                        $('#editSpotCheckDefectModal').modal('hide');
                     });
             } else {
                 swal("更新資料失敗!", obj.msg, "error");
@@ -102,9 +171,6 @@ function resetModal (obj) {
 
 var productionInfo = new Vue({
     el: '#productionInfo',
-    computed: {
-
-    },
     data: {
         checkID: null,
         editData: [],
@@ -112,16 +178,24 @@ var productionInfo = new Vue({
         production: null,
         defects: [],
         items: [],
+        spotCheckItems: [],
+        spotCheckDefects: [],
         productionData: [],
         defectList: [],
         itemsCount: null,
+        spotCheckItemsCount: null,
         avgDefect: null,
+        avgSpotCheckDefect: null,
         computedInfo: null,
         classTypeOption: [
             { text: '早班', value: 1},
             { text: '中班', value: 2},
             { text: '晚班', value: 3}
-        ]
+        ],
+        productionDataCount: 0,
+        spotCheckCount: 0,
+        productionDataID: {},
+        spotCheckID: {}
     },
 
     computed: {
@@ -131,17 +205,16 @@ var productionInfo = new Vue({
          * @returns {Array}
          */
         itemsCount: function () {
-            var array = [];
-            for (var i = 0; i < this.items.length; i++) {
-                var count = 0;
-                for (var x = 0; x < this.defects.length; x++) {
-                    if (this.defects[x].itemID == this.items[i].itemID) {
-                        count++;
-                    }
-                }
-                array[this.items[i].itemID] = count;
-            }
-            return array;
+            return this.setItemCount(this.items, this.defects);
+        },
+
+        /**
+         * 計算抽驗項目之缺點數
+         *
+         * @returns {Array, Array}
+         */
+        spotCheckItemsCount: function () {
+            return this.setItemCount(this.spotCheckItems, this.spotCheckDefects);
         },
 
         /**
@@ -150,43 +223,84 @@ var productionInfo = new Vue({
          * @returns {Array}
          */
         avgDefect: function () {
-            var array = [];
-            for (var i = 0; i < this.defects.length; i++) {
-                var count = 0;
-                var total = 0;
-                for (var x = 0; x < this.defectList.length; x++) {
-                    if (this.defects[i].defectID == this.defectList[x].defectID) {
-                        total += this.defectList[x].value;
-                        count++;
-                    }
-                }
-                var avg = parseFloat((total / count).toFixed(2));
-                array.push(avg);
-            }
-            return array;
+            return this.setAvg(this.defects, this.defectList, this.productionDataID)
         },
+
+        /**
+         * 計算抽驗缺點平均
+         *
+         * @returns {Array}
+         */
+        avgSpotCheckDefect: function () {
+            return this.setAvg(this.spotCheckDefects, this.defectList, this.spotCheckID);
+        },
+
         /**
          * 計算生產資訊
          *
          * @returns {{actualQuantity: number, minute: number, checkRate: number, actualMinWeight: number, actualMaxWeight: number}}
          */
         computedInfo: function () {
-            var array = {
+            let array = {
                 actualQuantity: 0,
                 minute: 0,
                 checkRate: 0,
                 actualMinWeight: 9999999999,
                 actualMaxWeight: 0
             };
-            for (var i = 0; i < this.productionData.length; i++) {
-                array['actualQuantity'] += this.productionData[i].actualQuantity;
-                array['minute'] += this.productionData[i].minute;
-                var checkRate = parseFloat(array['checkRate']) + parseFloat(this.productionData[i].checkRate);
-                array['checkRate'] = parseFloat((array['checkRate'] + parseFloat(this.productionData[i].checkRate)).toFixed(2));
-                array['actualMinWeight'] = parseFloat(Math.min(array['actualMinWeight'], this.productionData[i].actualMinWeight)).toFixed(2);
-                array['actualMaxWeight'] = parseFloat(Math.max(array['actualMaxWeight'], this.productionData[i].actualMaxWeight)).toFixed(2);
+            var total = 0;
+            for (let i = 0; i < this.productionData.length; i++) {
+                if (this.productionData[i].spotCheck == 0) {
+                    array['actualQuantity'] += this.productionData[i].actualQuantity;
+                    array['minute'] += this.productionData[i].minute;
+                    //let checkRate = parseFloat(array['checkRate']) + parseFloat(this.productionData[i].checkRate);
+                    array['checkRate'] = parseFloat(array['checkRate']) + parseFloat(this.productionData[i].checkRate);
+                    array['actualMinWeight'] = parseFloat(Math.min(array['actualMinWeight'], this.productionData[i].actualMinWeight)).toFixed(2);
+                    array['actualMaxWeight'] = parseFloat(Math.max(array['actualMaxWeight'], this.productionData[i].actualMaxWeight)).toFixed(2);
+                    total++;
+                }
             }
-            array['checkRate'] = parseFloat((array['checkRate'] / this.productionData.length).toFixed(2));
+            array['checkRate'] = parseFloat(array['checkRate'] / total).toFixed(2);
+            return array;
+        },
+
+        productionDataCount: function () {
+            let count = 0;
+            for (let i = 0; i < this.productionData.length; i++) {
+                if (this.productionData[i].spotCheck == 0) {
+                    count++;
+                }
+            }
+            return count;
+        },
+
+        spotCheckCount: function () {
+            var count = 0;
+            for (var i = 0; i < this.productionData.length; i++) {
+                if (this.productionData[i].spotCheck == 1) {
+                    count++;
+                }
+            }
+            return count;
+        },
+
+        productionDataID: function () {
+            var array = [];
+            for (var i = 0; i < this.productionData.length; i++) {
+                if (this.productionData[i].spotCheck == 0) {
+                    array.push(this.productionData[i].id);
+                }
+            }
+            return array;
+        },
+
+        spotCheckID: function () {
+            var array = [];
+            for (var i = 0; i < this.productionData.length; i++) {
+                if (this.productionData[i].spotCheck == 1) {
+                    array.push(this.productionData[i].id);
+                }
+            }
             return array;
         }
     },
@@ -218,6 +332,9 @@ var productionInfo = new Vue({
                     productionInfo.defectList = results.defectList;
                     productionInfo.items = results.item;
                     productionInfo.defects = results.defect;
+                    productionInfo.spotCheckItems = results.spotCheckItem;
+                    productionInfo.spotCheckDefects = results.spotCheckDefect;
+                    console.log(productionInfo.spotCheckItems);
                 },
                 error: function(e){
                     var response = jQuery.parseJSON(e.responseText);
@@ -235,6 +352,15 @@ var productionInfo = new Vue({
             $('#editProductionDefectModal').modal({backdrop: 'static'}, 'show');
         },
 
+        addSpotCheckDefectShow: function () {
+            $('#addSpotCheckDefectModal').modal({backdrop: 'static'}, 'show');
+        },
+
+        editSpotCheckDefectShow: function (id) {
+            this.setEditData(id);
+            $('#editSpotCheckDefectModal').modal({backdrop: 'static'}, 'show');
+        },
+
         /**
          * 設定編輯資料
          *
@@ -248,22 +374,11 @@ var productionInfo = new Vue({
                     this.editData = p[i];
                 }
             }
-            var defectList = [];
             for (var i = 0; i < d.length; i++) {
                 if (d[i].productionDataID == id) {
-                    this.editDefect[d[i].defectID] = d[i].value;
+                    this.editDefect[d[i].itemID + d[i].defectID] = d[i].value;
                 }
             }
-            console.log(this.editData);
-            console.log(this.editDefect);
-        },
-
-        addSpotCheckDefectShow: function () {
-            $('#addProductionDefectModal').modal({backdrop: 'static'}, 'show');
-        },
-
-        editSpotCheckDefectShow: function () {
-            $('#editProductionDefectModal').modal({backdrop: 'static'}, 'show');
         },
 
         setCollapse: function () {
@@ -283,6 +398,80 @@ var productionInfo = new Vue({
         getClassName: function (classType) {
             var className = {1: '早班', 2: '中班', 3: '晚班'};
             return className[classType];
+        },
+
+        setAvg: function (defects, defectList, IDArray) {
+            var array = [];
+            for (var i = 0; i < defects.length; i++) {
+                var count = 0;
+                var total = 0;
+                for (var x = 0; x < defectList.length; x++) {
+                    if (defects[i].itemID == defectList[x].itemID &&
+                        defects[i].defectID == defectList[x].defectID &&
+                        IDArray.indexOf(defectList[x].productionDataID, 0) != -1) {
+                        total = parseFloat(total) + parseFloat(defectList[x].value);
+                        count++;
+                    }
+                }
+                var avg = parseFloat((total / count)).toFixed(2);
+                array.push(avg);
+            }
+            return array;
+        },
+
+        setItemCount: function (items, defects) {
+            var array = [];
+            for (var i = 0; i < items.length; i++) {
+                var count = 0;
+                for (var x = 0; x < defects.length; x++) {
+                    if (defects[x].itemID == items[i].itemID) {
+                        count++;
+                    }
+                }
+                array[items[i].itemID] = count;
+            }
+            return array;
+        },
+
+        del: function (id) {
+            swal({
+                    title: "刪除資料?",
+                    text: "此動作將會刪除資料!",
+                    type: "warning",
+                    showCancelButton: true,
+                    cancelButtonText: '取消',
+                    confirmButtonClass: "btn-danger",
+                    confirmButtonText: "刪除",
+                    closeOnConfirm: false
+                },
+                function () {
+                    $.ajax({
+                        type: "DELETE",
+                        url: url + "/defect/deleteProductionDefect",
+                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                        data: {id: id},
+                        success: function (result) {
+                            if (result.success) {
+                                swal({
+                                    title: "刪除資料成功!",
+                                    type: "success",
+                                    showCancelButton: false,
+                                    confirmButtonClass: "btn-success",
+                                    confirmButtonText: "OK",
+                                    closeOnConfirm: true
+                                });
+                                productionInfo.getDefectList();
+                            } else {
+                                swal("刪除資料失敗!", response.message, "error");
+                            }
+                        },
+                        error: function (e) {
+                            var response = jQuery.parseJSON(e.responseText);
+                            swal("刪除資料失敗!", response.message, "error");
+                            console.log(response.message);
+                        }
+                    });
+                });
         }
     }
 });

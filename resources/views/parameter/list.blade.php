@@ -1,4 +1,4 @@
-@extends('layouts.masterpage')
+@extends('layouts.master_page')
 @section('content')
 <script src="{{ url('/js/parameter/list.js') }}"></script>
 <div class="row">

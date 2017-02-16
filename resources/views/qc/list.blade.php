@@ -1,4 +1,4 @@
-@extends('layouts.masterpage')
+@extends('layouts.master_page')
 @section('title', '品管管制表清單')
 @section('content')
 <script src="{{ url('/js/qc/list.js?v=3') }}"></script>

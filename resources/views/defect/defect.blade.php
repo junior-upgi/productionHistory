@@ -1,4 +1,4 @@
-@extends('layouts.masterpage')
+@extends('layouts.master_page')
 @section('title', '缺點項目管理')
 @section('content')
 <div id="defect">
@@ -60,5 +60,5 @@
     </div>
     @include('defect.addDefect')
 </div>
-<script src="{{ url('js/defect/defect.js?v=4') }}"></script>
+<script src="{{ url('js/defect/defect.js?v=5') }}"></script>
 @endsection

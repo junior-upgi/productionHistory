@@ -13,17 +13,30 @@
     <div class="tab-content" id="productionInfo">
         <div role="tabpanel" class="tab-pane active" id="productionDefect">
             <div style="margin-top: 10px; margin-bottom: 10px;">
-                <button type="button" class="btn btn-primary" @click="addProductionDefectShow()">新增生產缺點資料</button>
+                <button type="button" class="btn btn-primary" v-on:click="addProductionDefectShow()">新增生產缺點資料</button>
             </div>
-            @include('check.productionDefectTable')
+            <div v-if="productionDataCount > 0">
+                @include('check.productionDefectTable')
+            </div>
+            <div v-else>
+                <span>目前尚無資料</span>
+            </div>
             @include('check.addCheckDefect')
             @include('check.editCheckDefect')
         </div>
         <div role="tabpanel" class="tab-pane" id="spotCheck">
-            <div class="table-responsive">
-
+            <div style="margin-top: 10px; margin-bottom: 10px;">
+                <button type="button" class="btn btn-primary" v-on:click="addSpotCheckDefectShow()">新增抽驗缺點資料</button>
             </div>
+            <div v-if="spotCheckCount > 0">
+                @include('check.spotCheckTable')
+            </div>
+            <div v-else>
+                <span>目前尚無資料</span>
+            </div>
+            @include('check.addSpotCheckDefect')
+            @include('check.editSpotCheckDefect')
         </div>
     </div>
 </div>
-<script src="{{ url('/js/check/checkDefect.js?v=4') }}"></script>
+<script src="{{ url('/js/check/checkDefect.js?v=11') }}"></script>

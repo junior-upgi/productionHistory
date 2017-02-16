@@ -11,7 +11,7 @@ $(document).ready(function () {
         autoclose: true,
         todayBtn: true,
         todayHighlight: true,
-        language: 'zh-TW',
+        language: 'zh-TW'
     });
     $("#addCheckForm").ajaxForm({
         url: url + '/defect/insertCheck',
@@ -31,7 +31,7 @@ $(document).ready(function () {
                         closeOnConfirm: false
                     },
                     function () {
-                        document.location.href = url + '/nav/check.editCheck?id=' + obj.id;
+                        document.location.href = url + '/nav/check.editCheck?checkID=' + obj.id;
                     });
             } else {
                 swal("新增資料失敗!", obj.msg, "error");
@@ -49,7 +49,7 @@ var addCheck = new Vue({
     data: {
         template: [],
         schedule: [],
-        customer: [],
+        customer: []
     },
     computed: {
 
@@ -62,16 +62,15 @@ var addCheck = new Vue({
     methods: {
         getSchedule: function () {
             var urlParams = new URLSearchParams(window.location.search);
-            var baseData = {
+            this.schedule = {
                 'view': 'run',
                 'id': urlParams.get('id'),
                 'schedate': urlParams.get('schedate'),
                 'snm': urlParams.get('snm'),
                 'glassProdLineID': urlParams.get('glassProdLineID'),
                 'orderQty': urlParams.get('orderQty'),
-                'prd_no': urlParams.get('prd_no'),
+                'prd_no': urlParams.get('prd_no')
             };
-            this.schedule = baseData;
             this.getCustomer();
         },
 

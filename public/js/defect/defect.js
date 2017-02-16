@@ -158,15 +158,15 @@ var defect = new Vue({
                     data: {id: id},
                     error: function(e) {
                         var response = jQuery.parseJSON(e.responseText);	
-                        swal("刪除資料失敗!", response.message, "error");	
-                        item.setInit();	    
+                        swal("刪除資料失敗!", response.message, "error");
+                        defect.setInit();
                         return false;
                     },
 
                     success: function(result){			  		  	
                         if (result.success == true){	 
-                            item.setInit();
-                            item.getItem();
+                            defect.setInit();
+                            defect.getDefectList();
                             swal({
                                 title: "刪除資料成功!",
                                 type: "success",

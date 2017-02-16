@@ -69,8 +69,7 @@ class CheckService
     public function searchCheck($input)
     {
         if (isset($input['snm'])) {
-            $prd_no = $this->base->getPrdNo($input['snm']);
-            return $this->check->searchCheckByPrdNo($prd_no)->get();
+            return $this->check->searchCheckByPrdNo($this->base->getPrdNo($input['snm']))->get();
         }
         if (isset($input['start']) || isset($input['end'])) {
             return $this->check->searchCheckBySchedate($input['start'], $input['end'])->get();
@@ -87,8 +86,7 @@ class CheckService
     public function getCheck($id)
     {
         $data = $this->check->getCheck($id)->first();
-        $customer = $this->schedule->getScheduleCustomerByParams('run', $data['prd_no'], $data['glassProdLineID'], $data['schedate']);
-        $data['customer'] = $customer;
+        $data['customer'] = $this->schedule->getScheduleCustomerByParams('run', $data['prd_no'], $data['glassProdLineID'], $data['schedate']);
         return $data;
     }
 
@@ -100,15 +98,15 @@ class CheckService
      */
     public function getScheduleList($request)
     {
-        $collection = $this->schedule->getScheduleList('run', $request)
+        return $this->schedule->getScheduleList('run', $request)
             ->whereNotExists(function ($query) {
                 $query->select(DB::raw(1))
                     ->from('defectCheck')
                     ->whereRaw('defectCheck.schedate = glassRun.schedate')
                     ->whereRaw('defectCheck.glassProdLineID = glassRun.glassProdLineID')
-                    ->whereRaw('defectCheck.prd_no = glassRun.prd_no');
+                    ->whereRaw('defectCheck.prd_no = glassRun.prd_no')
+                    ->whereRaw('defectCheck.deleted_at = null');
             })->get();
-        return $collection;
     }
 
     /**

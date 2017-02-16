@@ -19,7 +19,8 @@
                             <div class="form-group form-group-sm">
                                 <label for="prodDate" class="control-label col-md-2">生產日期</label>
                                 <div class="col-md-3">
-                                    <input type="text" class="form-control input-sm date" name="prodDate">
+                                    <input type="text" class="form-control input-sm date" name="prodDate"
+                                           value="{{ date('Y-m-d', strtotime(\Carbon\Carbon::today())) }}">
                                 </div>
                             </div>
                             <div class="form-group form-group-sm">
@@ -46,8 +47,8 @@
                                         <table class="table table-condensed table-bordered" style="margin: 0px;">
                                             <tr>
                                                 <td width="160">實際生產數量</td>
-                                                <td><input type="text" class="form-control input-sm"
-                                                           name="actualQuantity"></td>
+                                                <td><input type="number" class="form-control input-sm"
+                                                   name="actualQuantity" value="0"></td>
                                             </tr>
                                             <tr>
                                                 <td>機速</td>
@@ -56,23 +57,23 @@
                                             </tr>
                                             <tr>
                                                 <td>分鐘</td>
-                                                <td><input type="text" class="form-control input-sm"
-                                                           name="minute"></td>
+                                                <td><input type="number" class="form-control input-sm"
+                                                    name="minute" value="0"></td>
                                             </tr>
                                             <tr>
                                                 <td>檢瓶率</td>
-                                                <td><input type="text" class="form-control input-sm"
-                                                           name="checkRate"></td>
+                                                <td><input type="number" class="form-control input-sm"
+                                                    name="checkRate" value="0"></td>
                                             </tr>
                                             <tr>
                                                 <td>實際生產重量最小值</td>
-                                                <td><input type="text" class="form-control input-sm"
-                                                           name="actualMinWeight"></td>
+                                                <td><input type="number" class="form-control input-sm"
+                                                    name="actualMinWeight" value="0"></td>
                                             </tr>
                                             <tr>
                                                 <td>實際生產重量最大值</td>
-                                                <td><input type="text" class="form-control input-sm"
-                                                           name="actualMaxWeight"></td>
+                                                <td><input type="number" class="form-control input-sm"
+                                                    name="actualMaxWeight" value="0"></td>
                                             </tr>
                                             <tr>
                                                 <td>歪力</td>
@@ -88,7 +89,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default" v-for="item in items">
+                            <div class="panel panel-default" v-for="item in items" v-if="itemsCount[item.itemID] != 0">
                                 <div class="panel-heading" role="tab">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" v-bind:href="'#p_add_' + item.itemID"
@@ -103,7 +104,7 @@
                                             <tr v-for="defect in defects" v-if="item.itemID == defect.itemID">
                                                 <td>@{{ defect.defectName }}</td>
                                                 <td><input type="number" class="form-control input-sm"
-                                                   v-bind:name="defect.itemID + defect.defectID"></td>
+                                                   v-bind:name="defect.itemID + defect.defectID" value="0"></td>
                                             </tr>
                                         </table>
                                     </div>

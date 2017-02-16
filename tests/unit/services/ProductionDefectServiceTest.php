@@ -113,6 +113,86 @@ class ProductionDefectServiceTest extends TestCase
         $this->assertEquals($expected->get(), $actual);
     }
 
+    public function test_getSpotCheckTemplateItem()
+    {
+        /** arrange */
+        $checkID = '';
+        $mock = Mockery::mock(TemplateRepository::class);
+        $this->app->instance(TemplateRepository::class, $mock);
+
+        $mock_check = Mockery::mock(CheckRepository::class);
+        $this->app->instance(CheckRepository::class, $mock_check);
+
+        /** act */
+        $return1 = new Class {
+            public $spotCheckTemplateID;
+            public function first () {
+                return $this;
+            }
+        };
+
+        $expected = new Class {
+            public function get () {
+
+            }
+        };
+
+        $mock_check->shouldReceive('getCheck')
+            ->once()
+            ->with($checkID)
+            ->andReturn($return1);
+        $template = $return1->first();
+        $mock->shouldReceive('getTemplateItem')
+            ->once()
+            ->with($template->spotCheckTemplateID)
+            ->andReturn($expected);
+        $target = $this->app->make(ProductionDefectService::class);
+        $actual = $target->getSpotCheckTemplateItem($checkID);
+
+        /** assert */
+        $this->assertEquals($expected->get(), $actual);
+    }
+
+    public function test_getSpotCheckTemplateDefect()
+    {
+        /** arrange */
+        $checkID = '';
+        $mock = Mockery::mock(TemplateRepository::class);
+        $this->app->instance(TemplateRepository::class, $mock);
+
+        $mock_check = Mockery::mock(CheckRepository::class);
+        $this->app->instance(CheckRepository::class, $mock_check);
+
+        /** act */
+        $return1 = new Class {
+            public $spotCheckTemplateID;
+            public function first () {
+                return $this;
+            }
+        };
+
+        $expected = new Class {
+            public function get () {
+
+            }
+        };
+
+        $mock_check->shouldReceive('getCheck')
+            ->once()
+            ->with($checkID)
+            ->andReturn($return1);
+        $template = $return1->first();
+        $mock->shouldReceive('getTemplateDefect')
+            ->once()
+            ->with($template->spotCheckTemplateID)
+            ->andReturn($expected);
+        $target = $this->app->make(ProductionDefectService::class);
+        $actual = $target->getSpotCheckTemplateDefect($checkID);
+
+        /** assert */
+        $this->assertEquals($expected->get(), $actual);
+    }
+
     public function _test_getProductionDataList()
     {
         /** arrange */
@@ -176,6 +256,76 @@ class ProductionDefectServiceTest extends TestCase
         $mock_defect = Mockery::mock(ProductionDefectRepository::class);
         $this->app->instance(ProductionDefectRepository::class, $mock_defect);
 
+        $input['id'] = '';
+        $input['checkID'] = '32EF7C89-2303-62E7-1111-417D61E9296F';
+        $input['prodDate'] = 'prodDate';
+        $input['classType'] = 'classType';
+        $input['spotCheck'] = 1;
+        $input['classRemark'] = 'classRemark';
+        $input['minute'] = 'minute';
+        $input['speed'] = 'speed';
+        $input['checkRate'] = 'checkRate';
+        $input['actualQuantity'] = 'actualQuantity';
+        $input['actualMinWeight'] = 'actualMinWeight';
+        $input['actualMaxWeight'] = 'actualMaxWeight';
+        $input['stressLevel'] = 'stressLevel';
+        $input['thermalShock'] = 'thermalShock';
+        $input['itemID1defectID1'] = 1;
+        $input['itemID1defectID2'] = 2;
+        $input['nonExistsID'] = '';
+        $return1 = new Class {
+            public $templateID;
+            public $spotCheckTemplateID;
+            public function first () {
+                return $this;
+            }
+        };
+        $result = new Class {
+            public function get () {
+                return [
+                    ['itemID' => 'itemID1', 'defectID' => 'defectID1'],
+                    ['itemID' => 'itemID1', 'defectID' => 'defectID2']
+                ];
+            }
+        };
+
+        /** act */
+        $mock_check->shouldReceive('getCheck')
+            ->once()
+            ->with($input['checkID'])
+            ->andReturn($return1);
+        $template = $return1->first();
+
+        $mock->shouldReceive('getTemplateDefect')
+            ->once()
+            ->with($template->templateID)
+            ->andReturn($result);
+
+        $expected = ['success' => true, 'msg' => 'success'];
+
+        $mock_defect->shouldReceive('insertProductionDefect')
+            ->once()
+            ->withAnyArgs()
+            ->andReturn($expected);
+        $target = $this->app->make(ProductionDefectService::class);
+        $actual = $target->insertProductionDefect($input);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_updateProductionDefect()
+    {
+        /** arrange */
+        $mock_check = Mockery::mock(CheckRepository::class);
+        $this->app->instance(CheckRepository::class, $mock_check);
+
+        $mock = Mockery::mock(TemplateRepository::class);
+        $this->app->instance(TemplateRepository::class, $mock);
+
+        $mock_defect = Mockery::mock(ProductionDefectRepository::class);
+        $this->app->instance(ProductionDefectRepository::class, $mock_defect);
+
         $input['id'] = '32EF7C89-2303-62E7-5878-417D61E9296F';
         $input['checkID'] = '32EF7C89-2303-62E7-1111-417D61E9296F';
         $input['prodDate'] = 'prodDate';
@@ -218,30 +368,12 @@ class ProductionDefectServiceTest extends TestCase
 
         $expected = ['success' => true, 'msg' => 'success'];
 
-        $mock_defect->shouldReceive('insertProductionDefect')
+        $mock_defect->shouldReceive('updateProductionDefect')
             ->once()
             ->with($params1, $params2)
             ->andReturn($expected);
         $target = $this->app->make(ProductionDefectService::class);
-        $actual = $target->insertProductionDefect($input);
-
-        /** assert */
-        $this->assertEquals($expected, $actual);
-    }
-
-    public function test_updateProductionDefect()
-    {
-        /** arrange */
-        $input = ['id' => '00000000-0000-0000-0000-000000000000'];
-        $params = [];
-
-        /** act */
-        $expected = 'success';
-        $this->mock->shouldReceive('updateProductionDefect')
-            ->once()
-            ->with($input['id'], $params)
-            ->andReturn($expected);
-        $actual = $this->target->updateProductionDefect($input);
+        $actual = $target->updateProductionDefect($input);
 
         /** assert */
         $this->assertEquals($expected, $actual);
@@ -259,6 +391,26 @@ class ProductionDefectServiceTest extends TestCase
             ->with($id)
             ->andReturn($expected);
         $actual = $this->target->deleteProductionDefect($id);
+
+        /** assert */
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function test_getDefectAvg()
+    {
+        /** arrange */
+        $checkID = 'checkID';
+        $mock = Mockery::mock(ProductionDefectRepository::class);
+        $this->app->instance(ProductionDefectRepository::class, $mock);
+
+        /** act */
+        $expected = new Class { public function get() {}};
+        $mock->shouldReceive('getDefectAvg')
+            ->once()
+            ->with($checkID)
+            ->andReturn($expected);
+        $target = $this->app->make(ProductionDefectService::class);
+        $actual = $target->getDefectAvg($checkID);
 
         /** assert */
         $this->assertEquals($expected, $actual);

@@ -1,4 +1,4 @@
-@extends('layouts.masterpage')
+@extends('layouts.master_page')
 @section('title', '生產值班表清單')
 @section('content')
 <script src="{{ url('/js/duty/list.js?x=5') }}"></script>

@@ -144,7 +144,9 @@ class CheckController extends Controller
             'productionData' => $this->defectService->getProductionDataList(request()->input('checkID')),
             'defectList' => $this->defectService->getProductionDefectList(request()->input('checkID')),
             'item' => $this->defectService->getCheckTemplateItem(request()->input('checkID')),
-            'defect' => $this->defectService->getCheckTemplateDefect(request()->input('checkID'))
+            'defect' => $this->defectService->getCheckTemplateDefect(request()->input('checkID')),
+            'spotCheckItem' => $this->defectService->getSpotCheckTemplateItem(request()->input('checkID')),
+            'spotCheckDefect' => $this->defectService->getSpotCheckTemplateDefect(request()->input('checkID'))
         ];
     }
 
@@ -184,5 +186,19 @@ class CheckController extends Controller
     public function getScheduleCustomer()
     {
         return $this->service->getScheduleCustomer(request());
+    }
+
+    /**
+     * 輸出品管履歷表頁面
+     *
+     * @return array
+     */
+    public function printCheckReport()
+    {
+        return [
+            'check' => $this->service->getCheck(request()->input('checkID')),
+            'data' => $this->defectService->getProductionDataList(request()->input('checkID')),
+            'defect' => $this->defectService->getDefectAvg(request()->input('checkID'))
+        ];
     }
 }

@@ -40,7 +40,7 @@ trait DataFormatService
      * @param $type
      * @return mixed
      */
-    public function setTimestamp($type, $params)
+    public function setTimestamp($type, $params = [])
     {
         if (isset($params[0])) {
             return $this->setTimestampBy2DArray($type, $params);

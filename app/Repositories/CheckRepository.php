@@ -43,6 +43,7 @@ class CheckRepository
     {
         return $this->check
             ->join('UPGWeb.dbo.glass', 'defectCheck.prd_no', 'glass.prd_no')
+            ->orderBy('schedate', 'desc')
             ->select('defectCheck.*', 'glass.snm');
     }
 
@@ -87,7 +88,7 @@ class CheckRepository
     {
         return $this->check->where('id', $id)
             ->join('UPGWeb.dbo.glass', 'UPGWeb.dbo.glass.prd_no', 'defectCheck.prd_no')
-            ->select('defectCheck.*', 'UPGWeb.dbo.glass.snm');
+            ->select('defectCheck.*', 'UPGWeb.dbo.glass.snm', 'UPGWeb.dbo.glass.spc');
     }
 
     /**
@@ -99,10 +100,28 @@ class CheckRepository
     public function insertCheck($params)
     {
         try {
-            $this->check->insert($this->setTimestamp('created', $params));
+            $this->insertCheckPrework($params);
             return ['success' => true, 'msg' => '新增檢查表成功', 'id' => $params['id']];
         } catch(\Exception $e) {
             return ['success' => false, 'msg' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * 新增檢查表前置工作
+     * 判斷是否曾經刪過檢查表，進行新增或修改
+     *
+     * @param $params
+     */
+    private function insertCheckPrework($params)
+    {
+        $table = $this->check->withTrashed()->where('id', $params['id']);
+        if ($table->exists()) {
+            $params['deleted_at'] = null;
+            $params['deleted_by'] = null;
+            $table->update($this->setTimestamp('updated', $params));
+        } else {
+            $this->check->insert($this->setTimestamp('created', $params));
         }
     }
 

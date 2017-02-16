@@ -1,4 +1,4 @@
-@extends('layouts.masterpage')
+@extends('layouts.master_page')
 @section('title', '新增檢查表')
 @section('content')
 <div id="addCheck">

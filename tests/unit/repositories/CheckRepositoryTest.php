@@ -62,6 +62,7 @@ class CheckRepositoryTest extends TestCase
         /** act */
         $expected = $table
             ->join('UPGWeb.dbo.glass', 'defectCheck.prd_no', 'glass.prd_no')
+            ->orderBy('schedate', 'desc')
             ->select('defectCheck.*', 'glass.snm');
 
         $target = App::make(CheckRepository::class);
@@ -148,7 +149,7 @@ class CheckRepositoryTest extends TestCase
         $this->assertEquals($expected, $actual->id);
     }
 
-    public function _test_insertCheck()
+    public function test_insertCheck()
     {
         /** arrange */
         $id = '99999999-9999-9999-9999-999999999999';
@@ -169,7 +170,41 @@ class CheckRepositoryTest extends TestCase
         $this->assertEquals($expected, $actual2->id);
     }
 
-    public function _test_updateCheck()
+    public function test_insertCheck_data_existed()
+    {
+        /** arrange */
+        $id = '99999999-9999-9999-9999-999999999999';
+        $params = [
+            'id' => $id,
+            'prd_no' => 'TS999999',
+            'deleted_at' => \Carbon\Carbon::now()
+        ];
+        DefectCheck::insert($params);
+
+        /** act */
+        $target = App::make(CheckRepository::class);
+        $actual1 = $target->insertCheck($params);
+        $actual2 = DefectCheck::where('id', $id)->first();
+        $expected = $id;
+
+        /** assert */
+        $this->assertTrue($actual1['success']);
+        $this->assertEquals($expected, $actual2->id);
+    }
+
+    public function test_insertCheck_exception()
+    {
+        /** arrange */
+        $error = ['error' => 'error'];
+
+        /** act */
+        $actual = $this->target->insertCheck($error);
+
+        /** assert */
+        $this->assertFalse($actual['success']);
+    }
+
+    public function test_updateCheck()
     {
         /** arrange */
         $id = '99999999-9999-9999-9999-999999999999';
@@ -192,7 +227,19 @@ class CheckRepositoryTest extends TestCase
         $this->assertEquals($expected, $actual2->prd_no);
     }
 
-    public function _test_deleteCheck()
+    public function test_updateCheck_exception()
+    {
+        /** arrange */
+        $error = ['error' => 'error'];
+
+        /** act */
+        $actual = $this->target->updateCheck('', $error);
+
+        /** assert */
+        $this->assertFalse($actual['success']);
+    }
+
+    public function test_deleteCheck()
     {
         /** arrange */
         $id = '99999999-9999-9999-9999-999999999999';
@@ -213,6 +260,18 @@ class CheckRepositoryTest extends TestCase
         $this->assertTrue($actual1['success']);
         $this->assertEquals($expected, $actual2->count());
         $this->assertNotEquals(null, $actual3->first()->deleted_at);
+    }
+
+    public function test_deleteCheck_exception()
+    {
+        /** arrange */
+        $error = new Class () {};
+
+        /** act */
+        $actual = $this->target->deleteCheck($error);
+
+        /** assert */
+        $this->assertFalse($actual['success']);
     }
 
     public function test_params()

@@ -1,4 +1,4 @@
-@extends('layouts.masterpage')
+@extends('layouts.master_page')
 @section('title', '產品履歷表清單')
 @section('content')
 <script src="{{ url('/js/history/list.js?v=12') }}"></script>

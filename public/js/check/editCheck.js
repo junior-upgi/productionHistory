@@ -57,6 +57,7 @@ $(document).ready(function () {
         $('.info').hide();
     });
 });
+
 var editCheck = new Vue({
     el: '#editCheck',
     data: {
@@ -64,10 +65,15 @@ var editCheck = new Vue({
         checkData: [],
         decoration: [],
         templateID: '',
+        spotCheckTemplateID: ''
     },
     computed: {
         templateID: function () {
             return this.checkData.templateID;
+        },
+
+        spotCheckTemplateID: function () {
+            return this.checkData.spotCheckTemplateID;
         }
     },
     mounted: function () {
@@ -109,7 +115,10 @@ var editCheck = new Vue({
         },
 
         setDecoration: function (decoration) {
-            return decoration.split(',');
+            if (decoration != null) {
+                return decoration.split(',');
+            }
+            return decoration;
         }
     }
 });

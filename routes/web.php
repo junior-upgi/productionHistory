@@ -19,6 +19,10 @@ Route::get('nav/{view}', function ($view) {
     return view($view);
 });
 
+Route::get('test/{view}', function ($view) {
+    return view('test.' . $view);
+});
+
 Route::group(['prefix' => 'Duty'], function() {
 //Route::group(['middleware' => 'sso', 'prefix' => 'Duty'], function() {
     Route::get('ScheduleList', 'DutyController@dutySchedule');
@@ -109,4 +113,6 @@ Route::group(['prefix' => 'defect'], function() {
     Route::post('insertProductionDefect', 'CheckController@insertProductionDefect');
     Route::put('updateProductionDefect', 'CheckController@updateProductionDefect');
     Route::delete('deleteProductionDefect', 'CheckController@deleteProductionDefect');
+
+    Route::get('report', 'CheckController@printCheckReport');
 });

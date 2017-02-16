@@ -5,13 +5,13 @@
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h4 class="modal-title">新增缺點記錄</h4>
+                <h4 class="modal-title">更新缺點記錄</h4>
             </div>
-            <form class="form-horizontal" id="addCheckDefectForm" role="form">
+            <form class="form-horizontal" id="editCheckDefectForm" role="form">
                 <div class="modal-body">
                     <div class="row">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                        <input type="hidden" name="id" value="">
+                        <input type="hidden" name="id" :value="editData.id">
                         <input type="hidden" name="checkID" :value="checkID">
                         <input type="hidden" name="classRemark" :value="editData.classRemark">
                         <input type="hidden" name="spotCheck" value="0">
@@ -47,7 +47,7 @@
                                         <table class="table table-condensed table-bordered" style="margin: 0px;">
                                             <tr>
                                                 <td width="160">實際生產數量</td>
-                                                <td><input type="text" class="form-control input-sm"
+                                                <td><input type="number" class="form-control input-sm"
                                                            name="actualQuantity" :value="editData.actualQuantity"></td>
                                             </tr>
                                             <tr>
@@ -57,22 +57,22 @@
                                             </tr>
                                             <tr>
                                                 <td>分鐘</td>
-                                                <td><input type="text" class="form-control input-sm"
+                                                <td><input type="number" class="form-control input-sm"
                                                            name="minute" :value="editData.minute"></td>
                                             </tr>
                                             <tr>
                                                 <td>檢瓶率</td>
-                                                <td><input type="text" class="form-control input-sm"
+                                                <td><input type="number" class="form-control input-sm"
                                                            name="checkRate" :value="editData.checkRate"></td>
                                             </tr>
                                             <tr>
                                                 <td>實際生產重量最小值</td>
-                                                <td><input type="text" class="form-control input-sm"
+                                                <td><input type="number" class="form-control input-sm"
                                                            name="actualMinWeight" :value="editData.actualMinWeight"></td>
                                             </tr>
                                             <tr>
                                                 <td>實際生產重量最大值</td>
-                                                <td><input type="text" class="form-control input-sm"
+                                                <td><input type="number" class="form-control input-sm"
                                                            name="actualMaxWeight" :value="editData.actualMaxWeight"></td>
                                             </tr>
                                             <tr>
@@ -89,7 +89,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default" v-for="item in items">
+                            <div class="panel panel-default" v-for="item in items" v-if="itemsCount[item.itemID] != 0">
                                 <div class="panel-heading" role="tab">
                                     <h4 class="panel-title">
                                         <a data-toggle="collapse" v-bind:href="'#p_edit_' + item.itemID"
@@ -105,7 +105,7 @@
                                                 <td>@{{ defect.defectName }}</td>
                                                 <td><input type="number" class="form-control input-sm"
                                                            v-bind:name="defect.itemID + defect.defectID"
-                                                           :value="editDefect[defect.defectID]"></td>
+                                                           :value="editDefect[defect.itemID + defect.defectID]"></td>
                                             </tr>
                                         </table>
                                     </div>
