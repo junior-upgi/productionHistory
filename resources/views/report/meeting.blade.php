@@ -1,7 +1,7 @@
 @extends('layouts.report')
 @section('title', '生產資訊報表')
 @section('content')
-<script src="{{ url('/js/report/meeting.js?v=4') }}"></script>
+<script src="{{ url('/js/report/meeting.js?v=5') }}"></script>
 @if (isset($historyList)) 
     <div class="row" style="padding-top: 10px; height: 100%; overflow: auto;">
         <div class="col-md-3">
@@ -20,16 +20,16 @@
                         <td></td>
                         <td>日期</td>
                         <td>線別</td>
-                        <td>良率</td>
+                        <td>預計生產量</td>
                     </tr>
                 </thead>
                 <tbody id="history_tbody">
-                    @foreach ($historyList as $item)
+                    @foreach ($schedule as $item)
                         <tr>
-                            <td><input type="checkbox" class="ch" value="{{ $item['id'] }}"></td>
+                            <td><input type="checkbox" class="ch" value="{{ $item['schedate'] . $item['glassProdLineID'] }}"></td>
                             <td>{{ date('Y-m-d', strtotime($item['schedate'])) }}</td>
                             <td>{{ $item['glassProdLineID'] }}</td>
-                            <td>{{ $item['efficiency'] }}</td>
+                            <td>{{ $item['orderQty'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -123,12 +123,12 @@
             <div id="historyDetail">
                 @foreach ($prodData as $item)
                     @if (true)
-                        <div class="panel panel-warning" id="{{ 'hi_' . $item['historyID'] }}" style="display:none;">
+                        <div class="panel panel-warning" id="{{ $item['mainSchedate'] . $item['mainGlassProdLineID'] }}" style="display:none;">
                             <div class="panel-heading">
                                 <h2 class="panel-title">
-                                    <div class="col-md-3">生產日期： {{ date('Y-m-d', strtotime($item['hschedate'])) }}</div>
-                                    <div class="col-md-2">線別： {{ $item['hline'] }}</div>
-                                    良率： {{ $item['efficiency'] }}
+                                    <div class="col-md-3">生產日期： {{ date('Y-m-d', strtotime($item['mainSchedate'])) }}</div>
+                                    <div class="col-md-2">線別： {{ $item['mainGlassProdLineID'] }}</div>
+                                    良率：
                                 </h2>
                             </div>
                             <table class="table table-bordered">
@@ -166,23 +166,45 @@
                                 <!--生產履歷資料-->
                                 <tr>
                                     <td>吹製方法</td><td>{{ $item['formingMethod'] }}</td><td>量規</td><td colspan="2">{{ $item['gauge'] }}</td>
-                                    <td>重量</td><td>{{ $item['weight'] }}</td><td>機速</td><td>{{ $item['speed'] }}</td>
-                                    <td colspan="2">檢瓶率/繳庫率</td><td  colspan="2">{{ $item['efficiency'] }}</td>
+                                    <td>重量</td><td>{{ $item['weight'] }}</td>
+                                    <td>機速</td>
+                                    <td>
+                                        @foreach($prodInfo as $info)
+                                            @if($info['schedate'] == date('Y-m-d', strtotime($item['mainSchedate'])) && $info['glassProdLineID'] == $item['mainGlassProdLineID'])
+                                                {{ $info['speed'] }}
+                                            @endif
+                                        @endforeach
+                                    </td>
+                                    <td colspan="2">檢瓶率/繳庫率</td>
+                                    <td  colspan="2">
+                                        @foreach($prodInfo as $info)
+                                            @if($info['schedate'] == date('Y-m-d', strtotime($item['mainSchedate'])) && $info['glassProdLineID'] == $item['mainGlassProdLineID'])
+                                                {{ sprintf("%.2f", $info['checkRate']) }}
+                                            @endif
+                                        @endforeach
+                                        <span> / {{ $item['payRate'] }}</span>
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td>生產狀況記錄</td>
-                                    <td colspan="12">{!! nl2br($item['note']) !!}</td>
+                                    <td colspan="12">{{ $item['note'] }}</td>
                                 </tr>
                                 <tr>
                                     <td>生產缺點</td>
-                                    <td colspan="12">{!! nl2br($item['defect']) !!}</td>
+                                    <td colspan="12">
+                                        @foreach($defect as $d)
+                                            @if($d['schedate'] == date('Y-m-d', strtotime($item['mainSchedate'])) && $d['glassProdLineID'] == $item['mainGlassProdLineID'])
+                                                {{ $d['defect'] }}
+                                            @endif
+                                        @endforeach
+                                    </td>
                                 </tr>
                             </table>
                         </div>
                     @else
                         <div class="panel panel-warning" id="{{ 'hi_' . $item['historyID'] }}" style="display:none;">
                             <div class="panel-heading">
-                                <h3 class="panel-title">生產日期： {{ $item['hschedate'] }}</h3>
+                                <h3 class="panel-title">生產日期： {{ $item['schedate'] }}</h3>
                             </div>
                             <div class="panel-body">
                                 <h4>無此次生產條件資料</h4>

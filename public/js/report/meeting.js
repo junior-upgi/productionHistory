@@ -14,10 +14,9 @@ $(function () {
     };
     $('.ch').change( function () {
         if ($(this).prop('checked')) {
-            var a = $(this).val();
-            $('#hi_' + a).show();
+            $('#' + $(this).val()).show();
         } else {
-            $('#hi_' + $(this).val()).hide();
+            $('#' + $(this).val()).hide();
         }
     });
 });

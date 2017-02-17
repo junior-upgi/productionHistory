@@ -32,25 +32,28 @@ class ReportController extends Controller
     {
         $request = request();
         $snm = $request->input('snm');
-        
-        $historyList = $this->report->getReportHistoryList($snm)->get()->toArray();
-        if (count($historyList) > 0) {
-            $prd_no = $historyList[0]['prd_no'];
-            $qcData = $this->report->getQCList($request)->first();
-            $task = $this->report->getTaskDetailByPrdNO($prd_no)->orderBy('deadline', 'desc')->get()->toArray();
-            $prodData = $this->report->getProdData($prd_no)->orderBy('productionHistory.schedate', 'desc')->orderBy('glassProdLineID')->get()->toArray();
-
-            return view('report.meeting')
-                ->with('snm', $snm)
-                ->with('historyList', $historyList)
-                ->with('qc', $qcData)
-                ->with('prodData', $prodData)
-                ->with('task', $task);
-        }
         if ($snm == '') {
             return view('report.meeting')->with('snm', null);
         }
-        return view('report.meeting')->with('snm', $snm);
+
+        $historyList = $this->report->getReportHistoryList($snm)->get()->toArray();
+        $schedule = $this->report->getReportScheduleList($snm)->get()->toArray();
+        $prd_no = $schedule[0]['prd_no'];
+        $qcData = $this->report->getQCList($request)->first();
+        $task = $this->report->getTaskDetailByPrdNO($prd_no)->orderBy('deadline', 'desc')->get()->toArray();
+        $prodData = $this->report->getProdData($prd_no)->orderBy('glassRun.schedate', 'desc')->orderBy('glassRun.glassProdLineID')->get()->toArray();
+        $prodInfo = $this->report->getProdInfo($prd_no)->get()->toArray();
+        $defect = $this->report->getDefect($prd_no);
+
+        return view('report.meeting')
+            ->with('snm', $snm)
+            ->with('schedule', $schedule)
+            ->with('historyList', $historyList)
+            ->with('qc', $qcData)
+            ->with('prodData', $prodData)
+            ->with('prodInfo', $prodInfo)
+            ->with('defect', $defect)
+            ->with('task', $task);
     }
 
     /**

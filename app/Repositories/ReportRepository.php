@@ -9,6 +9,10 @@
  */
 namespace App\Repositories;
 
+use App\Models\productionHistory\DefectCheck;
+use App\Models\productionHistory\GlassRun;
+use App\Models\productionHistory\ProductionData;
+use App\Models\productionHistory\ProductionDefect;
 use DB;
 use App\Repositories\BaseRepository;
 
@@ -49,6 +53,22 @@ class ReportRepository extends BaseRepository
      * @var Glass
      */
     public $glass;
+    /**
+     * @var GlassRun
+     */
+    public $run;
+    /**
+     * @var DefectCheck
+     */
+    public $check;
+    /**
+     * @var ProductionData
+     */
+    public $prodData;
+    /**
+     * @var ProductionDefect
+     */
+    public $defect;
 
     /**
      * ReportRepository constructor.
@@ -58,6 +78,10 @@ class ReportRepository extends BaseRepository
      * @param QualityControl $qc
      * @param Glass $glass
      * @param TaskListDetail $taskDetail
+     * @param GlassRun $run
+     * @param DefectCheck $check
+     * @param ProductionData $prodData
+     * @param ProductionDefect $defect
      */
     public function __construct(
         Common $common,
@@ -65,7 +89,11 @@ class ReportRepository extends BaseRepository
         GlassRundetail $runDetail,
         QualityControl $qc,
         Glass $glass,
-        TaskListDetail $taskDetail
+        TaskListDetail $taskDetail,
+        GlassRun $run,
+        DefectCheck $check,
+        ProductionData $prodData,
+        ProductionDefect $defect
     ) {
         $this->common = $common;
         $this->history = $history;
@@ -73,10 +101,14 @@ class ReportRepository extends BaseRepository
         $this->qc = $qc;
         $this->glass = $glass;
         $this->taskDetail = $taskDetail;
+        $this->run = $run;
+        $this->check = $check;
+        $this->prodData = $prodData;
+        $this->defect = $defect;
     }
 
     /**
-     *
+     * 取得履歷表清單
      *
      * @param $snm
      * @return mixed
@@ -86,8 +118,14 @@ class ReportRepository extends BaseRepository
         return $this->getReportFromSchedule($snm);
     }
 
+    public function getReportScheduleList($snm)
+    {
+        $list = $this->run->where('PRDT_SNM', $snm)->orderBy('schedate', 'desc');
+        return $list;
+    }
+
     /**
-     *
+     * 取得排程清單
      *
      * @param $snm
      * @return mixed
@@ -109,7 +147,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 取得試模清單
      *
      * @param $schedule
      * @param $snm
@@ -129,7 +167,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 取得所有履歷表清單
      *
      * @param $request
      * @return mixed
@@ -146,7 +184,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 格式化排程日期2016/01/01 => 2016-01-01
      *
      * @param $date
      * @return mixed
@@ -163,7 +201,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 取得履歷清單與排程
      *
      * @param $snm
      * @param $runProdLineID
@@ -189,7 +227,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * union履歷清單與排程
      *
      * @param $snm
      * @param $runProdLineID
@@ -215,7 +253,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 取得表單履歷清單
      *
      * @param $id
      * @return mixed
@@ -250,7 +288,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 取得履歷客戶資料
      *
      * @param $table
      * @return array
@@ -265,7 +303,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 串接客戶資料
      *
      * @param $item
      * @param array $customer
@@ -288,7 +326,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 取得品管清單
      *
      * @param $request
      * @return mixed
@@ -309,7 +347,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 取得瓶號資料
      *
      * @return mixed
      */
@@ -319,7 +357,7 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 取得註記
      *
      * @param $prd_no
      * @return mixed
@@ -330,27 +368,31 @@ class ReportRepository extends BaseRepository
     }
 
     /**
-     *
+     * 取得生產資訊
      *
      * @param $prd_no
      * @return mixed
      */
     public function getProdData($prd_no)
     {
-        return $this->history
-            ->where('productionHistory.prd_no', $prd_no)
-            ->leftJoin('isProdData', function ($join) {
-                $join->on('isProdData.schedate', 'productionHistory.schedate')
-                    ->on('isProdData.glassProdLineID', 'productionHistory.glassProdLineID')
-                    ->on('isProdData.prd_no', 'productionHistory.prd_no');
+        return $this->run
+            ->where('glassRun.prd_no', $prd_no)
+            ->leftJoin('defectCheck', function ($join) {
+                $join->on('defectCheck.schedate', 'glassRun.schedate')
+                    ->on('defectCheck.glassProdLineID', 'glassRun.glassProdLineID')
+                    ->on('defectCheck.prd_no', 'glassRun.prd_no');
             })
-            ->select('productionHistory.id as historyID', 'productionHistory.schedate as hschedate', 'productionHistory.glassProdLineID as hline', 
-                'productionHistory.efficiency', 'productionHistory.gauge', 'productionHistory.formingMethod', 'productionHistory.weight',
-                'productionHistory.defect', 'productionHistory.speed', 'isProdData.*');
+            ->leftJoin('isProdData', function ($join) {
+                $join->on('isProdData.schedate', 'glassRun.schedate')
+                    ->on('isProdData.glassProdLineID', 'glassRun.glassProdLineID')
+                    ->on('isProdData.prd_no', 'glassRun.prd_no');
+            })
+            ->select('glassRun.id as id', 'glassRun.schedate as mainSchedate', 'glassRun.glassProdLineID as mainGlassProdLineID',
+                'defectCheck.gauge', 'defectCheck.formingMethod', 'defectCheck.weight', 'defectCheck.payRate', 'isProdData.*');
     }
 
     /**
-     *
+     * 取得品管資料 join 產品資料
      *
      * @param $id
      * @return null
@@ -360,5 +402,55 @@ class ReportRepository extends BaseRepository
         return $this->qc->where('qualityControl.id', $id)
             ->join('DB_U105.dbo.PRDT', 'DB_U105.dbo.PRDT.PRD_NO', 'qualityControl.prd_no')
             ->select('qualityControl.*', 'DB_U105.dbo.PRDT.SNM as snm');
+    }
+
+    /**
+     * 取得生產資訊
+     *
+     * @param $prd_no
+     * @return mixed
+     */
+    public function getProdInfo($prd_no)
+    {
+        return $this->check
+            ->where('defectCheck.prd_no', $prd_no)
+            ->where('productionData.spotCheck', 0)
+            ->join('productionData', 'defectCheck.id', 'productionData.checkID')
+            ->groupBy('defectCheck.prd_no', 'defectCheck.schedate', 'defectCheck.glassProdLineID')
+            ->select('defectCheck.prd_no', 'defectCheck.schedate', 'defectCheck.glassProdLineID',
+                DB::raw( 'AVG(productionData.checkRate) as checkRate'), DB::raw( 'MAX(productionData.speed) as speed'));
+    }
+
+    /**
+     * 取得生產缺點資訊
+     *
+     * @param $prd_no
+     */
+    public function getDefect($prd_no)
+    {
+        $prodList = $this->check
+            ->where('defectCheck.prd_no', $prd_no)
+            ->join('productionData', 'productionData.checkID', 'defectCheck.id')
+            ->join('productionDefect', 'productionDefect.productionDataID', 'productionData.id')
+            ->groupBy('defectCheck.schedate', 'defectCheck.prd_no', 'defectCheck.glassProdLineID', 'defectCheck.id')
+            ->select('defectCheck.schedate', 'defectCheck.prd_no', 'defectCheck.glassProdLineID', 'defectCheck.id as checkID')
+            ->get()->toArray();
+        for ($i = 0; $i < count($prodList); $i++) {
+            $defectList = $this->defect
+                ->join('defect', 'productionDefect.defectID', 'defect.id')
+                ->where('productionDefect.checkID', $prodList[$i]['checkID'])
+                ->groupBy('productionDefect.checkID', 'productionDefect.itemID', 'productionDefect.defectID' , 'defect.name')
+                ->orderBy(DB::raw( 'AVG(productionDefect.value)'), 'desc')
+                ->select('productionDefect.checkID', 'productionDefect.itemID', 'productionDefect.defectID',
+                    'defect.name', DB::raw( 'AVG(productionDefect.value) as value'))->get();
+            $set = [];
+            for ($x = 0; $x < count($defectList); $x++) {
+                if ($prodList[$i]['checkID'] == $defectList[$x]->checkID) {
+                    array_push($set, $defectList[$x]->name . ': ' . sprintf("%.2f", $defectList[$x]->value));
+                }
+            }
+            $prodList[$i]['defect'] = implode(", ", $set);
+        }
+        return $prodList;
     }
 }
